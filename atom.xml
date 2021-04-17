@@ -3,11 +3,11 @@
   <title>长安故里</title>
   
   
-  <link href="https://ipvb.gitee.io/blog/atom.xml" rel="self"/>
+  <link href="https://longyongji.gitee.io/blog/atom.xml" rel="self"/>
   
-  <link href="https://ipvb.gitee.io/blog/"/>
+  <link href="https://longyongji.gitee.io/blog/"/>
   <updated>2021-04-17T02:29:45.185Z</updated>
-  <id>https://ipvb.gitee.io/blog/</id>
+  <id>https://longyongji.gitee.io/blog/</id>
   
   <author>
     <name>长安故里</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Mybatis-plus学习使用</title>
-    <link href="https://ipvb.gitee.io/blog/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/"/>
-    <id>https://ipvb.gitee.io/blog/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/</id>
+    <link href="https://longyongji.gitee.io/blog/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/"/>
+    <id>https://longyongji.gitee.io/blog/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/</id>
     <published>2021-04-17T02:27:06.000Z</published>
     <updated>2021-04-17T02:29:45.185Z</updated>
     
@@ -42,8 +42,8 @@
   
   <entry>
     <title>java后端解决跨域的几种方法</title>
-    <link href="https://ipvb.gitee.io/blog/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/"/>
-    <id>https://ipvb.gitee.io/blog/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</id>
+    <link href="https://longyongji.gitee.io/blog/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/"/>
+    <id>https://longyongji.gitee.io/blog/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</id>
     <published>2021-04-17T01:40:37.000Z</published>
     <updated>2021-04-17T02:17:28.167Z</updated>
     
@@ -71,8 +71,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="https://ipvb.gitee.io/blog/2021/04/16/hello-world/"/>
-    <id>https://ipvb.gitee.io/blog/2021/04/16/hello-world/</id>
+    <link href="https://longyongji.gitee.io/blog/2021/04/16/hello-world/"/>
+    <id>https://longyongji.gitee.io/blog/2021/04/16/hello-world/</id>
     <published>2021-04-16T07:43:48.172Z</published>
     <updated>2021-04-17T02:18:22.926Z</updated>
     
