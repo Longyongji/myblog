@@ -3,11 +3,11 @@
   <title>长安故里</title>
   
   
-  <link href="https://longyongji.github.io/myblog/atom.xml" rel="self"/>
+  <link href="http://longyongji.cn/atom.xml" rel="self"/>
   
-  <link href="https://longyongji.github.io/myblog/"/>
+  <link href="http://longyongji.cn/"/>
   <updated>2021-05-04T13:37:55.423Z</updated>
-  <id>https://longyongji.github.io/myblog/</id>
+  <id>http://longyongji.cn/</id>
   
   <author>
     <name>长安故里</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>MySQL复习</title>
-    <link href="https://longyongji.github.io/myblog/2021/05/04/MySQL%E5%A4%8D%E4%B9%A0/"/>
-    <id>https://longyongji.github.io/myblog/2021/05/04/MySQL%E5%A4%8D%E4%B9%A0/</id>
+    <link href="http://longyongji.cn/2021/05/04/MySQL%E5%A4%8D%E4%B9%A0/"/>
+    <id>http://longyongji.cn/2021/05/04/MySQL%E5%A4%8D%E4%B9%A0/</id>
     <published>2021-05-04T13:34:39.000Z</published>
     <updated>2021-05-04T13:37:55.423Z</updated>
     
@@ -33,17 +33,17 @@
     
     
     
-    <category term="mysql" scheme="https://longyongji.github.io/myblog/categories/mysql/"/>
+    <category term="mysql" scheme="http://longyongji.cn/categories/mysql/"/>
     
     
-    <category term="数据库" scheme="https://longyongji.github.io/myblog/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <category term="数据库" scheme="http://longyongji.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
   <entry>
     <title>Mybatis-plus学习使用</title>
-    <link href="https://longyongji.github.io/myblog/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/"/>
-    <id>https://longyongji.github.io/myblog/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/</id>
+    <link href="http://longyongji.cn/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/"/>
+    <id>http://longyongji.cn/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/</id>
     <published>2021-04-17T02:27:06.000Z</published>
     <updated>2021-05-04T14:09:01.027Z</updated>
     
@@ -61,17 +61,17 @@
     
     
     
-    <category term="数据库" scheme="https://longyongji.github.io/myblog/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <category term="数据库" scheme="http://longyongji.cn/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
     
-    <category term="mybatis-plus" scheme="https://longyongji.github.io/myblog/tags/mybatis-plus/"/>
+    <category term="mybatis-plus" scheme="http://longyongji.cn/tags/mybatis-plus/"/>
     
   </entry>
   
   <entry>
     <title>java后端解决跨域的几种方法</title>
-    <link href="https://longyongji.github.io/myblog/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/"/>
-    <id>https://longyongji.github.io/myblog/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</id>
+    <link href="http://longyongji.cn/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/"/>
+    <id>http://longyongji.cn/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</id>
     <published>2021-04-17T01:40:37.000Z</published>
     <updated>2021-04-18T10:30:43.011Z</updated>
     
@@ -99,8 +99,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="https://longyongji.github.io/myblog/2021/04/16/hello-world/"/>
-    <id>https://longyongji.github.io/myblog/2021/04/16/hello-world/</id>
+    <link href="http://longyongji.cn/2021/04/16/hello-world/"/>
+    <id>http://longyongji.cn/2021/04/16/hello-world/</id>
     <published>2021-04-16T07:43:48.172Z</published>
     <updated>2021-04-17T02:18:22.926Z</updated>
     
