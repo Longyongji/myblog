@@ -53,7 +53,7 @@
 
   <url>
     <loc>https://gitee.com/longyongji/blog</loc>
-    <lastmod>2021-05-05</lastmod>
+    <lastmod>2021-05-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -61,14 +61,14 @@
   
   <url>
     <loc>https://gitee.com/longyongji/blog/tags/mybatis-plus/</loc>
-    <lastmod>2021-05-05</lastmod>
+    <lastmod>2021-05-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://gitee.com/longyongji/blog/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2021-05-05</lastmod>
+    <lastmod>2021-05-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -77,14 +77,14 @@
   
   <url>
     <loc>https://gitee.com/longyongji/blog/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2021-05-05</lastmod>
+    <lastmod>2021-05-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://gitee.com/longyongji/blog/categories/mysql/</loc>
-    <lastmod>2021-05-05</lastmod>
+    <lastmod>2021-05-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>

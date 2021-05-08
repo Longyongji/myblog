@@ -1,6 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>java后端解决跨域的几种方法</title>
+    <url>/blog/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="java后端解决跨域的几种方法"><a href="#java后端解决跨域的几种方法" class="headerlink" title="java后端解决跨域的几种方法"></a>java后端解决跨域的几种方法</h1><ol>
+<li><blockquote>
+<p><code>作者：telami</code><br><code>来源：www.telami.cn/2019/springboot-resolve-cors/</code></p>
+</blockquote>
+</li>
+</ol>
+<p>前后端分离大势所趋，跨域问题更是老生常谈，随便用标题去google或百度一下，能搜出一大片解决方案，那么为啥又要写一遍呢，不急往下看。</p>
+<h4 id="问题背景："><a href="#问题背景：" class="headerlink" title="问题背景："></a>问题背景：</h4><blockquote>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">Same Origin Policy，译为“同源策略”。它是对于客户端脚本（尤其是JavaScript）的重要安全度量标准，其目的在于防止某个文档或者脚本从多个不同“origin”（源）装载。它认为自任何站点装载的信赖内容是不安全的。</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">当被浏览器半信半疑的脚本运行在沙箱时，它们应该只被允许访问来自同一站点的资源，而不是那些来自其它站点可能怀有恶意的资源。</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect"><strong>注：具有相同的Origin，也即是拥有相同的协议、主机地址以及端口。一旦这三项数据中有一项不同，那么该资源就将被认为是从不同的Origin得来的，进而不被允许访问。</strong></a></p>
+</blockquote>
+<p>CORS就是为了解决SOP问题而生的，当然CORS不是唯一的解决方案，不过这里不赘述其他解决办法了。</p>
+<span id="more"></span>
+<hr>
+<h4 id="CORS简介"><a href="#CORS简介" class="headerlink" title="CORS简介:"></a>CORS简介:</h4><blockquote>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">CORS是一个W3C标准，全称是”跨域资源共享”（Cross-origin resource sharing）。它允许浏览器向跨源(协议 + 域名 + 端口)服务器，发出XMLHttpRequest请求，从而克服了AJAX只能同源使用的限制。CORS需要浏览器和服务器同时支持。它的通信过程，都是浏览器自动完成，不需要用户参与。</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">对于开发者来说，CORS通信与同源的AJAX/Fetch通信没有差别，代码完全一样。浏览器一旦发现请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。因此，实现CORS通信的关键是服务器。只要服务器实现了CORS接口，就可以跨源通信。</a></p>
+</blockquote>
+<p><strong>浏览器将CORS请求分成两类：简单请求（simple request）和非简单请求（not-so-simple request）。</strong></p>
+<blockquote>
+<p>浏览器发出CORS简单请求，只需要在头信息之中增加一个Origin字段。</p>
+</blockquote>
+<blockquote>
+<p>浏览器发出CORS非简单请求，会在正式通信之前，增加一次OPTIONS查询请求，称为”预检”请求（preflight）。浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些HTTP动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的XMLHttpRequest请求，否则就报错。</p>
+</blockquote>
+<p>简单请求就是HEAD、GET、POST请求，并且HTTP的头信息不超出以下几种字段 Accept、Accept-Language、Content-Language、Last-Event-ID、Content-Type <strong>注：Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain</strong></p>
+<p>反之，就是非简单请求。</p>
+<p>其实实现CORS很简单，就是在服务端加一些响应头，并且这样做对前端来说是无感知的，很方便。</p>
+<h4 id="详解响应头："><a href="#详解响应头：" class="headerlink" title="详解响应头："></a>详解响应头：</h4><ul>
+<li>Access-Control-Allow-Origin 该字段必填。它的值要么是请求时Origin字段的具体值，要么是一个*，表示接受任意域名的请求。</li>
+<li>Access-Control-Allow-Methods 该字段必填。它的值是逗号分隔的一个具体的字符串或者*，表明服务器支持的所有跨域请求的方法。注意，返回的是所有支持的方法，而不单是浏览器请求的那个方法。这是为了避免多次”预检”请求。</li>
+<li>Access-Control-Expose-Headers 该字段可选。CORS请求时，XMLHttpRequest对象的getResponseHeader()方法只能拿到6个基本字段：Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma。如果想拿到其他字段，就必须在Access-Control-Expose-Headers里面指定。</li>
+<li>Access-Control-Allow-Credentials 该字段可选。它的值是一个布尔值，表示是否允许发送Cookie.默认情况下，不发生Cookie，即：false。对服务器有特殊要求的请求，比如请求方法是PUT或DELETE，或者Content-Type字段的类型是application/json，这个值只能设为true。如果服务器不要浏览器发送Cookie，删除该字段即可。</li>
+<li>Access-Control-Max-Age 该字段可选，用来指定本次预检请求的有效期，单位为秒。在有效期间，不用发出另一条预检请求。</li>
+</ul>
+<p>顺便提一下，如果在开发中，发现每次发起请求都是两条，一次OPTIONS，一次正常请求，注意是每次，那么就需要配置Access-Control-Max-Age，避免每次都发出预检请求。</p>
+<h4 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h4><h5 id="第一种办法"><a href="#第一种办法" class="headerlink" title="第一种办法:"></a>第一种办法:</h5><pre><code>import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+@Configuration
+public class CorsConfig implements WebMvcConfigurer &#123;
+    @Override
+    public void addCorsMappings(CorsRegistry registry) &#123;
+        registry.addMapping(&quot;/**&quot;)
+                .allowedOrigins(&quot;*&quot;)
+                .allowedMethods(&quot;GET&quot;, &quot;HEAD&quot;, &quot;POST&quot;, &quot;PUT&quot;, &quot;DELETE&quot;, &quot;OPTIONS&quot;)
+                .allowCredentials(true)
+                .maxAge(3600)
+                .allowedHeaders(&quot;*&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">这种方式是全局配置的，网上也大都是这种解决办法，但是很多都是基于旧的spring版本，比如 <strong>WebMvcConfigurerAdapter</strong> 在spring5.0已经被标记为Deprecated，点开源码可以看到：</a></p>
+<pre><code>/**
+ * An implementation of &#123;@link WebMvcConfigurer&#125; with empty methods allowing
+ * subclasses to override only the methods they&#39;re interested in.
+ *
+ * @author Rossen Stoyanchev
+ * @since 3.1
+ * @deprecated as of 5.0 &#123;@link WebMvcConfigurer&#125; has default methods (made
+ * possible by a Java 8 baseline) and can be implemented directly without the
+ * need for this adapter
+ */
+@Deprecated
+public abstract class WebMvcConfigurerAdapter implements WebMvcConfigurer &#123;&#125;
+</code></pre>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">像这种过时的类或者方法，spring的作者们一定会在注解上面说明原因，并告诉你新的该用哪个，这是非常优秀的编码习惯，点赞！</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">spring5最低支持到jdk1.8，所以注释中明确表明，你可以直接实现WebMvcConfigurer接口，无需再用这个适配器，因为jdk1.8支持接口中存在default-method。</a></p>
+<p>Spring Boot 基础就不介绍了，看下这个教程太全了：</p>
+<blockquote>
+<p><a href="https://github.com/javastacks/spring-boot-best-practice">https://github.com/javastacks/spring-boot-best-practice</a></p>
+</blockquote>
+<hr>
+<h5 id="第二种办法"><a href="#第二种办法" class="headerlink" title="第二种办法:"></a>第二种办法:</h5><pre><code>import org.springframework.context.annotation.Configuration;
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+@WebFilter(filterName = &quot;CorsFilter &quot;)
+@Configuration
+public class CorsFilter implements Filter &#123;
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException &#123;
+        HttpServletResponse response = (HttpServletResponse) res;
+        response.setHeader(&quot;Access-Control-Allow-Origin&quot;,&quot;*&quot;);
+        response.setHeader(&quot;Access-Control-Allow-Credentials&quot;, &quot;true&quot;);
+        response.setHeader(&quot;Access-Control-Allow-Methods&quot;, &quot;POST, GET, PATCH, DELETE, PUT&quot;);
+        response.setHeader(&quot;Access-Control-Max-Age&quot;, &quot;3600&quot;);
+        response.setHeader(&quot;Access-Control-Allow-Headers&quot;, &quot;Origin, X-Requested-With, Content-Type, Accept&quot;);
+        chain.doFilter(req, res);
+    &#125;
+&#125;
+</code></pre>
+<p>这种办法，是基于过滤器的方式，方式简单明了，就是在response中写入这些响应头，好多文章都是第一种和第二种方式都叫你配置，其实这是没有必要的，只需要一种即可。</p>
+<p>这里也吐槽一下，大家不求甚解的精神。</p>
+<hr>
+<h5 id="第三种办法："><a href="#第三种办法：" class="headerlink" title="第三种办法："></a>第三种办法：</h5><pre><code>public class GoodsController &#123;
+@CrossOrigin(origins = &quot;http://localhost:4000&quot;)
+@GetMapping(&quot;goods-url&quot;)
+public Response queryGoodsWithGoodsUrl(@RequestParam String goodsUrl) throws Exception &#123;&#125;
+&#125;  
+</code></pre>
+<p>没错就是**@CrossOrigin**注解，点开注解</p>
+<pre><code>@Target(&#123; ElementType.METHOD, ElementType.TYPE &#125;)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface CrossOrigin &#123;
+
+&#125;
+</code></pre>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">从元注解@Target可以看出，注解可以放在method、class等上面，类似RequestMapping，也就是说，整个controller下面的方法可以都受控制，也可以单个方法受控制。</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">也可以得知，这个是最小粒度的cors控制办法了，精确到单个请求级别。</a></p>
+<hr>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">以上三种方法都可以解决问题，最常用的应该是第一种、第二种，控制在自家几个域名范围下足以，一般没必要搞得太细。</a></p>
+<p>这三种配置方式都用了的话，谁生效呢，类似css中样式，就近原则，懂了吧。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/blog/2021/04/16/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><span id="more"></span>
+<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
     <title>Mybatis-plus学习使用</title>
     <url>/blog/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="Mybatis-plus学习使用"><a href="#Mybatis-plus学习使用" class="headerlink" title="Mybatis-plus学习使用"></a>Mybatis-plus学习使用</h1><p>官方网站：[<a href="https://mp.baomidou.com/]">https://mp.baomidou.com/]</a>: </p>
@@ -171,146 +311,6 @@ public class MybatisPlusConfig &#123;
       <tags>
         <tag>mybatis-plus</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/blog/2021/04/16/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><span id="more"></span>
-<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>java后端解决跨域的几种方法</title>
-    <url>/blog/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="java后端解决跨域的几种方法"><a href="#java后端解决跨域的几种方法" class="headerlink" title="java后端解决跨域的几种方法"></a>java后端解决跨域的几种方法</h1><ol>
-<li><blockquote>
-<p><code>作者：telami</code><br><code>来源：www.telami.cn/2019/springboot-resolve-cors/</code></p>
-</blockquote>
-</li>
-</ol>
-<p>前后端分离大势所趋，跨域问题更是老生常谈，随便用标题去google或百度一下，能搜出一大片解决方案，那么为啥又要写一遍呢，不急往下看。</p>
-<h4 id="问题背景："><a href="#问题背景：" class="headerlink" title="问题背景："></a>问题背景：</h4><blockquote>
-<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">Same Origin Policy，译为“同源策略”。它是对于客户端脚本（尤其是JavaScript）的重要安全度量标准，其目的在于防止某个文档或者脚本从多个不同“origin”（源）装载。它认为自任何站点装载的信赖内容是不安全的。</a></p>
-<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">当被浏览器半信半疑的脚本运行在沙箱时，它们应该只被允许访问来自同一站点的资源，而不是那些来自其它站点可能怀有恶意的资源。</a></p>
-<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect"><strong>注：具有相同的Origin，也即是拥有相同的协议、主机地址以及端口。一旦这三项数据中有一项不同，那么该资源就将被认为是从不同的Origin得来的，进而不被允许访问。</strong></a></p>
-</blockquote>
-<p>CORS就是为了解决SOP问题而生的，当然CORS不是唯一的解决方案，不过这里不赘述其他解决办法了。</p>
-<span id="more"></span>
-<hr>
-<h4 id="CORS简介"><a href="#CORS简介" class="headerlink" title="CORS简介:"></a>CORS简介:</h4><blockquote>
-<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">CORS是一个W3C标准，全称是”跨域资源共享”（Cross-origin resource sharing）。它允许浏览器向跨源(协议 + 域名 + 端口)服务器，发出XMLHttpRequest请求，从而克服了AJAX只能同源使用的限制。CORS需要浏览器和服务器同时支持。它的通信过程，都是浏览器自动完成，不需要用户参与。</a></p>
-<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">对于开发者来说，CORS通信与同源的AJAX/Fetch通信没有差别，代码完全一样。浏览器一旦发现请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。因此，实现CORS通信的关键是服务器。只要服务器实现了CORS接口，就可以跨源通信。</a></p>
-</blockquote>
-<p><strong>浏览器将CORS请求分成两类：简单请求（simple request）和非简单请求（not-so-simple request）。</strong></p>
-<blockquote>
-<p>浏览器发出CORS简单请求，只需要在头信息之中增加一个Origin字段。</p>
-</blockquote>
-<blockquote>
-<p>浏览器发出CORS非简单请求，会在正式通信之前，增加一次OPTIONS查询请求，称为”预检”请求（preflight）。浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些HTTP动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的XMLHttpRequest请求，否则就报错。</p>
-</blockquote>
-<p>简单请求就是HEAD、GET、POST请求，并且HTTP的头信息不超出以下几种字段 Accept、Accept-Language、Content-Language、Last-Event-ID、Content-Type <strong>注：Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain</strong></p>
-<p>反之，就是非简单请求。</p>
-<p>其实实现CORS很简单，就是在服务端加一些响应头，并且这样做对前端来说是无感知的，很方便。</p>
-<h4 id="详解响应头："><a href="#详解响应头：" class="headerlink" title="详解响应头："></a>详解响应头：</h4><ul>
-<li>Access-Control-Allow-Origin 该字段必填。它的值要么是请求时Origin字段的具体值，要么是一个*，表示接受任意域名的请求。</li>
-<li>Access-Control-Allow-Methods 该字段必填。它的值是逗号分隔的一个具体的字符串或者*，表明服务器支持的所有跨域请求的方法。注意，返回的是所有支持的方法，而不单是浏览器请求的那个方法。这是为了避免多次”预检”请求。</li>
-<li>Access-Control-Expose-Headers 该字段可选。CORS请求时，XMLHttpRequest对象的getResponseHeader()方法只能拿到6个基本字段：Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma。如果想拿到其他字段，就必须在Access-Control-Expose-Headers里面指定。</li>
-<li>Access-Control-Allow-Credentials 该字段可选。它的值是一个布尔值，表示是否允许发送Cookie.默认情况下，不发生Cookie，即：false。对服务器有特殊要求的请求，比如请求方法是PUT或DELETE，或者Content-Type字段的类型是application/json，这个值只能设为true。如果服务器不要浏览器发送Cookie，删除该字段即可。</li>
-<li>Access-Control-Max-Age 该字段可选，用来指定本次预检请求的有效期，单位为秒。在有效期间，不用发出另一条预检请求。</li>
-</ul>
-<p>顺便提一下，如果在开发中，发现每次发起请求都是两条，一次OPTIONS，一次正常请求，注意是每次，那么就需要配置Access-Control-Max-Age，避免每次都发出预检请求。</p>
-<h4 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h4><h5 id="第一种办法"><a href="#第一种办法" class="headerlink" title="第一种办法:"></a>第一种办法:</h5><pre><code>import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-@Configuration
-public class CorsConfig implements WebMvcConfigurer &#123;
-    @Override
-    public void addCorsMappings(CorsRegistry registry) &#123;
-        registry.addMapping(&quot;/**&quot;)
-                .allowedOrigins(&quot;*&quot;)
-                .allowedMethods(&quot;GET&quot;, &quot;HEAD&quot;, &quot;POST&quot;, &quot;PUT&quot;, &quot;DELETE&quot;, &quot;OPTIONS&quot;)
-                .allowCredentials(true)
-                .maxAge(3600)
-                .allowedHeaders(&quot;*&quot;);
-    &#125;
-&#125;
-</code></pre>
-<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">这种方式是全局配置的，网上也大都是这种解决办法，但是很多都是基于旧的spring版本，比如 <strong>WebMvcConfigurerAdapter</strong> 在spring5.0已经被标记为Deprecated，点开源码可以看到：</a></p>
-<pre><code>/**
- * An implementation of &#123;@link WebMvcConfigurer&#125; with empty methods allowing
- * subclasses to override only the methods they&#39;re interested in.
- *
- * @author Rossen Stoyanchev
- * @since 3.1
- * @deprecated as of 5.0 &#123;@link WebMvcConfigurer&#125; has default methods (made
- * possible by a Java 8 baseline) and can be implemented directly without the
- * need for this adapter
- */
-@Deprecated
-public abstract class WebMvcConfigurerAdapter implements WebMvcConfigurer &#123;&#125;
-</code></pre>
-<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">像这种过时的类或者方法，spring的作者们一定会在注解上面说明原因，并告诉你新的该用哪个，这是非常优秀的编码习惯，点赞！</a></p>
-<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">spring5最低支持到jdk1.8，所以注释中明确表明，你可以直接实现WebMvcConfigurer接口，无需再用这个适配器，因为jdk1.8支持接口中存在default-method。</a></p>
-<p>Spring Boot 基础就不介绍了，看下这个教程太全了：</p>
-<blockquote>
-<p><a href="https://github.com/javastacks/spring-boot-best-practice">https://github.com/javastacks/spring-boot-best-practice</a></p>
-</blockquote>
-<hr>
-<h5 id="第二种办法"><a href="#第二种办法" class="headerlink" title="第二种办法:"></a>第二种办法:</h5><pre><code>import org.springframework.context.annotation.Configuration;
-import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-@WebFilter(filterName = &quot;CorsFilter &quot;)
-@Configuration
-public class CorsFilter implements Filter &#123;
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException &#123;
-        HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader(&quot;Access-Control-Allow-Origin&quot;,&quot;*&quot;);
-        response.setHeader(&quot;Access-Control-Allow-Credentials&quot;, &quot;true&quot;);
-        response.setHeader(&quot;Access-Control-Allow-Methods&quot;, &quot;POST, GET, PATCH, DELETE, PUT&quot;);
-        response.setHeader(&quot;Access-Control-Max-Age&quot;, &quot;3600&quot;);
-        response.setHeader(&quot;Access-Control-Allow-Headers&quot;, &quot;Origin, X-Requested-With, Content-Type, Accept&quot;);
-        chain.doFilter(req, res);
-    &#125;
-&#125;
-</code></pre>
-<p>这种办法，是基于过滤器的方式，方式简单明了，就是在response中写入这些响应头，好多文章都是第一种和第二种方式都叫你配置，其实这是没有必要的，只需要一种即可。</p>
-<p>这里也吐槽一下，大家不求甚解的精神。</p>
-<hr>
-<h5 id="第三种办法："><a href="#第三种办法：" class="headerlink" title="第三种办法："></a>第三种办法：</h5><pre><code>public class GoodsController &#123;
-@CrossOrigin(origins = &quot;http://localhost:4000&quot;)
-@GetMapping(&quot;goods-url&quot;)
-public Response queryGoodsWithGoodsUrl(@RequestParam String goodsUrl) throws Exception &#123;&#125;
-&#125;  
-</code></pre>
-<p>没错就是**@CrossOrigin**注解，点开注解</p>
-<pre><code>@Target(&#123; ElementType.METHOD, ElementType.TYPE &#125;)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface CrossOrigin &#123;
-
-&#125;
-</code></pre>
-<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">从元注解@Target可以看出，注解可以放在method、class等上面，类似RequestMapping，也就是说，整个controller下面的方法可以都受控制，也可以单个方法受控制。</a></p>
-<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">也可以得知，这个是最小粒度的cors控制办法了，精确到单个请求级别。</a></p>
-<hr>
-<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">以上三种方法都可以解决问题，最常用的应该是第一种、第二种，控制在自家几个域名范围下足以，一般没必要搞得太细。</a></p>
-<p>这三种配置方式都用了的话，谁生效呢，类似css中样式，就近原则，懂了吧。</p>
-]]></content>
   </entry>
   <entry>
     <title>MySQL复习</title>
