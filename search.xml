@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Mybatis-plus学习使用</title>
-    <url>/myblog/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/</url>
+    <url>/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="Mybatis-plus学习使用"><a href="#Mybatis-plus学习使用" class="headerlink" title="Mybatis-plus学习使用"></a>Mybatis-plus学习使用</h1><p>官方网站：[<a href="https://mp.baomidou.com/]">https://mp.baomidou.com/]</a>: </p>
 <h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h3><p>导入依赖：</p>
 <pre><code class="xml">&lt;dependency&gt;
@@ -174,7 +174,7 @@ public class MybatisPlusConfig &#123;
   </entry>
   <entry>
     <title>Hello World</title>
-    <url>/myblog/2021/04/16/hello-world/</url>
+    <url>/2021/04/16/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><span id="more"></span>
 <h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
@@ -193,7 +193,7 @@ public class MybatisPlusConfig &#123;
   </entry>
   <entry>
     <title>java后端解决跨域的几种方法</title>
-    <url>/myblog/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</url>
+    <url>/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</url>
     <content><![CDATA[<h1 id="java后端解决跨域的几种方法"><a href="#java后端解决跨域的几种方法" class="headerlink" title="java后端解决跨域的几种方法"></a>java后端解决跨域的几种方法</h1><ol>
 <li><blockquote>
 <p><code>作者：telami</code><br><code>来源：www.telami.cn/2019/springboot-resolve-cors/</code></p>
@@ -314,7 +314,7 @@ public @interface CrossOrigin &#123;
   </entry>
   <entry>
     <title>MySQL复习</title>
-    <url>/myblog/2021/05/04/MySQL%E5%A4%8D%E4%B9%A0/</url>
+    <url>/2021/05/04/MySQL%E5%A4%8D%E4%B9%A0/</url>
     <content><![CDATA[<h1 id="MySQL复习"><a href="#MySQL复习" class="headerlink" title="MySQL复习"></a>MySQL复习</h1><h2 id="sql语句的分类"><a href="#sql语句的分类" class="headerlink" title="sql语句的分类"></a>sql语句的分类</h2><p>DQL(数据查询语言) ：查询语句，凡是select语句都是DML(数据操作语言) ：insert delete update ，对表当中的数据结构的增删该</p>
 <p>DDL(数据定义语言) ：create（增） drop（删） alter（改），对表结构的增删改</p>
 <p>TCL(事务控制语言) ：commit提交事务，rollback回滚事务</p>
