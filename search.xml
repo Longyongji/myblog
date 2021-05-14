@@ -1,28 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2021/04/16/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><span id="more"></span>
-<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>Mybatis-plus学习使用</title>
     <url>/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<h1 id="Mybatis-plus学习使用"><a href="#Mybatis-plus学习使用" class="headerlink" title="Mybatis-plus学习使用"></a>Mybatis-plus学习使用</h1><p>官方网站：[<a href="https://mp.baomidou.com/]">https://mp.baomidou.com/]</a>: </p>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Mybatis-plus学习使用"><a href="#Mybatis-plus学习使用" class="headerlink" title="Mybatis-plus学习使用"></a>Mybatis-plus学习使用</h1><p>官方网站：[<a href="https://mp.baomidou.com/]">https://mp.baomidou.com/]</a>: </p>
 <h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h3><p>导入依赖：</p>
 <pre><code class="xml">&lt;dependency&gt;
     &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
@@ -192,9 +173,269 @@ public class MybatisPlusConfig &#123;
       </tags>
   </entry>
   <entry>
+    <title>Mybatis动态Sql</title>
+    <url>/2021/05/14/Mybatis%E5%8A%A8%E6%80%81Sql/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Mybatis动态Sql"><a href="#Mybatis动态Sql" class="headerlink" title="Mybatis动态Sql"></a>Mybatis动态Sql</h1><h2 id="if"><a href="#if" class="headerlink" title="if"></a>if</h2><p>test: 动态sql的判断条件</p>
+<p>问题：当第一个为空的时候会导致sql拼接错误。</p>
+<p>方法一：在where后加上一个1=1 后面的<if>标签里全部加上and（不推荐）。</if></p>
+<p>方法二：使用<where></where>标签</p>
+<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
+     resultType=&quot;Blog&quot;&gt;
+  SELECT * FROM BLOG
+  WHERE
+  &lt;if test=&quot;state != null&quot;&gt;
+    state = #&#123;state&#125;
+  &lt;/if&gt;
+  &lt;if test=&quot;title != null&quot;&gt;
+    AND title like #&#123;title&#125;
+  &lt;/if&gt;
+  &lt;if test=&quot;author != null and author.name != null&quot;&gt;
+    AND author_name like #&#123;author.name&#125;
+  &lt;/if&gt;
+&lt;/select&gt;
+</code></pre>
+<h3 id="where"><a href="#where" class="headerlink" title="where"></a>where</h3><p><em>where</em> 元素只会在子元素返回任何内容的情况下才插入 “WHERE” 子句。而且，若子句的开头为 “AND” 或 “OR”，<em>where</em> 元素也会将它们去除。</p>
+<p>问题：当<if>标签里的and写在后面就会出现sql拼接错误。</if></p>
+<p>使用<tirm>标签解决</tirm></p>
+<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
+     resultType=&quot;Blog&quot;&gt;
+  SELECT * FROM BLOG
+  &lt;where&gt;
+    &lt;if test=&quot;state != null&quot;&gt;
+         state = #&#123;state&#125;
+    &lt;/if&gt;
+    &lt;if test=&quot;title != null&quot;&gt;
+        AND title like #&#123;title&#125;
+    &lt;/if&gt;
+    &lt;if test=&quot;author != null and author.name != null&quot;&gt;
+        AND author_name like #&#123;author.name&#125;
+    &lt;/if&gt;
+  &lt;/where&gt;
+&lt;/select&gt;
+</code></pre>
+<h3 id="tirm"><a href="#tirm" class="headerlink" title="tirm"></a>tirm</h3><p>prefix：前缀，trim标签题中是整个字符串拼串后的结果。prefix给拼串后的整个字符串加一个前缀。</p>
+<p>prefixOverrides：前缀覆盖，去掉整个字符串前面多余的字符</p>
+<p>suffix：后缀拼串后的整个字符串加一个后缀。</p>
+<p>suffixOverride：后缀覆盖，去掉整个字符串后面多余的字符</p>
+<pre><code class="xml">&lt;trim prefix=&quot;WHERE&quot; prefixOverrides=&quot;AND |OR &quot;&gt;
+  ...
+&lt;/trim&gt;
+</code></pre>
+<h2 id="choose、when、otherwise"><a href="#choose、when、otherwise" class="headerlink" title="choose、when、otherwise"></a>choose、when、otherwise</h2><p>MyBatis 提供了 choose 元素，</p>
+<p>它有点像 Java 中的 switch 语句。</p>
+<p>when元素，它有点像 Java 中的 switch中的case语句。</p>
+<p>otherwise元素，它有点像 Java 中的 switch中的default 语句。</p>
+<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
+     resultType=&quot;Blog&quot;&gt;
+  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  &lt;choose&gt;
+    &lt;when test=&quot;title != null&quot;&gt;
+      AND title like #&#123;title&#125;
+    &lt;/when&gt;
+    &lt;when test=&quot;author != null and author.name != null&quot;&gt;
+      AND author_name like #&#123;author.name&#125;
+    &lt;/when&gt;
+    &lt;otherwise&gt;
+      AND featured = 1
+    &lt;/otherwise&gt;
+  &lt;/choose&gt;
+&lt;/select&gt;
+</code></pre>
+<h2 id="内置参数"><a href="#内置参数" class="headerlink" title="内置参数"></a>内置参数</h2><p>mybatis默认还有两个内置参数：</p>
+<p>​    _parameter：代表整个参数</p>
+<p>​        单个参数：_parameter就是这个参数</p>
+<p>​        多个参数：参数会被封装为一个map：_parameter就是</p>
+<p>​    _databaseId：如果配置了databaseIdProvider标签。</p>
+<p>​                        _databaseId就是代表当前数据库的别名mysql（指的是mysql或者oracle）</p>
+<h2 id="Bind"><a href="#Bind" class="headerlink" title="Bind"></a>Bind</h2><p>​    <code>bind</code> 元素允许你在 OGNL 表达式以外创建一个变量，并将其绑定到当前的上下文。比如：</p>
+<pre><code class="sql">&lt;select id=&quot;selectBlogsLike&quot; resultType=&quot;Blog&quot;&gt;
+  &lt;bind name=&quot;pattern&quot; value=&quot;&#39;%&#39; + _parameter.getTitle() + &#39;%&#39;&quot; /&gt;
+  SELECT * FROM BLOG
+  WHERE title LIKE #&#123;pattern&#125;
+&lt;/select&gt;
+</code></pre>
+<h2 id="mybatis缓存"><a href="#mybatis缓存" class="headerlink" title="mybatis缓存"></a>mybatis缓存</h2><h3 id="一级缓存：（本地缓存）"><a href="#一级缓存：（本地缓存）" class="headerlink" title="一级缓存：（本地缓存）"></a>一级缓存：（本地缓存）</h3><p>sqlSession级别的缓存。一级缓存是一直开启的；SqlSession级别的一个Mybatis缓存，与数据库同一次会话期间查询到的数据会放在本地缓存中</p>
+<p>以后如果需要后期相同的数据。直接从缓存中拿，没必要再去查询数据库</p>
+<p>一级缓存失效情况（没有使用到当前一级缓存的情况，效果就是，还需要再想数据库发出查询）</p>
+<p>1、sqlSession不同</p>
+<p>2、sqlSession相同，查询条件不同。（当前一级缓存中还没有这个数据）</p>
+<p>3、sqlSession相同，两个查询之间执行了增删该操作（这次增删改可能对当前数据有影响）</p>
+<p>4、sqlSession相同，手动清除一级缓存（缓存清空）</p>
+<h3 id="二级缓存：（全局缓存）"><a href="#二级缓存：（全局缓存）" class="headerlink" title="二级缓存：（全局缓存）"></a>二级缓存：（全局缓存）</h3><p>基于namespace级别的缓存：一个namespace对应一个二级缓存</p>
+<p>1、一个会话，查询一条数据，这个数据就会被放在当前会话的一级缓存中；</p>
+<p>2、如果当前会话关闭了，一级缓存中的数据会被保存到二级缓存中；新的会话查询信息，就可以参照二级缓存</p>
+<p>3、不同namespace查询胡的数据会放在自己对应的缓存中（mapper)</p>
+<p>要启用全局的二级缓存，只需要在你的 SQL 映射文件中添加一行：</p>
+<pre><code class="xml">&lt;cache/&gt;
+</code></pre>
+<p>基本上就是这样。这个简单语句的效果如下:</p>
+<ul>
+<li><p>映射语句文件中的所有 select 语句的结果将会被缓存。</p>
+</li>
+<li><p>映射语句文件中的所有 insert、update 和 delete 语句会刷新缓存。</p>
+</li>
+<li><p>缓存会使用最近最少使用算法（LRU, Least Recently Used）算法来清除不需要的缓存。</p>
+</li>
+<li><p>缓存不会定时进行刷新（也就是说，没有刷新间隔）。</p>
+</li>
+<li><p>缓存会保存列表或对象（无论查询方法返回哪种）的 1024 个引用。</p>
+</li>
+<li><p>缓存会被视为读/写缓存，这意味着获取到的对象并不是共享的，可以安全地被调用者修改，而不干扰其他调用者或线程所做的潜在修改。</p>
+<h3 id="缓存原理"><a href="#缓存原理" class="headerlink" title="缓存原理"></a>缓存原理</h3><p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514135140.png" alt="image-20210513164854481"></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2021/04/16/hello-world/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><span id="more"></span>
+<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Mybatis逆向工程使用</title>
+    <url>/2021/05/14/Mybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Mybatis逆向工程使用"><a href="#Mybatis逆向工程使用" class="headerlink" title="Mybatis逆向工程使用"></a>Mybatis逆向工程使用</h1><p>官方地址：<a href="https://github.com/mybatis/generator">mybatis/generator: A code generator for MyBatis. (github.com)</a></p>
+<p>导入需要的jar包</p>
+<pre><code class="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-generator&lt;/artifactId&gt;
+    &lt;version&gt;1.4.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-generator-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;1.4.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>在项目名称下创建generatorConfig.xml（与src同一级别），各个组件的官方介绍<a href="http://mybatis.org/generator/configreference/xmlconfig.html">MyBatis Generator Core – MyBatis Generator XML Configuration File Reference</a></p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE generatorConfiguration
+        PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot;&gt;
+
+&lt;generatorConfiguration&gt;
+    &lt;context id=&quot;DB2Tables&quot; targetRuntime=&quot;MyBatis3&quot;&gt;
+        &lt;jdbcConnection driverClass=&quot;com.mysql.cj.jdbc.Driver&quot;
+                        connectionURL=&quot;jdbc:mysql://localhost:3306/bjpowernode?serverTimezone=UTC&quot;
+                        userId=&quot;root&quot;
+                        password=&quot;123456&quot;&gt;
+        &lt;/jdbcConnection&gt;
+
+        &lt;javaTypeResolver &gt;
+            &lt;property name=&quot;forceBigDecimals&quot; value=&quot;false&quot; /&gt;
+        &lt;/javaTypeResolver&gt;
+        &lt;!--javaModelGenerator,指定javaBean的生成策略--&gt;
+        &lt;javaModelGenerator targetPackage=&quot;com.lyj.pojo&quot; targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+            &lt;property name=&quot;trimStrings&quot; value=&quot;true&quot; /&gt;
+        &lt;/javaModelGenerator&gt;
+        &lt;!--sqlMapGenerator指定sql映射（Mapper）的生成策略--&gt;
+        &lt;sqlMapGenerator targetPackage=&quot;com.lyj.dao.xml&quot;  targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+        &lt;/sqlMapGenerator&gt;
+        &lt;!--javaClientGenerator指定mapper接口所在位置--&gt;
+        &lt;javaClientGenerator type=&quot;XMLMAPPER&quot; targetPackage=&quot;com.lyj.dao&quot;  targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+        &lt;/javaClientGenerator&gt;
+        &lt;!--指定逆向分析哪些表：根据这些表创建javabean--&gt;
+        &lt;table tableName=&quot;dept&quot; domainObjectName=&quot;Department&quot;/&gt;
+        &lt;table tableName=&quot;emp&quot; domainObjectName=&quot;Employee&quot;/&gt;
+    &lt;/context&gt;
+&lt;/generatorConfiguration&gt;
+</code></pre>
+<p>在测试类里面进行运行代码</p>
+<pre><code class="java">@Test
+    public void generator() throws IOException, XMLParserException, InvalidConfigurationException, SQLException, InterruptedException &#123;
+        List&lt;String&gt; warnings = new ArrayList&lt;String&gt;();
+        boolean overwrite = true;
+        File configFile = new File(&quot;generatorConfig.xml&quot;); //xml地址
+        ConfigurationParser cp = new ConfigurationParser(warnings);
+        Configuration config = cp.parseConfiguration(configFile);
+        DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+        MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
+        myBatisGenerator.generate(null);
+    &#125;
+</code></pre>
+<p>最后就可以生成代码和文件</p>
+<p>![image-20210514094825578](<a href="https://gitee.com/longyongji/image/raw/master/picture">https://gitee.com/longyongji/image/raw/master/picture</a> /20210514094825.png)</p>
+<p>如何使用targetRuntime=”MyBatis3”会产生一些条件查询的方法，因此要多一写xxxExample的类，具体看<a href="http://mybatis.org/generator/configreference/context.html">MyBatis Generator Core – The  Element</a></p>
+<table>
+<thead>
+<tr>
+<th>targetRuntime的值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>MyBatis3</strong></td>
+<td>使用该值，MBG将生成与MyBatis 3.0或更高版本以及JSE 5.0或更高版本兼容的对象（例如Java模型和mapper接口将使用通用类型）。 这些生成的对象中的“示例”方法实际上支持无限的动态where子句。 此外，使用这些生成器生成的Java对象支持许多JSE 5.0功能，包括参数化类型和注释。</td>
+</tr>
+<tr>
+<td><strong>MyBatis3Simple</strong></td>
+<td>使用该值，MBG将生成与MyBatis 3.0或更高版本以及JSE 5.0或更高版本兼容的对象（例如Java模型和mapper接口将使用通用类型）。 用此目标运行时生成的映射器是非常基本的CRUD操作，仅没有“示例”方法且动态SQL很少。 用这些生成器生成的Java对象支持许多JSE 5.0功能，包括参数化类型和注释。</td>
+</tr>
+</tbody></table>
+<p>![image-20210514094613433](<a href="https://gitee.com/longyongji/image/raw/master/picture">https://gitee.com/longyongji/image/raw/master/picture</a> /20210514094620.png)</p>
+<p>测试</p>
+<pre><code class="java">@Test
+public void mytest01() throws IOException &#123;
+    String resource = &quot;mybatis-config.xml&quot;;
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    
+    EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+    //使用EmployeeExample来封装条件
+    EmployeeExample example = new EmployeeExample();
+    //创建一个Criteria,这个criteria就是拼装条件
+    EmployeeExample.Criteria criteria = example.createCriteria();
+    criteria.andEnameLike(&quot;%S%&quot;);
+    //第二个criteria，使用or来拼接上,或满足criteria或者满足criteria2
+    EmployeeExample.Criteria criteria2 = example.createCriteria();
+    criteria2.andEnameLike(&quot;%T%&quot;);
+    //拼接第二个criteria
+    example.or(criteria2);
+    
+    List&lt;Employee&gt; employees = mapper.selectByExample(example);
+    for (Employee employee : employees) &#123;
+        System.out.println(employee.getEname());
+    &#125;
+&#125;
+</code></pre>
+<p>运行结果：</p>
+<p>![image-20210514133215219](<a href="https://gitee.com/longyongji/image/raw/master/picture">https://gitee.com/longyongji/image/raw/master/picture</a> /20210514133215.png)</p>
+]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>java后端解决跨域的几种方法</title>
     <url>/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="java后端解决跨域的几种方法"><a href="#java后端解决跨域的几种方法" class="headerlink" title="java后端解决跨域的几种方法"></a>java后端解决跨域的几种方法</h1><ol>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="java后端解决跨域的几种方法"><a href="#java后端解决跨域的几种方法" class="headerlink" title="java后端解决跨域的几种方法"></a>java后端解决跨域的几种方法</h1><ol>
 <li><blockquote>
 <p><code>作者：telami</code><br><code>来源：www.telami.cn/2019/springboot-resolve-cors/</code></p>
 </blockquote>
@@ -315,7 +556,7 @@ public @interface CrossOrigin &#123;
   <entry>
     <title>MySQL复习</title>
     <url>/2021/05/04/MySQL%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<h1 id="MySQL复习"><a href="#MySQL复习" class="headerlink" title="MySQL复习"></a>MySQL复习</h1><h2 id="sql语句的分类"><a href="#sql语句的分类" class="headerlink" title="sql语句的分类"></a>sql语句的分类</h2><p>DQL(数据查询语言) ：查询语句，凡是select语句都是DML(数据操作语言) ：insert delete update ，对表当中的数据结构的增删该</p>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="MySQL复习"><a href="#MySQL复习" class="headerlink" title="MySQL复习"></a>MySQL复习</h1><h2 id="sql语句的分类"><a href="#sql语句的分类" class="headerlink" title="sql语句的分类"></a>sql语句的分类</h2><p>DQL(数据查询语言) ：查询语句，凡是select语句都是DML(数据操作语言) ：insert delete update ，对表当中的数据结构的增删该</p>
 <p>DDL(数据定义语言) ：create（增） drop（删） alter（改），对表结构的增删改</p>
 <p>TCL(事务控制语言) ：commit提交事务，rollback回滚事务</p>
 <p>DCL(数据控制语言) ：grant授权，revoke撤销限权等</p>
@@ -598,7 +839,7 @@ source .sql脚本绝对位置
 <p>​        第一范式：任何一张表都应该有主键，并且每一个字段原子性不可再分。</p>
 <p>第二范式：建立在第一范式的基础之上，所有非主键字段完全依赖主键，不能产生部分依赖。<br>            对于多对多？用三张表，关系表两个外键来处理</p>
 <p>第三范式：建立在第二范式的基础之上，所有非主键字段直接依赖主键，不能产生传递依赖。<br>            一对多？两张表，多的表加外键。</p>
-<p>​        </p>
+<p>​    </p>
 ]]></content>
       <categories>
         <category>mysql</category>
