@@ -293,25 +293,6 @@ public class MybatisPlusConfig &#123;
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/2021/04/16/hello-world/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><span id="more"></span>
-<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>Mybatis逆向工程使用</title>
     <url>/2021/05/14/Mybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Mybatis逆向工程使用"><a href="#Mybatis逆向工程使用" class="headerlink" title="Mybatis逆向工程使用"></a>Mybatis逆向工程使用</h1><p>官方地址：<a href="https://github.com/mybatis/generator">mybatis/generator: A code generator for MyBatis. (github.com)</a></p>
@@ -377,7 +358,7 @@ public class MybatisPlusConfig &#123;
     &#125;
 </code></pre>
 <p>最后就可以生成代码和文件</p>
-<p>![image-20210514094825578](<a href="https://gitee.com/longyongji/image/raw/master/picture">https://gitee.com/longyongji/image/raw/master/picture</a> /20210514094825.png)</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514094825.png" alt="image-20210514094825578"></p>
 <p>如何使用targetRuntime=”MyBatis3”会产生一些条件查询的方法，因此要多一写xxxExample的类，具体看<a href="http://mybatis.org/generator/configreference/context.html">MyBatis Generator Core – The  Element</a></p>
 <table>
 <thead>
@@ -395,7 +376,7 @@ public class MybatisPlusConfig &#123;
 <td>使用该值，MBG将生成与MyBatis 3.0或更高版本以及JSE 5.0或更高版本兼容的对象（例如Java模型和mapper接口将使用通用类型）。 用此目标运行时生成的映射器是非常基本的CRUD操作，仅没有“示例”方法且动态SQL很少。 用这些生成器生成的Java对象支持许多JSE 5.0功能，包括参数化类型和注释。</td>
 </tr>
 </tbody></table>
-<p>![image-20210514094613433](<a href="https://gitee.com/longyongji/image/raw/master/picture">https://gitee.com/longyongji/image/raw/master/picture</a> /20210514094620.png)</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514094620.png" alt="image-20210514094613433"></p>
 <p>测试</p>
 <pre><code class="java">@Test
 public void mytest01() throws IOException &#123;
@@ -423,7 +404,7 @@ public void mytest01() throws IOException &#123;
 &#125;
 </code></pre>
 <p>运行结果：</p>
-<p>![image-20210514133215219](<a href="https://gitee.com/longyongji/image/raw/master/picture">https://gitee.com/longyongji/image/raw/master/picture</a> /20210514133215.png)</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514133215.png" alt="image-20210514133215219"></p>
 ]]></content>
       <categories>
         <category>mybatis</category>
@@ -431,6 +412,25 @@ public void mytest01() throws IOException &#123;
       <tags>
         <tag>mybatis</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2021/04/16/hello-world/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><span id="more"></span>
+<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
   </entry>
   <entry>
     <title>java后端解决跨域的几种方法</title>
