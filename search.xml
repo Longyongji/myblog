@@ -414,6 +414,227 @@ public void mytest01() throws IOException &#123;
       </tags>
   </entry>
   <entry>
+    <title>Spring+SpringMVC+Mybatis整合</title>
+    <url>/2021/05/15/Spring+SpringMVC+Mybatis%E6%95%B4%E5%90%88/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Spring-SpringMVC-Mybatis整合"><a href="#Spring-SpringMVC-Mybatis整合" class="headerlink" title="Spring+SpringMVC+Mybatis整合"></a>Spring+SpringMVC+Mybatis整合</h1><p>1、创建一个maven项目并且添加web框架</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210515190605.png" alt="image-20210515190557883" style="zoom: 50%;">
+
+
+
+<h2 id="2、整合spring-springMVC-mybatis配置文件"><a href="#2、整合spring-springMVC-mybatis配置文件" class="headerlink" title="2、整合spring+springMVC+mybatis配置文件"></a>2、整合spring+springMVC+mybatis配置文件</h2><p>1、导入相关依赖</p>
+<pre><code class="xml"> &lt;dependencies&gt;
+     &lt;!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc --&gt;
+     &lt;dependency&gt;
+         &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+         &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+         &lt;version&gt;5.3.6&lt;/version&gt;
+     &lt;/dependency&gt;
+     &lt;!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring --&gt;
+     &lt;dependency&gt;
+         &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+         &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+         &lt;version&gt;2.0.6&lt;/version&gt;
+     &lt;/dependency&gt;
+     &lt;!-- https://mvnrepository.com/artifact/com.alibaba/druid --&gt;
+     &lt;dependency&gt;
+         &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+         &lt;artifactId&gt;druid&lt;/artifactId&gt;
+         &lt;version&gt;1.1.23&lt;/version&gt;
+     &lt;/dependency&gt;
+     &lt;!-- https://mvnrepository.com/artifact/log4j/log4j --&gt;
+     &lt;dependency&gt;
+         &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+         &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;
+         &lt;version&gt;5.3.2&lt;/version&gt;
+     &lt;/dependency&gt;
+&lt;/dependencies&gt;
+ &lt;build&gt;
+     &lt;resources&gt;
+         &lt;resource&gt;
+             &lt;directory&gt;src/main/java&lt;/directory&gt;
+             &lt;includes&gt;
+                 &lt;include&gt;**/*.properties&lt;/include&gt;
+                 &lt;include&gt;**/*.xml&lt;/include&gt;
+             &lt;/includes&gt;
+         &lt;/resource&gt;
+     &lt;/resources&gt;
+&lt;/build&gt;
+</code></pre>
+<p>2、创建mybatis配置文件mybatis-config.xml，里面主要写一些mybatis的属性设置熟悉比如<setting>标签</setting></p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE configuration
+        PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;
+&lt;configuration&gt;
+
+&lt;/configuration&gt;
+</code></pre>
+<p>3、创建spring配置配置文件applationContext.xml</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
+       xmlns:mybatis=&quot;http://mybatis.org/schema/mybatis-spring&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://mybatis.org/schema/mybatis-spring
+       http://mybatis.org/schema/mybatis-spring.xsd&quot;&gt;
+    &lt;!--Spring希望管理所有的业务逻辑组件,Controller交给SpringMVC容器管理--&gt;
+    &lt;context:component-scan base-package=&quot;com.lyj&quot;&gt;
+      &lt;context:exclude-filter type=&quot;annotation&quot; expression=&quot;org.springframework.stereotype.Controller&quot;/&gt;
+    &lt;/context:component-scan&gt;
+    &lt;!--Spring用来控制业务逻辑。数据源、事务--&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;com.alibaba.druid.pool.DruidDataSource&quot;&gt;
+        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.cj.jdbc.Driver&quot; /&gt;
+        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/bjpowernode?useSSL=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;serverTimezone=UTC&quot; /&gt;
+        &lt;property name=&quot;username&quot; value=&quot;root&quot; /&gt;
+        &lt;property name=&quot;password&quot; value=&quot;123456&quot; /&gt;
+    &lt;/bean&gt;
+    &lt;!--事务管理器--&gt;
+    &lt;!-- transaction manager, use DataSourceTransactionManager&quot; for JDBC local tx --&gt;
+    &lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;
+    &lt;/bean&gt;
+    &lt;!--开启注解事务支持--&gt;
+    &lt;tx:annotation-driven /&gt;
+    &lt;!--整合mybatis 1、spring管理所有组件。mapper的实现类 2、spring用来管理事务--&gt;
+    &lt;!--创建sqlSessionFactory--&gt;
+    &lt;bean id=&quot;sqlSessionFactoryBean&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;
+        &lt;!--导入mybatis配置文件--&gt;
+        &lt;property name=&quot;configLocation&quot; value=&quot;classpath:mybatis-config.xml&quot;/&gt;
+        &lt;!--指定mapper文章--&gt;
+        &lt;property name=&quot;mapperLocations&quot; value=&quot;classpath:com/lyj/dao/xml/*.xml&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;!--扫描所有mapper接口的实现，让这些mapper能够自动注入--&gt;
+    &lt;mybatis:scan base-package=&quot;com.lyj.dao&quot;/&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>4、在web.xml文件中导入spring配置文件</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;
+         version=&quot;4.0&quot;&gt;
+    &lt;context-param&gt;
+        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+        &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;
+    &lt;/context-param&gt;
+    &lt;!--监听器--&gt;
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+    &lt;/listener&gt;
+&lt;/web-app&gt;
+</code></pre>
+<p>5、与SpringMVC的配置文件springmvc-config.xml进行整合</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd&quot;&gt;
+
+    &lt;!--值扫描过滤器--&gt;
+    &lt;context:component-scan base-package=&quot;com.lyj&quot; use-default-filters=&quot;false&quot;&gt;
+        &lt;context:include-filter type=&quot;annotation&quot; expression=&quot;org.springframework.stereotype.Controller&quot;/&gt;
+    &lt;/context:component-scan&gt;
+    &lt;!--视图解析器--&gt;
+    &lt;bean class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;!--使用mvc:annotation-driven代替上边注解映射器和注解适配器 配置 如果使用mvc:annotation-driven就不用配置上面的
+        RequestMappingHandlerMapping和RequestMappingHandlerAdapter--&gt;
+    &lt;mvc:annotation-driven/&gt;
+    &lt;mvc:default-servlet-handler/&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>6、在web.xml中整合SpringMVC配置文件</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;
+         version=&quot;4.0&quot;&gt;
+    &lt;context-param&gt;
+        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+        &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;
+    &lt;/context-param&gt;
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+    &lt;/listener&gt;
+    &lt;!--springMVC--&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;springmcv&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+            &lt;param-value&gt;classpath:springmvc-config.xml&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;springmcv&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+</code></pre>
+<p>也可以在spring配置文件applationContext.xml中通过<import resource="classpath:springmvc-config.xml">导入SpringMVC配置文件</import></p>
+<p>然后在将上述web.xml 改为</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;
+         version=&quot;4.0&quot;&gt;
+    &lt;context-param&gt;
+        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+        &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;
+    &lt;/context-param&gt;
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+    &lt;/listener&gt;
+    &lt;!--springMVC--&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;springmcv&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+            &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;springmcv&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+</code></pre>
+<p>注意如果配置了监听器<br><listener><br>    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class><br></listener><br>就必须配置，否则就会报错<br><context-param><br>    <param-name>contextConfigLocation</param-name><br>    <param-value>classpath:applicationContext.xml</param-value><br></context-param></p>
+<p>7、这样就spring+SpringMVC+mybatis就配置好了</p>
+<p>测试：</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210515193738.png" alt="image-20210515193738118" style="zoom:50%;">
+
+
+
+]]></content>
+      <categories>
+        <category>ssm</category>
+      </categories>
+      <tags>
+        <tag>ssm</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/2021/04/16/hello-world/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
@@ -552,6 +773,81 @@ public @interface CrossOrigin &#123;
 <p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">以上三种方法都可以解决问题，最常用的应该是第一种、第二种，控制在自家几个域名范围下足以，一般没必要搞得太细。</a></p>
 <p>这三种配置方式都用了的话，谁生效呢，类似css中样式，就近原则，懂了吧。</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>log4j日志输出</title>
+    <url>/2021/05/14/log4j%E6%97%A5%E5%BF%97%E8%BE%93%E5%87%BA/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="log4j日志输出"><a href="#log4j日志输出" class="headerlink" title="log4j日志输出"></a>log4j日志输出</h1><p>1、导入依赖</p>
+<pre><code class="xml">&lt;dependency&gt;
+    &lt;groupId&gt;log4j&lt;/groupId&gt;
+    &lt;artifactId&gt;log4j&lt;/artifactId&gt;
+    &lt;version&gt;1.2.17&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>2、在resources中配置log4j.properties，根据自己需求添加</p>
+<pre><code class="properties">#将等级为DEBUG的日志信息输出到console和file这两个目的地，console和file的定义在下面的代码
+log4j.rootLogger=DEBUG,console,file
+#,MAIL,DATABASE
+
+#控制台输出的相关设置
+log4j.appender.console = org.apache.log4j.ConsoleAppender
+log4j.appender.console.Target = System.out
+log4j.appender.console.Threshold=DEBUG
+log4j.appender.console.layout = org.apache.log4j.PatternLayout
+log4j.appender.console.layout.ConversionPattern=[%c]-%m%n
+
+#文件输出的相关设置
+log4j.appender.file = org.apache.log4j.RollingFileAppender
+log4j.appender.file.File=./log/kuang.log
+log4j.appender.file.MaxFileSize=10mb
+log4j.appender.file.Threshold=DEBUG
+log4j.appender.file.layout=org.apache.log4j.PatternLayout
+log4j.appender.file.layout.ConversionPattern=[%p][%d&#123;yy-MM-dd&#125;][%c]%m%n
+
+#日志输出级别
+log4j.logger.org.mybatis=DEBUG
+log4j.logger.java.sql=DEBUG
+log4j.logger.java.sql.Statement=DEBUG
+log4j.logger.java.sql.ResultSet=DEBUG
+log4j.logger.java.sql.PreparedStatement=DEBUG
+
+#### 配置输出到邮件 ###
+#log4j.appender.MAIL=org.apache.log4j.net.SMTPAppender
+#log4j.appender.MAIL.Threshold=FATAL
+#log4j.appender.MAIL.BufferSize=10
+#log4j.appender.MAIL.From=chenyl@yeqiangwei.com
+#log4j.appender.MAIL.SMTPHost=mail.hollycrm.com
+#log4j.appender.MAIL.Subject=Log4J Message
+#log4j.appender.MAIL.To=chenyl@yeqiangwei.com
+#log4j.appender.MAIL.layout=org.apache.log4j.PatternLayout
+#log4j.appender.MAIL.layout.ConversionPattern=[framework] %d - %c -%-4r [%t] %-5p %c %x - %m%n
+
+#### 配置输出到数据库 ###
+#log4j.appender.DATABASE=org.apache.log4j.jdbc.JDBCAppender
+#log4j.appender.DATABASE.URL=jdbc:mysql://localhost:3306/test
+#log4j.appender.DATABASE.driver=com.mysql.jdbc.Driver
+#log4j.appender.DATABASE.user=root
+#log4j.appender.DATABASE.password=
+#log4j.appender.DATABASE.sql=INSERT INTO LOG4J (Message) VALUES (&#39;[framework] %d - %c -%-4r [%t] %-5p %c %x - %m%n&#39;)
+#log4j.appender.DATABASE.layout=org.apache.log4j.PatternLayout
+#log4j.appender.DATABASE.layout.ConversionPattern=[framework] %d - %c -%-4r [%t] %-5p %c %x - %m%n
+#log4j.appender.A1=org.apache.log4j.DailyRollingFileAppender
+#log4j.appender.A1.File=SampleMessages.log4j
+#log4j.appender.A1.DatePattern=yyyyMMdd-HH&#39;.log4j&#39;
+#log4j.appender.A1.layout=org.apache.log4j.xml.XMLLayout
+</code></pre>
+<p>3、在mybatis-config.xml 配置文件中开启日志输出就ok了</p>
+<pre><code class="xml">&lt;settings&gt;
+    &lt;setting name=&quot;logImpl&quot; value=&quot;LOG4J&quot;/&gt;
+&lt;/settings&gt;
+</code></pre>
+]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>mybatis</tag>
+      </tags>
   </entry>
   <entry>
     <title>MySQL复习</title>
@@ -846,6 +1142,388 @@ source .sql脚本绝对位置
       </categories>
       <tags>
         <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringIOC和SpringAOP</title>
+    <url>/2021/05/16/SpringIOC%E5%92%8CSpringAOP%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h1><h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>1、IOC思想基于IOC容器完成，IOC容器底层就是对象工厂</p>
+<h3 id="Spring提供IOC容器实现的两种方式：（两个接口）"><a href="#Spring提供IOC容器实现的两种方式：（两个接口）" class="headerlink" title="Spring提供IOC容器实现的两种方式：（两个接口）"></a>Spring提供IOC容器实现的两种方式：（两个接口）</h3><p>​    （1）BeanFactory：IOC容器基本实现，是spring内部的使用接口，不提供开发人员进行使用</p>
+<p>​            加载配置文件时候不会创建对象，在获取对象（使用）才去创建对象</p>
+<p>​    （2）ApplicationContext：BeanFactory接口的子接口，提供更多更强大的功能，一般有开发人员使用</p>
+<p>​            加载配置文件的时候就把配置文件对象进行创建</p>
+<h3 id="Bean管理"><a href="#Bean管理" class="headerlink" title="Bean管理"></a>Bean管理</h3><p>​    spring创建对象 和 spring注入属性</p>
+<h3 id="bean的属性注入"><a href="#bean的属性注入" class="headerlink" title="bean的属性注入"></a>bean的属性注入</h3><h4 id="set注入"><a href="#set注入" class="headerlink" title="set注入"></a>set注入</h4><p>对象中有属性有set方法的时候可以使用set注入</p>
+<pre><code class="xml">&lt;bean id=&quot;people&quot; class=&quot;com.lyj.pojo.People&quot;&gt;
+     &lt;property name=&quot;name&quot; value=&quot;张三&quot;/&gt;
+     &lt;property name=&quot;sex&quot; value=&quot;男&quot;/&gt;
+     &lt;property name=&quot;age&quot; value=&quot;18&quot;/&gt;
+&lt;/bean&gt;
+</code></pre>
+<h4 id="有参构造器注入"><a href="#有参构造器注入" class="headerlink" title="有参构造器注入"></a>有参构造器注入</h4><p>当有有参构造器是</p>
+<pre><code class="xml">&lt;bean id=&quot;people&quot; class=&quot;com.lyj.pojo.People&quot;&gt;
+    &lt;constructor-arg name=&quot;name&quot; value=&quot;张三&quot;/&gt;
+    &lt;constructor-arg name=&quot;sex&quot; value=&quot;男&quot;/&gt;
+    &lt;constructor-arg name=&quot;age&quot; value=&quot;18&quot;/&gt;
+&lt;/bean&gt;
+</code></pre>
+<h4 id="设置空值"><a href="#设置空值" class="headerlink" title="设置空值"></a>设置空值</h4><p>其中age就被设置为了空值</p>
+<pre><code class="xml">&lt;bean id=&quot;people&quot; class=&quot;com.lyj.pojo.People&quot;&gt;
+    &lt;property name=&quot;name&quot; value=&quot;张三&quot;/&gt;
+    &lt;property name=&quot;sex&quot; value=&quot;男&quot;/&gt;
+    &lt;property name=&quot;age&quot;&gt;&lt;null/&gt;&lt;/property&gt;
+&lt;/bean&gt;
+</code></pre>
+<h4 id="特殊符号"><a href="#特殊符号" class="headerlink" title="特殊符号"></a>特殊符号</h4><p>第一种：使用转义字符 &lt; &lg;</p>
+<p>第二种：使用<!--[CDATA[你的内容]]--></p>
+<pre><code class="xml">&lt;bean id=&quot;people&quot; class=&quot;com.lyj.pojo.People&quot;&gt;
+    &lt;property name=&quot;name&quot; value=&quot;张三&quot;/&gt;
+    &lt;property name=&quot;sex&quot;&gt;
+        &lt;value&gt;
+            &lt;![CDATA[&lt;&lt;男&gt;&gt;]]&gt;
+        &lt;/value&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+</code></pre>
+<h4 id="数组、-list、map、set注入"><a href="#数组、-list、map、set注入" class="headerlink" title="数组、 list、map、set注入"></a>数组、 list、map、set注入</h4><pre><code class="xml">&lt;bean id=&quot;student&quot; class=&quot;com.lyj.pojo.Student&quot;&gt;
+    &lt;property name=&quot;courses&quot;&gt;
+        &lt;!--数组--&gt;
+        &lt;array&gt;
+            &lt;value&gt;java课程&lt;/value&gt;
+            &lt;value&gt;Spring课程&lt;/value&gt;
+        &lt;/array&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;list&quot;&gt;
+        &lt;!--List--&gt;
+        &lt;list&gt;
+            &lt;value&gt;张三&lt;/value&gt;
+            &lt;value&gt;小三&lt;/value&gt;
+            &lt;!--如果list里面是对象--&gt;
+            &lt;!--&lt;ref bean=&quot;people&quot;&gt;&lt;/ref&gt;--&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;maps&quot;&gt;
+        &lt;!--Map--&gt;
+        &lt;map&gt;
+            &lt;entry key=&quot;JAVA&quot; value=&quot;java&quot;&gt;&lt;/entry&gt;
+            &lt;entry key=&quot;PHP&quot; value=&quot;php&quot;&gt;&lt;/entry&gt;
+        &lt;/map&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;sets&quot;&gt;
+        &lt;!--set--&gt;
+        &lt;set&gt;
+            &lt;value&gt;MySQL&lt;/value&gt;
+            &lt;value&gt;Redis&lt;/value&gt;
+        &lt;/set&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+</code></pre>
+<h4 id="属性的抽取"><a href="#属性的抽取" class="headerlink" title="属性的抽取"></a>属性的抽取</h4><p>在spring配置文件中导入util约束</p>
+<pre><code class="xml">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:util=&quot;http://www.springframework.org/schema/util&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd&quot;&gt;
+    
+</code></pre>
+<p>可以抽取下面的各个属性问公共部分，提高代码复用</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516103321.png" alt="image-20210516103314576"></p>
+<pre><code class="xml">&lt;!--list 属性抽取出来--&gt;
+    &lt;util:list id=&quot;bookList&quot;&gt;
+        &lt;value&gt;java入门到精通&lt;/value&gt;
+        &lt;value&gt;JavaWeb&lt;/value&gt;
+        &lt;value&gt;spring实战&lt;/value&gt;
+    &lt;/util:list&gt;
+
+    &lt;bean id=&quot;book&quot; class=&quot;com.lyj.pojo.Book&quot;&gt;
+        &lt;property name=&quot;books&quot; ref=&quot;bookList&quot;/&gt;
+    &lt;/bean&gt;
+</code></pre>
+<h3 id="IOC操作Bean管理"><a href="#IOC操作Bean管理" class="headerlink" title="IOC操作Bean管理"></a>IOC操作Bean管理</h3><p>Spring中有两种bean，一种普通bean，另一种工厂bean</p>
+<p>工厂bean:在配置文件定义bean类型就是返回类型</p>
+<p>第一步：创建类：让这个类作为工厂bean，实现接口FactoryBean</p>
+<p>第二步：实现接口里面的方法，在实现的方法中定义返回的bean类</p>
+<pre><code class="java">public class MyFactory implements FactoryBean&lt;People&gt; &#123;
+    @Override
+    public People getObject() throws Exception &#123;
+        People people = new People();
+        people.setName(&quot;陈皮&quot;);
+        people.setSex(&quot;男&quot;);
+        people.setAge(18);
+        return people;
+    &#125;
+    @Override
+    public Class&lt;?&gt; getObjectType() &#123;
+        return null;
+    &#125;
+    @Override
+    public boolean isSingleton() &#123;
+        return false;
+    &#125;
+&#125;
+</code></pre>
+<p>spring容器中</p>
+<pre><code class="xml">&lt;bean id=&quot;myFactory&quot; class=&quot;com.lyj.factory.MyFactory&quot;/&gt;
+</code></pre>
+<h3 id="bean的作用域"><a href="#bean的作用域" class="headerlink" title="bean的作用域"></a>bean的作用域</h3><p>spring在默认情况下是单例</p>
+<p>在<bean>标签里面有一个scope属性值可以设置bean是单例还是多例</bean></p>
+<p>第一个值 默认值：singleton，表示是单实例，在加载配置文件是就进行了创建对象</p>
+<p>第二个值 propertype，表示是多实例，在getBean获取对象的时候才创建对象</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516110544.png" alt="image-20210516110544750"></p>
+<h3 id="bean生命周期"><a href="#bean生命周期" class="headerlink" title="bean生命周期"></a>bean生命周期</h3><ol>
+<li><p>通过构造器创建bean实例（无惨构造）</p>
+</li>
+<li><p>为bean的属性设置值和对其他bean引用（调用set方法）</p>
+</li>
+<li><p>把bean实例传递bean后置处理器的方法</p>
+</li>
+<li><p>调用bean的初始化的方法（需要进行配置初始化的方法）</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516142523.png" alt="image-20210516142441130"></p>
+</li>
+<li><p>把bean实例传递bean后置处理器的方法</p>
+</li>
+<li><p>bean可以使用了（对象获取到了）</p>
+</li>
+<li><p>当容器关闭时候，调用bean的销毁的方法（需要进行配置销毁的方法）</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516142602.png" alt="image-20210516142602135"></p>
+</li>
+</ol>
+<p>第三步和第五部需要自己写一个类继承BeanPostProcessor</p>
+<pre><code class="java">public class MyBeanPost implements BeanPostProcessor &#123;
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException &#123;
+        System.out.println(&quot;在初始化之前执行&quot;);
+        return null;
+    &#125;
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException &#123;
+        System.out.println(&quot;在初始化之后执行&quot;);
+        return null;
+    &#125;
+&#125;
+</code></pre>
+<p>spring.xml</p>
+<pre><code class="xml">  &lt;!--配置后置处理器--&gt;
+    &lt;bean id=&quot;myBeanPost&quot; class=&quot;com.lyj.bean.MyBeanPost&quot;/&gt;
+</code></pre>
+<h3 id="自动装配"><a href="#自动装配" class="headerlink" title="自动装配"></a>自动装配</h3><h4 id="xml方式"><a href="#xml方式" class="headerlink" title="xml方式"></a>xml方式</h4><p>实现自动装配 bean的标签属性autowire，配置自动装配，autowire属性常用两个值byName根据属性名称注入，注入值bean的id值和类属性名称一样 </p>
+<p>byType根据属性类型注入</p>
+<h4 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h4><p>spring开启注解扫描</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+    &lt;context:component-scan base-package=&quot;com.lyj&quot;/&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>还可以使用自己的filter</p>
+<p>use-default-filters=”false” 表示不使用默认的filter，自己配置filter</p>
+<p>context:include-filter：设置扫描那些内容</p>
+<p>context:exclude-filter：设置不扫描的内容</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd 
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;context:component-scan base-package=&quot;com.lyj&quot; use-default-filters=&quot;false&quot;&gt;
+        &lt;!--只扫描@Controller注解--&gt;
+        &lt;context:include-filter type=&quot;annotation&quot; expression=&quot;org.springframework.stereotype.Controller&quot;/&gt;
+    &lt;/context:component-scan&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>@Autowire：根据属性类型进行自动装配 （byType）</p>
+<p>@Qualifier：根据属性名称进行自动装配  （byName)</p>
+<p>@Resource：根据属性名称或者类型进行自动装配  （先byName如果没有再byType)</p>
+<p>@Value：普通值的注入</p>
+<h2 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h2><p>AOP：面向切面编程，利用AOP可以对业务逻辑的各个部分进行隔离，从而使得业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时提高了开发的效率。</p>
+<p>通俗的说：不通过修改源代码方式，在主干功能里面添加新功能</p>
+<h3 id="Aop底层"><a href="#Aop底层" class="headerlink" title="Aop底层"></a>Aop底层</h3><p>AOP的底层使用的是动态代理实现的</p>
+<p>1、JDK动态代理：有接口的情况下，使用JDK动态代理，创建<strong>接口实现类代理对象</strong>，增强类的方法</p>
+<p>2、cglib动态代理：没有接口的情况下，使用cglib动态代理，创建<strong>当前类子类的代理对象</strong></p>
+<h5 id="jdk动态案例"><a href="#jdk动态案例" class="headerlink" title="jdk动态案例"></a>jdk动态案例</h5><p>UserDaoImpl是UserDao接口的实现类</p>
+<pre><code class="java">public class MyJDKProxy &#123;
+    public static void main(String[] args) &#123;
+        //创建接口实现代理
+        Class[] interfaces=&#123;UserDao.class&#125;;
+        UserDao userDaoImpl=new UserDaoImpl();
+        //要使用接口类
+        UserDao userDaoProxy =(UserDao) Proxy.newProxyInstance(MyJDKProxy.class.getClassLoader(), interfaces, new MyProxyUserDaoImpl(userDaoImpl));
+        System.out.println(userDaoProxy.add(1, 2));
+    &#125;
+
+&#125;
+class MyProxyUserDaoImpl implements InvocationHandler &#123;
+    private Object object;
+
+    public MyProxyUserDaoImpl(Object object) &#123;
+        this.object = object;
+    &#125;
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;
+        //方法执行前
+        System.out.println(&quot;方法之前执行。。。&quot;+method.getName()+&quot; :传递的参数。。。&quot;+ Arrays.toString(args));
+        //被增强的方法执行
+        Object res = method.invoke(object, args);
+        //方法执行之后
+        System.out.println(&quot;方法执行之后。。。&quot;+object);
+        return res;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516185307.png" alt="image-20210516185300853"></p>
+<h3 id="Aop术语"><a href="#Aop术语" class="headerlink" title="Aop术语"></a>Aop术语</h3><p>1、连接点：类里面的那些方法<strong>可以被增强</strong>，这些方法称为连接点</p>
+<p>2、切入点：<strong>实际被增强</strong>的方法，称为切入点 </p>
+<p>3、通知（增强）：实际增强的逻辑部分称为通知，通知类型：前置通知、后置通知、环绕通知、异常通知、最终通知（finally）</p>
+<p>4、切面：把通知应用到切入点的过程</p>
+<h4 id="切入点表达式"><a href="#切入点表达式" class="headerlink" title="切入点表达式"></a>切入点表达式</h4><p>切入点表达式作用：知道对哪个类里面的哪个方法进行增强</p>
+<p>语法结构：execution([权限修饰符] [返回类型] [类全路径] [类全路径] [方法名称] ([参数列表]))。</p>
+<pre><code>例如：executon(* *com.lyj.dao.BookDao.add(..)) 或者executon(* *com.lyj.dao.BookDao.*(..))或者executon(* *com.lyj.dao.*.*(..))
+</code></pre>
+<h4 id="AOP操作（AspectJ注解）"><a href="#AOP操作（AspectJ注解）" class="headerlink" title="AOP操作（AspectJ注解）"></a>AOP操作（AspectJ注解）</h4><p>1、创建类，在类里定义方法</p>
+<p>2、创建增强类（编写增强逻辑）</p>
+<p>3、进行通知的配置</p>
+<p>​    1、在spring配置文件中，开启注解扫描</p>
+<p>​    2、使用注解创建User和UserProxy对象</p>
+<p>​    3、在增强类上面添加注解@Aspect</p>
+<p>​    4、在spring配置文件中开启代理对象</p>
+<h5 id="Aop的实现代码"><a href="#Aop的实现代码" class="headerlink" title="Aop的实现代码"></a>Aop的实现代码</h5><p>1、导入依赖</p>
+<pre><code class="xml">&lt;!-- https://mvnrepository.com/artifact/org.springframework/spring-aop --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+    &lt;version&gt;5.3.3&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-aspects&lt;/artifactId&gt;
+    &lt;version&gt;5.3.3&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>2、创建类</p>
+<pre><code class="java">@Component
+public class User &#123;
+    public void addUser()&#123;
+        System.out.println(&quot;===执行User对象的addUser()方法===&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>3、创建增强类</p>
+<pre><code class="java">@Aspect
+@Component
+public class UserProxy &#123;
+    @Before(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+    public void before()&#123;
+        System.out.println(&quot;前置通知。。。&quot;);
+    &#125;
+    @AfterReturning(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+    public void afterReturning()&#123;
+        System.out.println(&quot;后置通知。。。&quot;);
+    &#125;
+    @After(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+    public void after()&#123;
+        System.out.println(&quot;最终通知。。。&quot;);
+    &#125;
+    @AfterThrowing(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+    public void afterThrowing()&#123;
+        System.out.println(&quot;异常通知。。。&quot;);
+    &#125;
+    @Around(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+    public void around(ProceedingJoinPoint point) throws Throwable &#123;
+        System.out.println(&quot;环绕通知前。。。&quot;);
+        point.proceed();
+        System.out.println(&quot;环绕通知后。。。&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>​    注：将相同的切入点进行抽取</p>
+<pre><code class="java">@Pointcut(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+public void point()&#123;
+&#125;
+@Before(value = &quot;point()&quot;)
+public void before()&#123;
+    System.out.println(&quot;前置通知。。。&quot;);
+&#125;
+</code></pre>
+<p>4、spring配置文件进行配置</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;
+
+    &lt;!--开启注解--&gt;
+    &lt;context:component-scan base-package=&quot;com.lyj.aspectj&quot;/&gt;
+    &lt;!--开启Aspect生成代理对象--&gt;
+    &lt;aop:aspectj-autoproxy/&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>5、测试类</p>
+<pre><code class="java"> @Test
+    public void testAopAnno()&#123;
+        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;application.xml&quot;);
+        User user = context.getBean(&quot;user&quot;, User.class);
+        user.addUser();
+    &#125;
+</code></pre>
+<p>6、结果：可以看出通知的先后顺序</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516201046.png" alt="image-20210516201046467"></p>
+<p>​    当出现异常时的异常通知：后置通知和环绕通知后不执行了，而执行了异常通知</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516201221.png" alt="image-20210516201221015"></p>
+<p>如果有多个增强类对同一方法进行增强时，在增强类上面添加@Order(数字类型值)，数字越小优先级越高</p>
+<h5 id="完全使用注解开发（将java配置类用来代替spring的xml文件）"><a href="#完全使用注解开发（将java配置类用来代替spring的xml文件）" class="headerlink" title="完全使用注解开发（将java配置类用来代替spring的xml文件）"></a>完全使用注解开发（将java配置类用来代替spring的xml文件）</h5><pre><code class="java">@Configuration//相当于配置类
+@ComponentScan(basePackages = &#123;&quot;com.lyj.aspectj&quot;&#125;)//开启注解扫描
+@EnableAspectJAutoProxy(proxyTargetClass = true)//代替注解中的&lt;aop:aspectj-autoproxy/&gt;
+public class AspectConfig &#123;
+&#125;
+</code></pre>
+<h4 id="AOP操作（AspectJ配置文件）"><a href="#AOP操作（AspectJ配置文件）" class="headerlink" title="AOP操作（AspectJ配置文件）"></a>AOP操作（AspectJ配置文件）</h4><p>1、创建两个类，增强类和被增强类，创建方法</p>
+<p>2、在spring配置文件中创建两个类对象</p>
+<pre><code class="xml"> &lt;!--创建对象--&gt;
+&lt;bean id=&quot;user&quot; class=&quot;com.lyj.aspectj.User&quot;/&gt;
+&lt;bean id=&quot;userProxy&quot; class=&quot;com.lyj.aspectj.UserProxy&quot;/&gt;
+</code></pre>
+<p>3、在spring配置文件中配置切入点</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd 
+                           http://www.springframework.org/schema/aop 
+                           http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;
+    &lt;!--创建对象--&gt;
+    &lt;bean id=&quot;user&quot; class=&quot;com.lyj.aspectj.User&quot;/&gt;
+    &lt;bean id=&quot;userProxy&quot; class=&quot;com.lyj.aspectj.UserProxy&quot;/&gt;
+    &lt;!--配置aop增强--&gt;
+    &lt;aop:config&gt;
+        &lt;!--切入点--&gt;
+        &lt;aop:pointcut id=&quot;point&quot; expression=&quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;/&gt;
+        &lt;!--配置切面--&gt;
+        &lt;aop:aspect ref=&quot;userProxy&quot;&gt;
+            &lt;!--增强在具体的方法上--&gt;
+            &lt;aop:before method=&quot;before&quot; pointcut-ref=&quot;point&quot;/&gt;
+        &lt;/aop:aspect&gt;
+    &lt;/aop:config&gt;
+&lt;/beans&gt;
+</code></pre>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516203302.png" alt="image-20210516203302663"></p>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
       </tags>
   </entry>
 </search>
