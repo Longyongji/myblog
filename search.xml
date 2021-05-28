@@ -1,144 +1,375 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Mybatis逆向工程使用</title>
-    <url>/2021/05/14/Mybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Mybatis逆向工程使用"><a href="#Mybatis逆向工程使用" class="headerlink" title="Mybatis逆向工程使用"></a>Mybatis逆向工程使用</h1><p>官方地址：<a href="https://github.com/mybatis/generator">mybatis/generator: A code generator for MyBatis. (github.com)</a></p>
-<p>导入需要的jar包</p>
-<pre><code class="xml">&lt;dependency&gt;
-    &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
-    &lt;artifactId&gt;mybatis-generator&lt;/artifactId&gt;
-    &lt;version&gt;1.4.0&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
-    &lt;artifactId&gt;mybatis-generator-maven-plugin&lt;/artifactId&gt;
-    &lt;version&gt;1.4.0&lt;/version&gt;
-&lt;/dependency&gt;
+    <title>IO流复习</title>
+    <url>/2021/05/28/IO%E6%B5%81/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="IO流复习"><a href="#IO流复习" class="headerlink" title="IO流复习"></a>IO流复习</h1><h2 id="File创建的几种方式"><a href="#File创建的几种方式" class="headerlink" title="File创建的几种方式"></a>File创建的几种方式</h2><p>FiLe类的使用</p>
+<p>1、File类的一个对象，代表一个文件或一个文件目录(俗称:文件夹)</p>
+<p>2、File类声明在java.io包下</p>
+<p>3、File类中涉及到关于文件或文件目录的创建、删除、重命名、修改时间、文件大小等方法，并未涉及到写入或读取文件内容的操作。如果需要读取或写入文件内容，必须使用Io流来完成。</p>
+<p>4、后续File类的对象常会作为参照写入io流的构造器中</p>
+<pre><code class="java">//构造器1
+File file = new File(&quot;hello.txt&quot;);//相对于当前module
+File file1 = new File(&quot;E:\\Java\\复习\\IO\\IOStudy01&quot;);
+System.out.println(file);
+System.out.println(file1);
+//构造器2
+File file2 = new File(&quot;E:\\Java\\复习\\IO\\IOStudy01&quot;, &quot;javaSenior&quot;);
+System.out.println(file2);
+//构造器3
+File file3 = new File(file2, &quot;hi.txt&quot;);
+System.out.println(file3);
 </code></pre>
-<p>在项目名称下创建generatorConfig.xml（与src同一级别），各个组件的官方介绍<a href="http://mybatis.org/generator/configreference/xmlconfig.html">MyBatis Generator Core – MyBatis Generator XML Configuration File Reference</a></p>
-<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;!DOCTYPE generatorConfiguration
-        PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;
-        &quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot;&gt;
-
-&lt;generatorConfiguration&gt;
-    &lt;context id=&quot;DB2Tables&quot; targetRuntime=&quot;MyBatis3&quot;&gt;
-        &lt;jdbcConnection driverClass=&quot;com.mysql.cj.jdbc.Driver&quot;
-                        connectionURL=&quot;jdbc:mysql://localhost:3306/bjpowernode?serverTimezone=UTC&quot;
-                        userId=&quot;root&quot;
-                        password=&quot;123456&quot;&gt;
-        &lt;/jdbcConnection&gt;
-
-        &lt;javaTypeResolver &gt;
-            &lt;property name=&quot;forceBigDecimals&quot; value=&quot;false&quot; /&gt;
-        &lt;/javaTypeResolver&gt;
-        &lt;!--javaModelGenerator,指定javaBean的生成策略--&gt;
-        &lt;javaModelGenerator targetPackage=&quot;com.lyj.pojo&quot; targetProject=&quot;.\src\main\java&quot;&gt;
-            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
-            &lt;property name=&quot;trimStrings&quot; value=&quot;true&quot; /&gt;
-        &lt;/javaModelGenerator&gt;
-        &lt;!--sqlMapGenerator指定sql映射（Mapper）的生成策略--&gt;
-        &lt;sqlMapGenerator targetPackage=&quot;com.lyj.dao.xml&quot;  targetProject=&quot;.\src\main\java&quot;&gt;
-            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
-        &lt;/sqlMapGenerator&gt;
-        &lt;!--javaClientGenerator指定mapper接口所在位置--&gt;
-        &lt;javaClientGenerator type=&quot;XMLMAPPER&quot; targetPackage=&quot;com.lyj.dao&quot;  targetProject=&quot;.\src\main\java&quot;&gt;
-            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
-        &lt;/javaClientGenerator&gt;
-        &lt;!--指定逆向分析哪些表：根据这些表创建javabean--&gt;
-        &lt;table tableName=&quot;dept&quot; domainObjectName=&quot;Department&quot;/&gt;
-        &lt;table tableName=&quot;emp&quot; domainObjectName=&quot;Employee&quot;/&gt;
-    &lt;/context&gt;
-&lt;/generatorConfiguration&gt;
+<h3 id="File常用方法"><a href="#File常用方法" class="headerlink" title="File常用方法"></a>File常用方法</h3><p>public String getAbsolutePath()：获取绝对路径</p>
+<p>public String getPath() ：获取路径</p>
+<p>public String getName()：获取名称</p>
+<p>public String getParent()：获取上层文件目录路径。若无，返回null</p>
+<p>public long length()：获取文件长度（即:字节数）。不能获取目录的长度。</p>
+<p>public long lastModified()：获取最后一次的修改时间，毫秒值</p>
+<p>public String[] list()：获取指定目录下的所有文件或者文件目录的名称数组</p>
+<p>public File[] listFiles()：获取指定目录下的所有文件或者文件目录的File数组</p>
+<p>文件重命名</p>
+<pre><code class="java">File file = new File(&quot;hello.txt&quot;);//重命名的文件
+File file1 = new File(&quot;E:\\Java\\复习\\IO\\IOStudy01\\hi.txt&quot;);//必须不存在的
+boolean b = file.renameTo(file1);
+System.out.println(&quot;是否重命名成功：&quot;+b );
 </code></pre>
-<p>在测试类里面进行运行代码</p>
+<h3 id="File类判断方法"><a href="#File类判断方法" class="headerlink" title="File类判断方法"></a>File类判断方法</h3><p>public boolean isDirectory()：判断是否是文件目录</p>
+<p>public boolean isFile()：判断是否是文件</p>
+<p>public boolean exists()：判断是否存在</p>
+<p>public boolean canRead( )：判断是否可读</p>
+<p>public boolean canwrite()：判断是否可写</p>
+<p>public boolean isHidden()：判断是否隐藏</p>
+<h3 id="File文件的创建"><a href="#File文件的创建" class="headerlink" title="File文件的创建"></a>File文件的创建</h3><p>public boolean createNewFile()：创建文件。若文件存在，则不创建，返回false</p>
+<p>public boolean mkdir()：创建文件目录。如果此文件目录存在，就不创建了。如果此文件目录的上层目录不存在，也不创建</p>
+<p>public boolean mkdirs()：创建文件目录。如果上层文件目录不存在，一并创建</p>
+<p>public boolean delete()：删除文件或者文件夹</p>
 <pre><code class="java">@Test
-    public void generator() throws IOException, XMLParserException, InvalidConfigurationException, SQLException, InterruptedException &#123;
-        List&lt;String&gt; warnings = new ArrayList&lt;String&gt;();
-        boolean overwrite = true;
-        File configFile = new File(&quot;generatorConfig.xml&quot;); //xml地址
-        ConfigurationParser cp = new ConfigurationParser(warnings);
-        Configuration config = cp.parseConfiguration(configFile);
-        DefaultShellCallback callback = new DefaultShellCallback(overwrite);
-        MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
-        myBatisGenerator.generate(null);
-    &#125;
-</code></pre>
-<p>最后就可以生成代码和文件</p>
-<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514094825.png" alt="image-20210514094825578"></p>
-<p>如何使用targetRuntime=”MyBatis3”会产生一些条件查询的方法，因此要多一写xxxExample的类，具体看<a href="http://mybatis.org/generator/configreference/context.html">MyBatis Generator Core – The  Element</a></p>
-<table>
-<thead>
-<tr>
-<th>targetRuntime的值</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>MyBatis3</strong></td>
-<td>使用该值，MBG将生成与MyBatis 3.0或更高版本以及JSE 5.0或更高版本兼容的对象（例如Java模型和mapper接口将使用通用类型）。 这些生成的对象中的“示例”方法实际上支持无限的动态where子句。 此外，使用这些生成器生成的Java对象支持许多JSE 5.0功能，包括参数化类型和注释。</td>
-</tr>
-<tr>
-<td><strong>MyBatis3Simple</strong></td>
-<td>使用该值，MBG将生成与MyBatis 3.0或更高版本以及JSE 5.0或更高版本兼容的对象（例如Java模型和mapper接口将使用通用类型）。 用此目标运行时生成的映射器是非常基本的CRUD操作，仅没有“示例”方法且动态SQL很少。 用这些生成器生成的Java对象支持许多JSE 5.0功能，包括参数化类型和注释。</td>
-</tr>
-</tbody></table>
-<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514094620.png" alt="image-20210514094613433"></p>
-<p>测试</p>
-<pre><code class="java">@Test
-public void mytest01() throws IOException &#123;
-    String resource = &quot;mybatis-config.xml&quot;;
-    InputStream inputStream = Resources.getResourceAsStream(resource);
-    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-    SqlSession sqlSession = sqlSessionFactory.openSession();
-    
-    EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
-    //使用EmployeeExample来封装条件
-    EmployeeExample example = new EmployeeExample();
-    //创建一个Criteria,这个criteria就是拼装条件
-    EmployeeExample.Criteria criteria = example.createCriteria();
-    criteria.andEnameLike(&quot;%S%&quot;);
-    //第二个criteria，使用or来拼接上,或满足criteria或者满足criteria2
-    EmployeeExample.Criteria criteria2 = example.createCriteria();
-    criteria2.andEnameLike(&quot;%T%&quot;);
-    //拼接第二个criteria
-    example.or(criteria2);
-    
-    List&lt;Employee&gt; employees = mapper.selectByExample(example);
-    for (Employee employee : employees) &#123;
-        System.out.println(employee.getEname());
+public void test03() throws IOException &#123;
+    File file = new File(&quot;hi.txt&quot;);
+    if (file.exists())&#123;
+        file.delete();
+        System.out.println(&quot;文件删除成功&quot;);
+    &#125;else &#123;
+        file.createNewFile();
+        System.out.println(&quot;文件创建成功&quot;);
     &#125;
 &#125;
 </code></pre>
-<p>运行结果：</p>
-<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514133215.png" alt="image-20210514133215219"></p>
+<h2 id="javaIO"><a href="#javaIO" class="headerlink" title="javaIO"></a>javaIO</h2><p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210523151243.png" alt="image-20210523151235824"></p>
+<h3 id="流的分类"><a href="#流的分类" class="headerlink" title="流的分类"></a>流的分类</h3><p>按操作数据单位不同分为：字节流（8bit），字符流（16bit）</p>
+<p>按数据流的流向不同分为：输入流，输出流</p>
+<p>按流的角色的不同分为：节点流，处理流</p>
+<table>
+<thead>
+<tr>
+<th>（<strong>抽象</strong>基类)</th>
+<th>字节流</th>
+<th>字符流</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>输入流</td>
+<td>InputStream</td>
+<td>Reader</td>
+</tr>
+<tr>
+<td>输出流</td>
+<td>OutputStream</td>
+<td>Writer</td>
+</tr>
+</tbody></table>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210525204208.png" alt="image-20210525204200807" style="zoom:50%;">
+
+<p>蓝色的是要重点注意的</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210523152156.png" alt="image-20210523152156213" style="zoom:50%;">
+
+<h3 id="字符流"><a href="#字符流" class="headerlink" title="字符流"></a>字符流</h3><h4 id="FileReader"><a href="#FileReader" class="headerlink" title="FileReader"></a>FileReader</h4><p>说明：</p>
+<p>1、read()的理解：返回读入的一个字符，并输出到控制台</p>
+<p>2、异常的处理：为了保证流资源一定可以执行关闭操作，需要使用try-catch-finally</p>
+<p>3、读入的文件一定要存在，否则会报FileNotFoundException</p>
+<p>例如：hi.txt文件内容读入程序中，并输出到控制台</p>
+<pre><code class="java">@Test
+public void testFileReader() &#123;
+
+    //1、实例化File类的对象，指明要操作的文件
+    File file = new File(&quot;hi.txt&quot;);
+    System.out.println(file.getAbsolutePath());
+    //2、提供具体的流
+    FileReader reader = null;
+    try &#123;
+        reader = new FileReader(file);
+        //3、数据的读入，read()：返回读入的一个字符，如果达到文件末尾，返回-1
+        //方法一
+        int data = reader.read();
+        while (data != -1) &#123;
+            System.out.print((char) data);
+            data = reader.read();
+        &#125;
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        //4、流的关闭操作
+        try &#123;
+            if (reader != null) &#123;
+                reader.close();
+            &#125;
+        &#125; catch (IOException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>上述代码的第三步read的优化</p>
+<pre><code class="java">//方式二
+//read(char[] cbuf)：返回每次读入cbuf数据中的字符的个数，如果达到文件末尾返回-1；
+char[] buffer=new char[5];
+int len;
+while ((len=reader.read(buffer))!=-1)&#123;
+    /*for (int i = 0; i &lt; len; i++) &#123;
+                    System.out.print(buffer[i]);
+       &#125;*/
+    String str=new String(buffer,0,len);
+    System.out.println(str);
+&#125;
+</code></pre>
+<h4 id="FileWriter"><a href="#FileWriter" class="headerlink" title="FileWriter"></a>FileWriter</h4><p>从内存中写出数据到硬盘的文件里</p>
+<p>说明：</p>
+<p>1、输出操作，对应的File可以不存在，不会报异常</p>
+<p>2、File对应的硬盘文件如果不存在，在输出的过程中，会自动创建此文件，</p>
+<p>​    File对应的硬盘文件如果存在：如果流使用的构造器是：FileWriter(file,false)/FileWriter(file)：对原有文件的覆盖</p>
+<p>​    如果使用的构造器是：FileWriter(file,true)：不会对原有文件覆盖，而是在原有文件基础上追加内容</p>
+<pre><code class="java">@Test
+public void testFileWriter() throws IOException &#123;
+    //1、提供File类的对象，指明写出到的文件
+    File file = new File(&quot;hello.txt&quot;);
+    //2、提供FileWriter的对象，用于数据的写出
+    FileWriter fileWriter = new FileWriter(file);
+    //3、写出的操作
+    fileWriter.write(&quot;I have a handsome,&quot;.toCharArray());
+    fileWriter.write(&quot;you need to have a dream!&quot;);
+    //4、流资源关闭
+    fileWriter.close();
+&#125;
+</code></pre>
+<h4 id="FileReader与FileWriter"><a href="#FileReader与FileWriter" class="headerlink" title="FileReader与FileWriter"></a>FileReader与FileWriter</h4><p>将一个文件通过FileReader读取文件，</p>
+<pre><code class="java">@Test
+public void testFileWriterWithFileReader() &#123;
+    //1、提供File类的对象，指明写出到的文件
+    File srcFile = new File(&quot;hello.txt&quot;);
+    File destFile = new File(&quot;hello2.txt&quot;);
+    FileReader fileReader = null;
+    FileWriter fileWriter = null;
+    try &#123;
+        //2、提供FileWriter的对象，用于数据的写出
+        fileReader = new FileReader(srcFile);
+        fileWriter = new FileWriter(destFile);
+        //3、数据的读入和写出操作
+        char[] buffer=new char[5];
+        int len;//记录每次读入到buffer数据的字符的个数
+        while ((len=fileReader.read(buffer))!=-1)&#123;
+            //每次写出len个字符
+            fileWriter.write(buffer,0,len);
+        &#125;
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        //4、流资源关闭
+        try &#123;
+            if (fileReader != null) &#123;
+                fileReader.close();
+            &#125;
+            if (fileWriter != null) &#123;
+                fileWriter.close();
+            &#125;
+        &#125; catch (IOException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h3 id="字节流"><a href="#字节流" class="headerlink" title="字节流"></a>字节流</h3><h4 id="FileInputStream与OutputStream"><a href="#FileInputStream与OutputStream" class="headerlink" title="FileInputStream与OutputStream"></a>FileInputStream与OutputStream</h4><p>操作和上面的FileReader和FileWriter一样的</p>
+<pre><code class="java">@Test
+public void testFileInputStream() &#123;
+    //造文件
+    File srcFile = new File(&quot;touxiang.png&quot;);
+    File destFile = new File(&quot;touxiang1.png&quot;);
+    //流
+    FileInputStream fileInputStream = null;
+    FileOutputStream fileOutputStream = null;
+    try &#123;
+        fileInputStream = new FileInputStream(srcFile);
+        fileOutputStream = new FileOutputStream(destFile);
+        byte[] buffer=new byte[1024];
+        int length;
+        while ((length=fileInputStream.read(buffer))!=-1)&#123;
+            fileOutputStream.write(buffer,0,length);
+        &#125;
+
+    &#125; catch (FileNotFoundException e) &#123;
+        e.printStackTrace();
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        try &#123;
+            if (fileInputStream != null) &#123;
+                fileInputStream.close();
+            &#125;
+            if (fileOutputStream != null) &#123;
+                fileOutputStream.close();
+            &#125;
+        &#125; catch (IOException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>读写字符可以使用缓冲流BufferedInputStream和BufferedOutputStream，来提高读写速度，</p>
+<p>读写字节可以使用BufferedReader和BufferedWriter与上诉类似</p>
+<p>提高读写速度的原因：内部提供一个缓冲区</p>
+<pre><code class="java">//使用缓冲流复制字节文件
+@Test
+public void testBuffFileInputStream() &#123;
+    //造文件
+    File srcFile = new File(&quot;touxiang.png&quot;);
+    File destFile = new File(&quot;touxiang1.png&quot;);
+    //流
+    FileInputStream fileInputStream = null;
+    FileOutputStream fileOutputStream = null;
+    BufferedInputStream bufferedInputStream = null;
+    BufferedOutputStream bufferedOutputStream = null;
+    try &#123;
+        //造流
+        fileInputStream = new FileInputStream(srcFile);
+        fileOutputStream = new FileOutputStream(destFile);
+        //造缓冲流
+        bufferedInputStream = new BufferedInputStream(fileInputStream);
+        bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = bufferedInputStream.read(buffer)) != -1) &#123;
+            bufferedOutputStream.write(buffer, 0, length);
+        &#125;
+
+    &#125; catch (FileNotFoundException e) &#123;
+        e.printStackTrace();
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        try &#123;
+            //要求先关闭外层的流，在关闭内层的流，因此先关缓冲流
+            if (bufferedInputStream != null) &#123;
+                bufferedInputStream.close();
+            &#125;
+            if (bufferedOutputStream != null) &#123;
+                bufferedInputStream.close();
+            &#125;
+            //关闭外层流的时候，内层流会自动关闭
+            if (fileInputStream != null) &#123;
+                fileInputStream.close();
+            &#125;
+            if (fileOutputStream != null) &#123;
+                fileOutputStream.close();
+            &#125;
+        &#125; catch (IOException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h4 id="转化流"><a href="#转化流" class="headerlink" title="转化流"></a>转化流</h4><p>处理流之二:转换流的使用</p>
+<p>1、转换流:属于字符流</p>
+<p>InputStreamReader：将一个字节的输入流转换为字符的输入流</p>
+<p>outputStreamwriter：将一个字符的输出流转换为字节的输出流</p>
+<p>2、作用:提供字节流与字符流之间的转换</p>
+<p>3、解码:字节、字节数组—&gt;字符数组、字符串</p>
+<p>​    编码:字符数组、字符串—&gt;字节、字节数组</p>
+<p>4、字符集</p>
+<p>ASCII：美国标准信息交换码。一个字节的7位可以表示。</p>
+<p>IS08859-1：拉丁码表。欧洲码表用一个字节的8位表示。</p>
+<p>GB2312：中国的中文编码表。最多两个字节编码所有字符</p>
+<p>GBK：中国的中文编码表升级，融合了更多的中文文字符号。最多两个字节编码</p>
+<p>Unicode：国际标准码，融合了目前人类使用的所有字符。为每个字符分配唯一的字符码。所有的文字都用两个字节来表示</p>
+<p>UTF-8：变长的编码方式，可用1-4个字节来表示一个字符。</p>
+<pre><code class="java">/*
+    InputStreamReader的使用，实现字节的输入流到字符的输入流的转换
+    * */
+@Test
+public void test01() throws IOException &#123;
+    FileInputStream fis1 = new FileInputStream(&quot;hello.txt&quot;);
+    InputStreamReader isr = new InputStreamReader(fis1, &quot;gbk&quot;);
+    char[] buffer=new char[10];
+    int len;
+    while ((len=isr.read(buffer))!=-1)&#123;
+        String str = new String(buffer, 0, len);
+        System.out.println(str);
+    &#125;
+    isr.close();
+&#125;
+</code></pre>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>序列化过程：将内存中的java对象报存到磁盘中或者通过网络传输出去，使用ObjectOutputStream是实现。</p>
+<p>反序列化：将磁盘文件中的对象还原为内存中的一个java对象。</p>
+<p>序列化</p>
+<pre><code class="java">@Test
+public void testObjectOutputStream()&#123;
+    ObjectOutputStream oos = null;
+    try &#123;
+        oos = new ObjectOutputStream(new FileOutputStream(&quot;object.dat&quot;));
+        oos.writeObject(new String(&quot;我爱北京天安门&quot;));
+
+        oos.flush();//刷新操作
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125;finally &#123;
+        if (oos!=null)&#123;
+            try &#123;
+                oos.close();
+            &#125; catch (IOException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>反序列化</p>
+<pre><code class="java"> @Test
+public void testObjectInputStream()&#123;
+    ObjectInputStream ois = null;
+    try &#123;
+        ois = new ObjectInputStream(new FileInputStream(&quot;object.dat&quot;));
+        Object obj = ois.readObject();
+        String str = (String) obj;
+        System.out.println(str);
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; catch (ClassNotFoundException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        if (ois!=null)&#123;
+            try &#123;
+                ois.close();
+            &#125; catch (IOException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>对象序列化</p>
+<p>对象虚满足如下的要求，方可序列化</p>
+<p>1、需要实现接口：Serializable</p>
+<p>2、当前类提供一个全局常量：serialVersionUID，随便写一个值，是用来反序列化时进行验证使用的</p>
+<pre><code class="java">public static final long serialVersionUID = 42L;
+</code></pre>
+<p>3、除了当前对象类需要实现Serializable接口之外。HIA必须保证其内部所有属性也必须是可序列化的。（默认情况下，基本数据类型可序列化）</p>
+<p>补充：ObjectOutputStream和ObjectInputStream不能序列化static和transient修饰的成员变量</p>
 ]]></content>
       <categories>
-        <category>mybatis</category>
+        <category>IO</category>
       </categories>
       <tags>
-        <tag>mybatis</tag>
+        <tag>java</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2021/04/16/hello-world/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><span id="more"></span>
-<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
   </entry>
   <entry>
     <title>Mybatis-plus学习使用</title>
@@ -310,6 +541,247 @@ public class MybatisPlusConfig &#123;
       </categories>
       <tags>
         <tag>mybatis-plus</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mybatis动态Sql</title>
+    <url>/2021/05/14/Mybatis%E5%8A%A8%E6%80%81Sql/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Mybatis动态Sql"><a href="#Mybatis动态Sql" class="headerlink" title="Mybatis动态Sql"></a>Mybatis动态Sql</h1><h2 id="if"><a href="#if" class="headerlink" title="if"></a>if</h2><p>test: 动态sql的判断条件</p>
+<p>问题：当第一个为空的时候会导致sql拼接错误。</p>
+<p>方法一：在where后加上一个1=1 后面的<if>标签里全部加上and（不推荐）。</if></p>
+<p>方法二：使用<where></where>标签</p>
+<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
+     resultType=&quot;Blog&quot;&gt;
+  SELECT * FROM BLOG
+  WHERE
+  &lt;if test=&quot;state != null&quot;&gt;
+    state = #&#123;state&#125;
+  &lt;/if&gt;
+  &lt;if test=&quot;title != null&quot;&gt;
+    AND title like #&#123;title&#125;
+  &lt;/if&gt;
+  &lt;if test=&quot;author != null and author.name != null&quot;&gt;
+    AND author_name like #&#123;author.name&#125;
+  &lt;/if&gt;
+&lt;/select&gt;
+</code></pre>
+<h3 id="where"><a href="#where" class="headerlink" title="where"></a>where</h3><p><em>where</em> 元素只会在子元素返回任何内容的情况下才插入 “WHERE” 子句。而且，若子句的开头为 “AND” 或 “OR”，<em>where</em> 元素也会将它们去除。</p>
+<p>问题：当<if>标签里的and写在后面就会出现sql拼接错误。</if></p>
+<p>使用<tirm>标签解决</tirm></p>
+<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
+     resultType=&quot;Blog&quot;&gt;
+  SELECT * FROM BLOG
+  &lt;where&gt;
+    &lt;if test=&quot;state != null&quot;&gt;
+         state = #&#123;state&#125;
+    &lt;/if&gt;
+    &lt;if test=&quot;title != null&quot;&gt;
+        AND title like #&#123;title&#125;
+    &lt;/if&gt;
+    &lt;if test=&quot;author != null and author.name != null&quot;&gt;
+        AND author_name like #&#123;author.name&#125;
+    &lt;/if&gt;
+  &lt;/where&gt;
+&lt;/select&gt;
+</code></pre>
+<h3 id="tirm"><a href="#tirm" class="headerlink" title="tirm"></a>tirm</h3><p>prefix：前缀，trim标签题中是整个字符串拼串后的结果。prefix给拼串后的整个字符串加一个前缀。</p>
+<p>prefixOverrides：前缀覆盖，去掉整个字符串前面多余的字符</p>
+<p>suffix：后缀拼串后的整个字符串加一个后缀。</p>
+<p>suffixOverride：后缀覆盖，去掉整个字符串后面多余的字符</p>
+<pre><code class="xml">&lt;trim prefix=&quot;WHERE&quot; prefixOverrides=&quot;AND |OR &quot;&gt;
+  ...
+&lt;/trim&gt;
+</code></pre>
+<h2 id="choose、when、otherwise"><a href="#choose、when、otherwise" class="headerlink" title="choose、when、otherwise"></a>choose、when、otherwise</h2><p>MyBatis 提供了 choose 元素，</p>
+<p>它有点像 Java 中的 switch 语句。</p>
+<p>when元素，它有点像 Java 中的 switch中的case语句。</p>
+<p>otherwise元素，它有点像 Java 中的 switch中的default 语句。</p>
+<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
+     resultType=&quot;Blog&quot;&gt;
+  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  &lt;choose&gt;
+    &lt;when test=&quot;title != null&quot;&gt;
+      AND title like #&#123;title&#125;
+    &lt;/when&gt;
+    &lt;when test=&quot;author != null and author.name != null&quot;&gt;
+      AND author_name like #&#123;author.name&#125;
+    &lt;/when&gt;
+    &lt;otherwise&gt;
+      AND featured = 1
+    &lt;/otherwise&gt;
+  &lt;/choose&gt;
+&lt;/select&gt;
+</code></pre>
+<h2 id="内置参数"><a href="#内置参数" class="headerlink" title="内置参数"></a>内置参数</h2><p>mybatis默认还有两个内置参数：</p>
+<p>​    _parameter：代表整个参数</p>
+<p>​        单个参数：_parameter就是这个参数</p>
+<p>​        多个参数：参数会被封装为一个map：_parameter就是</p>
+<p>​    _databaseId：如果配置了databaseIdProvider标签。</p>
+<p>​                        _databaseId就是代表当前数据库的别名mysql（指的是mysql或者oracle）</p>
+<h2 id="Bind"><a href="#Bind" class="headerlink" title="Bind"></a>Bind</h2><p>​    <code>bind</code> 元素允许你在 OGNL 表达式以外创建一个变量，并将其绑定到当前的上下文。比如：</p>
+<pre><code class="sql">&lt;select id=&quot;selectBlogsLike&quot; resultType=&quot;Blog&quot;&gt;
+  &lt;bind name=&quot;pattern&quot; value=&quot;&#39;%&#39; + _parameter.getTitle() + &#39;%&#39;&quot; /&gt;
+  SELECT * FROM BLOG
+  WHERE title LIKE #&#123;pattern&#125;
+&lt;/select&gt;
+</code></pre>
+<h2 id="mybatis缓存"><a href="#mybatis缓存" class="headerlink" title="mybatis缓存"></a>mybatis缓存</h2><h3 id="一级缓存：（本地缓存）"><a href="#一级缓存：（本地缓存）" class="headerlink" title="一级缓存：（本地缓存）"></a>一级缓存：（本地缓存）</h3><p>sqlSession级别的缓存。一级缓存是一直开启的；SqlSession级别的一个Mybatis缓存，与数据库同一次会话期间查询到的数据会放在本地缓存中</p>
+<p>以后如果需要后期相同的数据。直接从缓存中拿，没必要再去查询数据库</p>
+<p>一级缓存失效情况（没有使用到当前一级缓存的情况，效果就是，还需要再想数据库发出查询）</p>
+<p>1、sqlSession不同</p>
+<p>2、sqlSession相同，查询条件不同。（当前一级缓存中还没有这个数据）</p>
+<p>3、sqlSession相同，两个查询之间执行了增删该操作（这次增删改可能对当前数据有影响）</p>
+<p>4、sqlSession相同，手动清除一级缓存（缓存清空）</p>
+<h3 id="二级缓存：（全局缓存）"><a href="#二级缓存：（全局缓存）" class="headerlink" title="二级缓存：（全局缓存）"></a>二级缓存：（全局缓存）</h3><p>基于namespace级别的缓存：一个namespace对应一个二级缓存</p>
+<p>1、一个会话，查询一条数据，这个数据就会被放在当前会话的一级缓存中；</p>
+<p>2、如果当前会话关闭了，一级缓存中的数据会被保存到二级缓存中；新的会话查询信息，就可以参照二级缓存</p>
+<p>3、不同namespace查询胡的数据会放在自己对应的缓存中（mapper)</p>
+<p>要启用全局的二级缓存，只需要在你的 SQL 映射文件中添加一行：</p>
+<pre><code class="xml">&lt;cache/&gt;
+</code></pre>
+<p>基本上就是这样。这个简单语句的效果如下:</p>
+<ul>
+<li><p>映射语句文件中的所有 select 语句的结果将会被缓存。</p>
+</li>
+<li><p>映射语句文件中的所有 insert、update 和 delete 语句会刷新缓存。</p>
+</li>
+<li><p>缓存会使用最近最少使用算法（LRU, Least Recently Used）算法来清除不需要的缓存。</p>
+</li>
+<li><p>缓存不会定时进行刷新（也就是说，没有刷新间隔）。</p>
+</li>
+<li><p>缓存会保存列表或对象（无论查询方法返回哪种）的 1024 个引用。</p>
+</li>
+<li><p>缓存会被视为读/写缓存，这意味着获取到的对象并不是共享的，可以安全地被调用者修改，而不干扰其他调用者或线程所做的潜在修改。</p>
+<h3 id="缓存原理"><a href="#缓存原理" class="headerlink" title="缓存原理"></a>缓存原理</h3><p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514135140.png" alt="image-20210513164854481"></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mybatis逆向工程使用</title>
+    <url>/2021/05/14/Mybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Mybatis逆向工程使用"><a href="#Mybatis逆向工程使用" class="headerlink" title="Mybatis逆向工程使用"></a>Mybatis逆向工程使用</h1><p>官方地址：<a href="https://github.com/mybatis/generator">mybatis/generator: A code generator for MyBatis. (github.com)</a></p>
+<p>导入需要的jar包</p>
+<pre><code class="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-generator&lt;/artifactId&gt;
+    &lt;version&gt;1.4.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-generator-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;1.4.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>在项目名称下创建generatorConfig.xml（与src同一级别），各个组件的官方介绍<a href="http://mybatis.org/generator/configreference/xmlconfig.html">MyBatis Generator Core – MyBatis Generator XML Configuration File Reference</a></p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE generatorConfiguration
+        PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot;&gt;
+
+&lt;generatorConfiguration&gt;
+    &lt;context id=&quot;DB2Tables&quot; targetRuntime=&quot;MyBatis3&quot;&gt;
+        &lt;jdbcConnection driverClass=&quot;com.mysql.cj.jdbc.Driver&quot;
+                        connectionURL=&quot;jdbc:mysql://localhost:3306/bjpowernode?serverTimezone=UTC&quot;
+                        userId=&quot;root&quot;
+                        password=&quot;123456&quot;&gt;
+        &lt;/jdbcConnection&gt;
+
+        &lt;javaTypeResolver &gt;
+            &lt;property name=&quot;forceBigDecimals&quot; value=&quot;false&quot; /&gt;
+        &lt;/javaTypeResolver&gt;
+        &lt;!--javaModelGenerator,指定javaBean的生成策略--&gt;
+        &lt;javaModelGenerator targetPackage=&quot;com.lyj.pojo&quot; targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+            &lt;property name=&quot;trimStrings&quot; value=&quot;true&quot; /&gt;
+        &lt;/javaModelGenerator&gt;
+        &lt;!--sqlMapGenerator指定sql映射（Mapper）的生成策略--&gt;
+        &lt;sqlMapGenerator targetPackage=&quot;com.lyj.dao.xml&quot;  targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+        &lt;/sqlMapGenerator&gt;
+        &lt;!--javaClientGenerator指定mapper接口所在位置--&gt;
+        &lt;javaClientGenerator type=&quot;XMLMAPPER&quot; targetPackage=&quot;com.lyj.dao&quot;  targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+        &lt;/javaClientGenerator&gt;
+        &lt;!--指定逆向分析哪些表：根据这些表创建javabean--&gt;
+        &lt;table tableName=&quot;dept&quot; domainObjectName=&quot;Department&quot;/&gt;
+        &lt;table tableName=&quot;emp&quot; domainObjectName=&quot;Employee&quot;/&gt;
+    &lt;/context&gt;
+&lt;/generatorConfiguration&gt;
+</code></pre>
+<p>在测试类里面进行运行代码</p>
+<pre><code class="java">@Test
+    public void generator() throws IOException, XMLParserException, InvalidConfigurationException, SQLException, InterruptedException &#123;
+        List&lt;String&gt; warnings = new ArrayList&lt;String&gt;();
+        boolean overwrite = true;
+        File configFile = new File(&quot;generatorConfig.xml&quot;); //xml地址
+        ConfigurationParser cp = new ConfigurationParser(warnings);
+        Configuration config = cp.parseConfiguration(configFile);
+        DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+        MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
+        myBatisGenerator.generate(null);
+    &#125;
+</code></pre>
+<p>最后就可以生成代码和文件</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514094825.png" alt="image-20210514094825578"></p>
+<p>如何使用targetRuntime=”MyBatis3”会产生一些条件查询的方法，因此要多一写xxxExample的类，具体看<a href="http://mybatis.org/generator/configreference/context.html">MyBatis Generator Core – The  Element</a></p>
+<table>
+<thead>
+<tr>
+<th>targetRuntime的值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>MyBatis3</strong></td>
+<td>使用该值，MBG将生成与MyBatis 3.0或更高版本以及JSE 5.0或更高版本兼容的对象（例如Java模型和mapper接口将使用通用类型）。 这些生成的对象中的“示例”方法实际上支持无限的动态where子句。 此外，使用这些生成器生成的Java对象支持许多JSE 5.0功能，包括参数化类型和注释。</td>
+</tr>
+<tr>
+<td><strong>MyBatis3Simple</strong></td>
+<td>使用该值，MBG将生成与MyBatis 3.0或更高版本以及JSE 5.0或更高版本兼容的对象（例如Java模型和mapper接口将使用通用类型）。 用此目标运行时生成的映射器是非常基本的CRUD操作，仅没有“示例”方法且动态SQL很少。 用这些生成器生成的Java对象支持许多JSE 5.0功能，包括参数化类型和注释。</td>
+</tr>
+</tbody></table>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514094620.png" alt="image-20210514094613433"></p>
+<p>测试</p>
+<pre><code class="java">@Test
+public void mytest01() throws IOException &#123;
+    String resource = &quot;mybatis-config.xml&quot;;
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    
+    EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+    //使用EmployeeExample来封装条件
+    EmployeeExample example = new EmployeeExample();
+    //创建一个Criteria,这个criteria就是拼装条件
+    EmployeeExample.Criteria criteria = example.createCriteria();
+    criteria.andEnameLike(&quot;%S%&quot;);
+    //第二个criteria，使用or来拼接上,或满足criteria或者满足criteria2
+    EmployeeExample.Criteria criteria2 = example.createCriteria();
+    criteria2.andEnameLike(&quot;%T%&quot;);
+    //拼接第二个criteria
+    example.or(criteria2);
+    
+    List&lt;Employee&gt; employees = mapper.selectByExample(example);
+    for (Employee employee : employees) &#123;
+        System.out.println(employee.getEname());
+    &#125;
+&#125;
+</code></pre>
+<p>运行结果：</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514133215.png" alt="image-20210514133215219"></p>
+]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>mybatis</tag>
       </tags>
   </entry>
   <entry>
@@ -534,124 +1006,23 @@ public class MybatisPlusConfig &#123;
       </tags>
   </entry>
   <entry>
-    <title>Mybatis动态Sql</title>
-    <url>/2021/05/14/Mybatis%E5%8A%A8%E6%80%81Sql/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Mybatis动态Sql"><a href="#Mybatis动态Sql" class="headerlink" title="Mybatis动态Sql"></a>Mybatis动态Sql</h1><h2 id="if"><a href="#if" class="headerlink" title="if"></a>if</h2><p>test: 动态sql的判断条件</p>
-<p>问题：当第一个为空的时候会导致sql拼接错误。</p>
-<p>方法一：在where后加上一个1=1 后面的<if>标签里全部加上and（不推荐）。</if></p>
-<p>方法二：使用<where></where>标签</p>
-<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
-     resultType=&quot;Blog&quot;&gt;
-  SELECT * FROM BLOG
-  WHERE
-  &lt;if test=&quot;state != null&quot;&gt;
-    state = #&#123;state&#125;
-  &lt;/if&gt;
-  &lt;if test=&quot;title != null&quot;&gt;
-    AND title like #&#123;title&#125;
-  &lt;/if&gt;
-  &lt;if test=&quot;author != null and author.name != null&quot;&gt;
-    AND author_name like #&#123;author.name&#125;
-  &lt;/if&gt;
-&lt;/select&gt;
+    <title>Hello World</title>
+    <url>/2021/04/16/hello-world/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><span id="more"></span>
+<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
 </code></pre>
-<h3 id="where"><a href="#where" class="headerlink" title="where"></a>where</h3><p><em>where</em> 元素只会在子元素返回任何内容的情况下才插入 “WHERE” 子句。而且，若子句的开头为 “AND” 或 “OR”，<em>where</em> 元素也会将它们去除。</p>
-<p>问题：当<if>标签里的and写在后面就会出现sql拼接错误。</if></p>
-<p>使用<tirm>标签解决</tirm></p>
-<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
-     resultType=&quot;Blog&quot;&gt;
-  SELECT * FROM BLOG
-  &lt;where&gt;
-    &lt;if test=&quot;state != null&quot;&gt;
-         state = #&#123;state&#125;
-    &lt;/if&gt;
-    &lt;if test=&quot;title != null&quot;&gt;
-        AND title like #&#123;title&#125;
-    &lt;/if&gt;
-    &lt;if test=&quot;author != null and author.name != null&quot;&gt;
-        AND author_name like #&#123;author.name&#125;
-    &lt;/if&gt;
-  &lt;/where&gt;
-&lt;/select&gt;
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
 </code></pre>
-<h3 id="tirm"><a href="#tirm" class="headerlink" title="tirm"></a>tirm</h3><p>prefix：前缀，trim标签题中是整个字符串拼串后的结果。prefix给拼串后的整个字符串加一个前缀。</p>
-<p>prefixOverrides：前缀覆盖，去掉整个字符串前面多余的字符</p>
-<p>suffix：后缀拼串后的整个字符串加一个后缀。</p>
-<p>suffixOverride：后缀覆盖，去掉整个字符串后面多余的字符</p>
-<pre><code class="xml">&lt;trim prefix=&quot;WHERE&quot; prefixOverrides=&quot;AND |OR &quot;&gt;
-  ...
-&lt;/trim&gt;
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
 </code></pre>
-<h2 id="choose、when、otherwise"><a href="#choose、when、otherwise" class="headerlink" title="choose、when、otherwise"></a>choose、when、otherwise</h2><p>MyBatis 提供了 choose 元素，</p>
-<p>它有点像 Java 中的 switch 语句。</p>
-<p>when元素，它有点像 Java 中的 switch中的case语句。</p>
-<p>otherwise元素，它有点像 Java 中的 switch中的default 语句。</p>
-<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
-     resultType=&quot;Blog&quot;&gt;
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
-  &lt;choose&gt;
-    &lt;when test=&quot;title != null&quot;&gt;
-      AND title like #&#123;title&#125;
-    &lt;/when&gt;
-    &lt;when test=&quot;author != null and author.name != null&quot;&gt;
-      AND author_name like #&#123;author.name&#125;
-    &lt;/when&gt;
-    &lt;otherwise&gt;
-      AND featured = 1
-    &lt;/otherwise&gt;
-  &lt;/choose&gt;
-&lt;/select&gt;
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
 </code></pre>
-<h2 id="内置参数"><a href="#内置参数" class="headerlink" title="内置参数"></a>内置参数</h2><p>mybatis默认还有两个内置参数：</p>
-<p>​    _parameter：代表整个参数</p>
-<p>​        单个参数：_parameter就是这个参数</p>
-<p>​        多个参数：参数会被封装为一个map：_parameter就是</p>
-<p>​    _databaseId：如果配置了databaseIdProvider标签。</p>
-<p>​                        _databaseId就是代表当前数据库的别名mysql（指的是mysql或者oracle）</p>
-<h2 id="Bind"><a href="#Bind" class="headerlink" title="Bind"></a>Bind</h2><p>​    <code>bind</code> 元素允许你在 OGNL 表达式以外创建一个变量，并将其绑定到当前的上下文。比如：</p>
-<pre><code class="sql">&lt;select id=&quot;selectBlogsLike&quot; resultType=&quot;Blog&quot;&gt;
-  &lt;bind name=&quot;pattern&quot; value=&quot;&#39;%&#39; + _parameter.getTitle() + &#39;%&#39;&quot; /&gt;
-  SELECT * FROM BLOG
-  WHERE title LIKE #&#123;pattern&#125;
-&lt;/select&gt;
-</code></pre>
-<h2 id="mybatis缓存"><a href="#mybatis缓存" class="headerlink" title="mybatis缓存"></a>mybatis缓存</h2><h3 id="一级缓存：（本地缓存）"><a href="#一级缓存：（本地缓存）" class="headerlink" title="一级缓存：（本地缓存）"></a>一级缓存：（本地缓存）</h3><p>sqlSession级别的缓存。一级缓存是一直开启的；SqlSession级别的一个Mybatis缓存，与数据库同一次会话期间查询到的数据会放在本地缓存中</p>
-<p>以后如果需要后期相同的数据。直接从缓存中拿，没必要再去查询数据库</p>
-<p>一级缓存失效情况（没有使用到当前一级缓存的情况，效果就是，还需要再想数据库发出查询）</p>
-<p>1、sqlSession不同</p>
-<p>2、sqlSession相同，查询条件不同。（当前一级缓存中还没有这个数据）</p>
-<p>3、sqlSession相同，两个查询之间执行了增删该操作（这次增删改可能对当前数据有影响）</p>
-<p>4、sqlSession相同，手动清除一级缓存（缓存清空）</p>
-<h3 id="二级缓存：（全局缓存）"><a href="#二级缓存：（全局缓存）" class="headerlink" title="二级缓存：（全局缓存）"></a>二级缓存：（全局缓存）</h3><p>基于namespace级别的缓存：一个namespace对应一个二级缓存</p>
-<p>1、一个会话，查询一条数据，这个数据就会被放在当前会话的一级缓存中；</p>
-<p>2、如果当前会话关闭了，一级缓存中的数据会被保存到二级缓存中；新的会话查询信息，就可以参照二级缓存</p>
-<p>3、不同namespace查询胡的数据会放在自己对应的缓存中（mapper)</p>
-<p>要启用全局的二级缓存，只需要在你的 SQL 映射文件中添加一行：</p>
-<pre><code class="xml">&lt;cache/&gt;
-</code></pre>
-<p>基本上就是这样。这个简单语句的效果如下:</p>
-<ul>
-<li><p>映射语句文件中的所有 select 语句的结果将会被缓存。</p>
-</li>
-<li><p>映射语句文件中的所有 insert、update 和 delete 语句会刷新缓存。</p>
-</li>
-<li><p>缓存会使用最近最少使用算法（LRU, Least Recently Used）算法来清除不需要的缓存。</p>
-</li>
-<li><p>缓存不会定时进行刷新（也就是说，没有刷新间隔）。</p>
-</li>
-<li><p>缓存会保存列表或对象（无论查询方法返回哪种）的 1024 个引用。</p>
-</li>
-<li><p>缓存会被视为读/写缓存，这意味着获取到的对象并不是共享的，可以安全地被调用者修改，而不干扰其他调用者或线程所做的潜在修改。</p>
-<h3 id="缓存原理"><a href="#缓存原理" class="headerlink" title="缓存原理"></a>缓存原理</h3><p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514135140.png" alt="image-20210513164854481"></p>
-</li>
-</ul>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
-      <categories>
-        <category>mybatis</category>
-      </categories>
-      <tags>
-        <tag>mybatis</tag>
-      </tags>
   </entry>
   <entry>
     <title>java后端解决跨域的几种方法</title>
@@ -847,6 +1218,160 @@ log4j.logger.java.sql.PreparedStatement=DEBUG
       </categories>
       <tags>
         <tag>mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>网络编程复习</title>
+    <url>/2021/05/28/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="网络编程复习"><a href="#网络编程复习" class="headerlink" title="网络编程复习"></a>网络编程复习</h1><h2 id="IP与InetAddress类"><a href="#IP与InetAddress类" class="headerlink" title="IP与InetAddress类"></a>IP与InetAddress类</h2><h4 id="IP地址："><a href="#IP地址：" class="headerlink" title="IP地址："></a>IP地址：</h4><p>1、唯一的标识Internet上的计算机（通信实体）IP地址=网络地址+主机地址</p>
+<p>2、本地回环地址：127.0.0.1     主机名：localhost</p>
+<p>3、IP地址分类方式2：IPV4和IPV6</p>
+<p>4、IP地址分类方式2：公网地址（万维网使用）和私有地址（局域网使用）。192.168.开头的就是私有地址，范围既为192.168.0.0-192.168.255.255，专门为组织机构内部使用</p>
+<p>通过InetAddress获取IP地址：</p>
+<pre><code class="java">public static void main(String[] args) &#123;
+    try &#123;
+         InetAddress address1  = InetAddress.getByName(&quot;192.168.10.14&quot;);
+            InetAddress address2  = InetAddress.getByName(&quot;www.baidu.com&quot;);
+            InetAddress address3 = InetAddress.getLocalHost();
+            System.out.println(&quot;IP为192.168.10.14的InetAddress对象：&quot;+address1);
+            System.out.println(&quot;百度的InetAddress对象：&quot;+address2);
+            System.out.println(&quot;本机的InetAddress对象：&quot;+address3);
+
+            System.out.println(&quot;获取主机域名：&quot;+address2.getHostName());
+            System.out.println(&quot;获取主机id地址：&quot;+address2.getHostAddress());
+    &#125; catch (UnknownHostException e) &#123;
+        e.printStackTrace();
+    &#125;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210524210914.png" alt="image-20210524210914400"></p>
+<h2 id="TCP与UDP"><a href="#TCP与UDP" class="headerlink" title="TCP与UDP"></a>TCP与UDP</h2><p>TCP协议:</p>
+<p>​    1、使用TCP协议前，须先建立TCP连接，形成传输数据通道</p>
+<p>​    2、传输前，采用“<strong>三次握手</strong>”方式，点对点通信，<strong>是可靠的</strong></p>
+<p>​    3、TCP协议进行通信的两个应用进程:客户端、服务端。</p>
+<p>​    4、在连接中可<strong>进行大数据量的传输</strong></p>
+<p>​    5、传输完毕，需<strong>释放已建立的连接，效率低</strong></p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210524212408.png" alt="image-20210524212408378"></p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210524212941.png" alt="image-20210524212941156"></p>
+<p>UDP协议:</p>
+<p>​    1、将数据、源、目的封装成数据包，<strong>不需要建立连接</strong></p>
+<p>​    2、每个数据报的大小限制在64K内</p>
+<p>​    3、发送不管对方是否准备好，接收方收到也不确认，故是不可靠的</p>
+<p>​    4、可以广播发送</p>
+<p>​    5、发送数据结束时<strong>无需释放资源，开销小，速度快</strong></p>
+<h2 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h2><p>Socket：端口号与IP地址的组合得出一个网络套接字：Socket</p>
+<p>客户端使用Socket</p>
+<p>​    1、创建Socket对象，指明服务器端的ip和端口号</p>
+<p>​    2、获取一个输出流，用于输出数据</p>
+<p>​    3、写出数据的操作</p>
+<p>​    4、资源的关闭</p>
+<h3 id="TCP方式发送数据"><a href="#TCP方式发送数据" class="headerlink" title="TCP方式发送数据"></a>TCP方式发送数据</h3><pre><code class="java">客户端发送内容给服务端，服务端将内容打印到控制台
+//客户端
+@Test
+public void client() &#123;
+    OutputStream os = null;
+    Socket socket = null;
+    try &#123;
+        //服务端地址
+        InetAddress address = InetAddress.getByName(&quot;127.0.0.1&quot;);
+        socket = new Socket(address, 8888);
+        os = socket.getOutputStream();
+        os.write(&quot;你好我是客户端&quot;.getBytes());
+
+    &#125; catch (UnknownHostException e) &#123;
+        e.printStackTrace();
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        if (os != null) &#123;
+            try &#123;
+                os.close();
+            &#125; catch (IOException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+        if (socket != null) &#123;
+            try &#123;
+                socket.close();
+            &#125; catch (IOException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>服务端使用Socket</p>
+<p>​    1、创建ServerSocket对象，指明自己的端口号</p>
+<p>​    2、调用accept()表示接受来自客户端的socket</p>
+<p>​    3、获取输入流</p>
+<p>​    4、读取输入流中的数据</p>
+<p>​    5、资源的关闭</p>
+<pre><code class="java">//服务端
+@Test
+public void server() throws IOException &#123;
+    ServerSocket serverSocket = null;
+    ByteArrayOutputStream baos = null;
+    Socket socket = null;
+    try &#123;
+        serverSocket = new ServerSocket(8888);
+        socket = serverSocket.accept();
+        InputStream is = socket.getInputStream();
+        /*不建议，可能会出现乱码，建议以下方式
+            int length;
+            byte[] buffer = new byte[20];
+            while ((length = is.read(buffer)) != -1) &#123;
+                String str = new String(buffer, 0, length);
+                System.out.println(str);
+            &#125;
+            */
+        baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[20];
+        int len;
+        while ((len = is.read(buffer)) != -1) &#123;
+            baos.write(buffer, 0, len);
+        &#125;
+        System.out.println(baos.toString());
+
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        baos.close();
+        socket.close();
+        serverSocket.close();
+    &#125;
+&#125;
+</code></pre>
+<h3 id="UDP方式发送数据"><a href="#UDP方式发送数据" class="headerlink" title="UDP方式发送数据"></a>UDP方式发送数据</h3><p>发送端：</p>
+<pre><code class="java">//发送端
+@Test
+public void sender() throws IOException &#123;
+    DatagramSocket socket = new DatagramSocket();
+    String str=&quot;我是UDP方式发送的导弹&quot;;
+    byte[] data=str.getBytes();
+    InetAddress iner = InetAddress.getLocalHost();
+    DatagramPacket packet = new DatagramPacket(data, 0, data.length, iner, 8888);
+    socket.send(packet);
+    socket.close();
+&#125;
+</code></pre>
+<p>接收端</p>
+<pre><code class="java">//接收端
+@Test
+public void receiver() throws IOException &#123;
+    DatagramSocket socket = new DatagramSocket(8888);
+    byte[] buffer=new byte[100];
+    DatagramPacket packet = new DatagramPacket(buffer,0,buffer.length);
+    socket.receive(packet);
+    System.out.println(new String(packet.getData(),packet.getLength()));
+    socket.close();
+&#125;
+</code></pre>
+]]></content>
+      <categories>
+        <category>网络编程</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1524,6 +2049,746 @@ public class AspectConfig &#123;
       </categories>
       <tags>
         <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>java集合复习</title>
+    <url>/2021/05/28/java%E9%9B%86%E5%90%88/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="java集合复习"><a href="#java集合复习" class="headerlink" title="java集合复习"></a>java集合复习</h1><p>1、集合与数组存储数据结构概述</p>
+<p>​    集合、数组都是对多个数据进行存储操作的结构，简称java容器</p>
+<p>​    说明：此时的存储，主要指的是内存层面的存储，不涉及持久化的存储</p>
+<p>2、数组存储的特点</p>
+<p>​    一旦初始化以后，其长度就确定了</p>
+<p>​    数组一段定义好，其元素类型也就确定了。我们也就只能操作指定类型的数据了</p>
+<p>3、数组存储的弊端</p>
+<p>​    一旦初始化以后，其长度就不可修改</p>
+<p>​    数组中提供的方法非常有限，对应添加、删除、插入数据等操作，非常不便，同时效率不高。</p>
+<p>​    获取数组中实际元素的个数的需求，数组没有现成的属性或方法可用</p>
+<p>​    数组存储数据的特点：序、可重复、对于无序、不可重复的需求，不能满足</p>
+<p>4、集合优点</p>
+<p>​    解决数组存储数据方面的弊端</p>
+<h2 id="集合的框架结构"><a href="#集合的框架结构" class="headerlink" title="集合的框架结构"></a>集合的框架结构</h2><p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210526090520.png" alt="image-20210526090512899"></p>
+<h3 id="Collection常用方法"><a href="#Collection常用方法" class="headerlink" title="Collection常用方法"></a>Collection常用方法</h3><ul>
+<li><ul>
+<li><table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>boolean</code></td>
+<td><code>add(E e)</code>  确保此集合包含指定的元素（可选操作）。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>addAll(Collection&lt;? extends E&gt; c)</code>  将指定集合中的所有元素添加到此集合（可选操作）。</td>
+</tr>
+<tr>
+<td><code>void</code></td>
+<td><code>clear()</code>  从此集合中删除所有元素（可选操作）。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>contains(Object o)</code>  如果此集合包含指定的元素，则返回 <code>true</code> 。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>containsAll(Collection&lt;?&gt; c)</code>  如果此集合包含指定 <code>集合</code>中的所有元素，则返回true。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>equals(Object o)</code>  将指定的对象与此集合进行比较以获得相等性。</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>hashCode()</code>  返回此集合的哈希码值。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>isEmpty()</code>  如果此集合不包含元素，则返回 <code>true</code> 。</td>
+</tr>
+<tr>
+<td><code>Iterator&lt;E&gt;</code></td>
+<td><code>iterator()</code>  返回此集合中的元素的迭代器。</td>
+</tr>
+<tr>
+<td><code>default Stream&lt;E&gt;</code></td>
+<td><code>parallelStream()</code>  返回可能并行的 <code>Stream</code>与此集合作为其来源。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>remove(Object o)</code>  从该集合中删除指定元素的单个实例（如果存在）（可选操作）。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>removeAll(Collection&lt;?&gt; c)</code>  删除指定集合中包含的所有此集合的元素（可选操作）。</td>
+</tr>
+<tr>
+<td><code>default boolean</code></td>
+<td><code>removeIf(Predicate&lt;? super E&gt; filter)</code>  删除满足给定谓词的此集合的所有元素。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>retainAll(Collection&lt;?&gt; c)</code>  仅保留此集合中包含在指定集合中的元素（可选操作）。</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>size()</code>  返回此集合中的元素数。</td>
+</tr>
+<tr>
+<td><code>default Spliterator&lt;E&gt;</code></td>
+<td><code>spliterator()</code>  创建一个<a href="../../java/util/Spliterator.html"><code>Spliterator</code></a>在这个集合中的元素。</td>
+</tr>
+<tr>
+<td><code>default Stream&lt;E&gt;</code></td>
+<td><code>stream()</code>  返回以此集合作为源的顺序 <code>Stream</code> 。</td>
+</tr>
+<tr>
+<td><code>Object[]</code></td>
+<td><code>toArray()</code>  返回一个包含此集合中所有元素的数组。</td>
+</tr>
+<tr>
+<td><code>&lt;T&gt; T[]</code></td>
+<td><code>toArray(T[] a)</code>  返回包含此集合中所有元素的数组;  返回的数组的运行时类型是指定数组的运行时类型。</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+<p>contains判断对象是否包含在集合中，我们要复写equals方法，如果不复写就会去比较原生的equals，就是比较地址，复写后比较内容</p>
+<h3 id="Iterator迭代器"><a href="#Iterator迭代器" class="headerlink" title="Iterator迭代器"></a>Iterator迭代器</h3><ol>
+<li><p>Iterator对象称为迭代器（设计模式的一种），主要用于遍历Collection集合中的元素</p>
+</li>
+<li><p>GOF给迭代器模式的定义为：提供一个方法访问一个容器（container）对象中各个元素，而不是需要暴露该对象的内部细节</p>
+</li>
+<li><p>Collection接口继承了java.lang.Iterable接口，该接口有一个iterator()方法，那么所有实现Collection接口的集合都有一个iterator()方法，用以返回一个实现了Iterator接口的对象</p>
+</li>
+<li><p>Iterator仅用于遍历集合，Iterator本身并不提供承装对象的能力，如果需要创建Iterator对象，则必须有一个被迭代的集合</p>
+</li>
+<li><p>集合对象每次调用iterator()方法都得到一个全新的迭代器，默认游标都在集合的第一个元素之前</p>
+</li>
+</ol>
+<pre><code class="java">public static void main(String []args)&#123;
+    Collection collection=new ArrayList();
+    collection.add(&quot;123&quot;);
+    collection.add(&quot;456&quot;);
+    collection.add(new Person(1,&quot;张三&quot;,18));
+    Iterator iterator = collection.iterator();
+    while (iterator.hasNext())&#123;
+        System.out.println(iterator.next());
+    &#125;
+&#125;
+</code></pre>
+<ul>
+<li><ul>
+<li><table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>default void</code></td>
+<td><code>forEachRemaining(Consumer&lt;? super E&gt; action)</code>  对每个剩余元素执行给定的操作，直到所有元素都被处理或动作引发异常。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>hasNext()</code>  如果迭代具有更多元素，则返回 <code>true</code> 。</td>
+</tr>
+<tr>
+<td><code>E</code></td>
+<td><code>next()</code>  返回迭代中的下一个元素。</td>
+</tr>
+<tr>
+<td><code>default void</code></td>
+<td><code>remove()</code>  从底层集合中删除此迭代器返回的最后一个元素（可选操作）。</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+<p>部分实现类：</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210527155807.png" alt="image-20210527155807467" style="zoom:50%;">
+
+<h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><ul>
+<li>动态数组</li>
+<li>List集合类中元素有序、且可重复，集合中的每个元素都有其对应的顺序索引。</li>
+<li>List容器中的元素都对应一个整数型的序号记载其容器中的位置，可以根据序号存取容器的元素</li>
+</ul>
+<h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>ArrayList：作为List接口的主要实现类；线程不安全，效率高；底层使用Object[] elementData存储</p>
+<p>扩容机制：默认大小为10，超过容量扩容原来的1.5倍，同时将原来数据复制到新的数组中</p>
+<pre><code class="java">//扩容机制源码
+private void grow(int minCapacity) &#123;
+    // overflow-conscious code
+    int oldCapacity = elementData.length;
+    int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);
+    if (newCapacity - minCapacity &lt; 0)
+        newCapacity = minCapacity;
+    if (newCapacity - MAX_ARRAY_SIZE &gt; 0)
+        newCapacity = hugeCapacity(minCapacity);
+    // minCapacity is usually close to size, so this is a win:
+    elementData = Arrays.copyOf(elementData, newCapacity);
+&#125;
+</code></pre>
+<p>常用方法</p>
+<h3 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h3><p>LinkedList：对于频繁的插入、删除操作，使用此类效率比ArrayList高；底层使用双向链表存储</p>
+<p>LinkedList数据结构 Node内部类</p>
+<pre><code class="java">private static class Node&lt;E&gt; &#123;
+    E item;
+    Node&lt;E&gt; next;
+    Node&lt;E&gt; prev;
+
+    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;
+        this.item = element;
+        this.next = next;
+        this.prev = prev;
+    &#125;
+&#125;
+</code></pre>
+<h3 id="Vector"><a href="#Vector" class="headerlink" title="Vector"></a>Vector</h3><p>Vector：作为List接口的古老实现类；线程安全的，效率低；底层使用Object[] elementData存储</p>
+<p>扩容机制：默认扩容到原来的2倍</p>
+<h2 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h2><p>Set接口是Collection的子接口，set接口没有提供额外的方法</p>
+<p>Set集合不允许包括相同的元素，如果试吧两个相同的元素加入同一个Set集合中，则添加操作失败（<strong>存储无序，不可重复的数据</strong>）</p>
+<p>Set判断两个对象是否相同不是==运算符，而是根据equals()方法</p>
+<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>作为Set接口的主要实现类；线程不安全的；可以存储null值</p>
+<p>一：Set：存储无序，不可重复的数据</p>
+<p>以HashSet为例</p>
+<p>​    无序性：不等于随机性，存储的数据在底层数组中并非按照数组索引的顺序添加，而是根据数据的HashCode</p>
+<p>​    不可重复性：保证添加的元素按照equals()判断时，不能返回true，既：相同的元素只能添加一个。</p>
+<p>二：添加元素的过程：以HashSet为例：</p>
+<p>​    我们向HashSet中添加元素a，首先调用a所在类的hashCode()方法，计算元素a的哈希值，次哈希值接着通过某种算法计算出在HashSet底层数组中的存放位置（既：索引位置），判断数组此位置上是否已经有元素</p>
+<p>​        1、如果位置上没有其他元素，则元素a添加成功。—&gt;情况1</p>
+<p>​        2、如果此位置上有其他元素b（或以链表形式存在的多个元素），则比较元素a与元素b的hash值：</p>
+<p>​            （1）如果hash值不相同，则元素a添加成功   —&gt;情况2</p>
+<p>​            （2）如果hash值相同，进而需要调整元素啊所在类的equlas()方法：</p>
+<p>​                （1）equals()返回true，元素a添加失败</p>
+<p>​                （2）equals()返回false，元素a添加成功     —&gt;情况3</p>
+<p>对于上面的情况2和情况3而言：元素a与已经存在指定索引位置上数据以链表的方式存储</p>
+<p>jdk7：元素a放到数组中，指向原来的元素（新元素为链表的头）</p>
+<p>jdk8：原来的元素在数组中，指向元素a（新元素为链表的尾）</p>
+<p>总结：七上八下</p>
+<p>HashSet底层：数组+链表（jdk7以前）</p>
+<h3 id="LinkedHashSet"><a href="#LinkedHashSet" class="headerlink" title="LinkedHashSet"></a>LinkedHashSet</h3><p>作为HashSet的子类，遍历其内部数据时，可以按照添加的顺序遍历。</p>
+<p>LinkedHashSet作为HashSet的子类，在添加数据的同时，每个数据还维持了两个引用，记录此数据的前一个和后一个数据。</p>
+<p>优点：对于频繁的遍历操作，LinkedHashSet效率高于HashSet。</p>
+<h3 id="TreeSet"><a href="#TreeSet" class="headerlink" title="TreeSet"></a>TreeSet</h3><p>可以按照添加元素对象的<strong>指定属性</strong>进行排序</p>
+<p>两种排序：自然排序（继承Comparable接口）和定制排序（Comparator）</p>
+<p>​    自然排序：比较两个对象是否相同的标准：compareTo()返回0，不再是equals().</p>
+<p>​    定制排序：比较两个对象是否相同的标准：compare()返回0，不再是equals().</p>
+<p>自然排序：对象继承Comparable接口</p>
+<pre><code class="java">//TreeSet按照姓名排序
+@Override
+public int compareTo(Object o) &#123;
+    if (o instanceof Person)&#123;
+        Person person=(Person)o;
+        int i = this.name.compareTo(person.name);
+        //当姓名相同是，按照年龄排序
+        if (i!=0)&#123;
+            return i;
+        &#125;else &#123;
+            return Integer.compare(this.age,person.age);
+        &#125;
+    &#125;else &#123;
+        throw new RuntimeException(&quot;输入的类型不匹配&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>定制排序：注入Comparator参数</p>
+<pre><code class="java">Comparator comparator=new Comparator() &#123;
+    @Override
+    public int compare(Object o1, Object o2) &#123;
+        if (o1 instanceof Person &amp;&amp; o2 instanceof Person)&#123;
+            Person person1 = (Person) o1;
+            Person person2 = (Person) o2;
+            return Integer.compare(person1.getAge(),person2.getAge());
+        &#125;else &#123;
+            throw new RuntimeException(&quot;参数类型不匹配&quot;);
+        &#125;
+    &#125;
+&#125;;
+TreeSet set=new TreeSet(comparator);
+</code></pre>
+<p>要求：想TreeSet中添加数据，要求是相同类的对象 </p>
+<p>TreeSet是通过compareTo()来判断数据是否重复，而不是使用equals()</p>
+<h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210527160336.png" alt="image-20210527160336312" style="zoom:50%;">
+
+<ul>
+<li>Map：双列数据，存储key-value对的数据。</li>
+<li>Map中的key：无序的，不可重复的，使用Set存储所有的key   –&gt;如果key为对象，则key所在的类要重写equals()和hashCode() （以HashMap来说的）。</li>
+<li>Map中的value：无序的，可重复的，使用Collection存储所有的value    –&gt;如果value为对象，则value所在的类要重写equals()。</li>
+<li>一个键值对：key-value构成了一个Entry对象。</li>
+<li>Map中的entry：无序、不可重复，使用set存储所有的entry。</li>
+</ul>
+<h3 id="HashMap（Map主要实现类）"><a href="#HashMap（Map主要实现类）" class="headerlink" title="HashMap（Map主要实现类）"></a>HashMap（Map主要实现类）</h3><p>HashMap：作为Map的主要实现类；线程不安全的；效率高，存储null的key和value。</p>
+<p>HashMap底层：数组+链表（jdk7及之前）</p>
+<p>​                         数组+链表+红黑树（jdk8）</p>
+<h4 id="HashMap的底层实现原理"><a href="#HashMap的底层实现原理" class="headerlink" title="HashMap的底层实现原理"></a>HashMap的底层实现原理</h4><p>在实例化后，底层创建了长度为16的一维 数组Entry[] table</p>
+<p>map.put(key1,value1):（jdk7)</p>
+<p>​    一、调用key1所在类的hashCode()及计算key1哈希值，此哈希值经过某种计算以后，得到Entry数组中的存放位置</p>
+<p>​    二、如果此位置上的数据为空，此时的key1-value为空添加成功       —&gt;情况1</p>
+<p>​         （1）如果此位置上的数据不为空（意味着此位置上存在一个或多个数据（以链表形式存在），比较key1和已经存在的一个或者多个数据的哈希值：</p>
+<ul>
+<li>​                    1、如果key1的哈希值与已经存在的数据的好像值不相同，此时key1-value添加成功     —&gt;情况2</li>
+<li>​                    2、如果key1的哈希值与已经存在的某一个数据的好像值相同时，继续比较：调用key1所在类的equals()方法，比较：<ul>
+<li>​                            (1)如果equals返回false，此时key1-value添加成功      —&gt;情况3</li>
+<li>​                            (2)如果equals返回true，将value1替换相同key的value值</li>
+</ul>
+</li>
+</ul>
+<p>补充：关于情况2和情况3：此时key1-value1和原来的数据以链表的方式存储</p>
+<p>​    三：扩容方式：默认为扩容为原来容量的2倍，并将原有数据复制过来</p>
+<p>​    四：jdk8相较于jdk7在底层实现的不同</p>
+<ul>
+<li>​        1、new HashMap()：底层没有创建一个长度为16的数组</li>
+<li>​        2、jdk8底层的数组是：Node[]，而非Entry[]</li>
+<li>​        3、首次调用put()方法是，底层常见长度为16的数组</li>
+<li>​        4、jdk7底层结构：数组+链表</li>
+</ul>
+<p>​             jdk8底层结构：数组+链表+红黑树</p>
+<p>​            当数组的摸一个索引位置上的元素以链表形式存在的数据个数&gt;8且当前数组的长度&gt;64时，此时此索引位置上所有数据改为使用红黑树 </p>
+<h5 id="HashMap的源码"><a href="#HashMap的源码" class="headerlink" title="HashMap的源码"></a>HashMap的源码</h5><p><strong>HashMap重要常量</strong></p>
+<p>​    DEFAULT_INITIAL_CAPACITY：HashMap的默认容量，16</p>
+<p>​    MAXIMUM_CAPACITY：HashMap的最大支持容量，2^30</p>
+<p>​    DEFAULT_LOAD_FACTOR：HashMap的默认加载因子</p>
+<p>​    TREEIFY_THRESHOLD：Bucket中链表长度大于该默认值，转化为红黑树</p>
+<p>​    UNTREEIFY_THRESHOLD：Bucket中红黑树存储的Node小于该默认值，转化为链</p>
+<p>​    MIN_TREEIFY_CAPACITY：桶中的Node被树化时最小的hash表容量。</p>
+<p>​            (当桶中Node的数量大到需要变红黑树时，若hash表容量小于MIN_TREEIFY_CAPACITY时，此时应执行resize扩容操作这个MIN_TREEIFY_CAPACITY的值至少是TREEIFY_THRESHOLD的4倍。)</p>
+<p>​    table：存储元素的数组，总是2的n次幂</p>
+<p>​    entrySet：存储具体元素的集</p>
+<p>​    size：HashMap中存储的键值对的数量</p>
+<p>​    modCount：HashMap扩容和结构改变的次数。</p>
+<p>​    threshold：扩容的临界值，=容量*填充因</p>
+<p>​    loadFactor：填充因子</p>
+<p>源码：map.put()调用下面的方法（jdk8)</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210527215724.png" alt="image-20210527215724769" style="zoom: 50%;">
+
+<pre><code class="java">final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+               boolean evict) &#123;
+    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
+    if ((tab = table) == null || (n = tab.length) == 0)
+        n = (tab = resize()).length;//创建一个16大小的数组
+    if ((p = tab[i = (n - 1) &amp; hash]) == null)
+        tab[i] = newNode(hash, key, value, null);//如果没有相同的hashCode的，直接添加，对应上述情况1
+    else &#123;
+        Node&lt;K,V&gt; e; K k;
+        if (p.hash == hash &amp;&amp;
+            ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))//如果hashCode相同，key也相同的情况,用新值将原来的值覆盖
+            e = p;
+        else if (p instanceof TreeNode)//判断p是不是一个树
+            e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
+        else &#123;//hashCode相同，key不同，在数组的这个位置生成链表
+            for (int binCount = 0; ; ++binCount) &#123;
+                if ((e = p.next) == null) &#123;//找到这个位置的尾节点
+                    p.next = newNode(hash, key, value, null);//在最后插入新的值
+                    if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                        treeifyBin(tab, hash);//当该链表大小大于8时，转换为红黑树
+                    break;
+                &#125;
+                if (e.hash == hash &amp;&amp;
+                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))//如果hashCode相同，key也相同的情况,用新值将原来的值覆盖
+                    break;
+                p = e;
+            &#125;
+        &#125;
+        if (e != null) &#123; // existing mapping for key（翻译：存在key的映射）
+            V oldValue = e.value;//存在时将新值覆盖为原来的值
+            if (!onlyIfAbsent || oldValue == null)
+                e.value = value;
+            afterNodeAccess(e);
+            return oldValue;
+        &#125;
+    &#125;
+    ++modCount;
+    if (++size &gt; threshold)//当数组大小大于临界值时，扩容
+        resize();//扩容方法，源码中 newThr = oldThr &lt;&lt; 1; 扩大为原来的2倍
+    afterNodeInsertion(evict);
+    return null;
+&#125;
+</code></pre>
+<p>resize扩容的部分源码：</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210527222736.png" style="zoom:50%;">
+
+<h3 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h3><p>LinkedHashMap：保证在遍历map元素时，可以按照添加的顺序实现遍历。原因：在原有的HashMap底层结构基础上，添加了一对指针，指向前一个和后一个元素。</p>
+<p>对于频繁的遍历操作，此类执行效率高于HashMap。</p>
+<h3 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h3><p>TreeMap：保证按照添加的key-value对进行排序，实现排序遍历，吃啥考虑key的自然排序或定制排序。底层使用红黑树。</p>
+<p>向TreeMap中添加key-value，要求key必须是由同一个类创建的对象，因为要按照key进行排序：自然排序、定制排序</p>
+<pre><code class="java">//定制排序，按照年龄排序
+Comparator comparator = new Comparator() &#123;
+    @Override
+    public int compare(Object o1, Object o2) &#123;
+        if (o1 instanceof Person &amp;&amp; o2 instanceof Person)&#123;
+            Person person1 = (Person) o1;
+            Person person2 = (Person) o2;
+            return Integer.compare(person1.getAge(),person2.getAge());
+        &#125;
+        throw new RuntimeException(&quot;输入的类型不匹配&quot;);
+    &#125;
+&#125;;
+TreeMap map=new TreeMap(comparator);
+</code></pre>
+<h3 id="Hashtable。"><a href="#Hashtable。" class="headerlink" title="Hashtable。"></a>Hashtable。</h3><p>Hashtable：作为古老的实现类；线程安全，效率低；不能存储null的key和value。</p>
+<h3 id="Properties"><a href="#Properties" class="headerlink" title="Properties"></a>Properties</h3><p>Properties：常用来处理配置文件。key和value都是String类型 。</p>
+<pre><code class="java">public static void main(String[] args) throws IOException &#123;
+    Properties properties = new Properties();
+    FileInputStream fis = new FileInputStream(&quot;jdbc.properties&quot;);
+    properties.load(fis);//加载流对应文件
+    String name = properties.getProperty(&quot;name&quot;);
+    System.out.println(name);
+&#125;
+</code></pre>
+<h2 id="Collections"><a href="#Collections" class="headerlink" title="Collections"></a>Collections</h2><p>Collections：集合工具集（具体看jdk文档）</p>
+<p>Collections类中提供了多个synchronizedXxx()方法，该方法可变将制定集合包装成线程同步的集合，从而可以解决多线程并发访问集合时的线程安全问题</p>
+]]></content>
+      <categories>
+        <category>集合</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>多线程</title>
+    <url>/2021/05/28/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="线程的复习"><a href="#线程的复习" class="headerlink" title="线程的复习"></a>线程的复习</h1><p>java中线程分为两类：一种是守护线程（如：垃圾回收线程，jvm中都是守护线程），通过在start()方法前调用thread.serDaemon(true)可以把一个用户线程变为一个守护线程，一种是用户线程（main线程）</p>
+<h2 id="线程的创建"><a href="#线程的创建" class="headerlink" title="线程的创建"></a>线程的创建</h2><h3 id="（一）使用Thread"><a href="#（一）使用Thread" class="headerlink" title="（一）使用Thread"></a>（一）使用Thread</h3><p>多线程的创建，方式一:继承于Thread类</p>
+<p>1、创建一个继承于Thread类的子类</p>
+<p>2、重写Thread类的run() –&gt;将此线程执行的操作声明在run()中</p>
+<p>3、创建Thread类的子类的对象</p>
+<p>4、通过此对象调用start()</p>
+<pre><code class="java">class MyThread extends Thread&#123;
+    @Override
+    public void run() &#123;
+        for (int i = 0; i &lt; 1000; i++) &#123;
+            if(i%2==0)&#123;
+                System.out.println(Thread.currentThread().getName()+&quot;:&quot;+i);
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="java">public static void main(String[] args) &#123;
+    MyThread myThead = new MyThread();
+    MyThread myThead2 = new MyThread();
+    myThead.start();
+    myThead2.start();
+&#125;
+</code></pre>
+<p>使用匿名子类的方式</p>
+<pre><code class="java">//使用匿名子类的方法
+public static void main(String[] args) &#123;
+    /*
+         * 匿名子类
+         * */
+    new Thread()&#123;
+        @Override
+        public void run() &#123;
+            for (int i = 0; i &lt; 100000; i++) &#123;
+                if(i%2==0)&#123;
+                    System.out.println(Thread.currentThread().getName()+&quot;:&quot;+i);
+                &#125;
+            &#125;
+        &#125;
+    &#125;.start();
+    new Thread()&#123;
+        @Override
+        public void run() &#123;
+            for (int i = 0; i &lt; 100000; i++) &#123;
+                if(i%2==0)&#123;
+                    System.out.println(Thread.currentThread().getName()+&quot;:&quot;+i);
+                &#125;
+            &#125;
+        &#125;
+    &#125;.start();
+&#125;
+</code></pre>
+<h4 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h4><p>1、start()：启动当前线程，调用当前线程的run()</p>
+<p>2、run()：通常需要重写Tread类中的此方法，将创建的线程要执行的操作声明在此方法中</p>
+<p>3、currentTread()：静态方法，返回执行当前代码的线程</p>
+<p>4、getName：获取当前线程的名字</p>
+<p>5、serName：设置当前线程的名字</p>
+<p>6、yield：释放当前cpu的执行权。再去和其他线程竞争cpu</p>
+<pre><code class="java">class MyThread extends Thread&#123;
+    @Override
+    public void run() &#123;
+        for (int i = 0; i &lt; 1000; i++) &#123;
+            if(i%2==0)&#123;
+                System.out.println(Thread.currentThread().getName()+&quot;:&quot;+i);
+            &#125;
+            if (i%20==0)&#123;
+                yield();
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>7、join()：在线程a中调用线程b的join()，此时线程a就进入阻塞状态，直到线程b完全执行完以后，线程a才结束阻塞状态</p>
+<pre><code class="java">//在main函数中，线程myThead调用了join(),则当main函数i=20时,myThead会强行强到cpu资源，等到myThead执行完后才执行mian
+if (i==20)&#123;
+    try &#123;
+        myThead.join();
+    &#125; catch (InterruptedException e) &#123;
+        e.printStackTrace();
+    &#125;
+&#125;
+</code></pre>
+<p>8、sleep(long millis)：线程睡眠多少时间，单位毫秒</p>
+<p>9、stop()：已过时，强制结束当前线程，不推荐</p>
+<p>10、isAlive()：线程是否存活</p>
+<h4 id="线程优先级"><a href="#线程优先级" class="headerlink" title="线程优先级"></a>线程优先级</h4><p>MAX_PRIORITY(max_priority)：10</p>
+<p>MIN_PRIORITY(min_priority)：1</p>
+<p>NORM_PRIORITY(norm_priority)：5</p>
+<p>涉及方法：</p>
+<p>getPriority()：获取线程优先级</p>
+<p>setPriority(int newPriority)：设置线程优先级</p>
+<p>说明：高优先级的线程要抢占低优先级线程cpu的执行权，但是只是从概率上讲，高优先级的线程搞概率的情况下被执行。并不意味着只有当高优先级的线程执行完以后，低优先级线程执行</p>
+<h3 id="（二）Runnable"><a href="#（二）Runnable" class="headerlink" title="（二）Runnable"></a>（二）Runnable</h3><p>创建多线程的方式二:实现Runnable接口</p>
+<p>1、创建一个实现了Runnable接口的类</p>
+<p>2、实现类去实现Runnable中的抽象方法: run()</p>
+<p>3、创建实现类的对象</p>
+<p>4、将此对象作为参数传递到Thread类的构造器中，创建Thread类的对象</p>
+<p>5、通过Thread类的对象调用start()</p>
+<pre><code class="java">public class TestRunnable implements Runnable&#123; 
+    private int ticketNum = 100;
+    @Override
+    public void run() &#123;
+        while (ticketNum &gt;0) &#123;
+            try &#123;
+                Thread.sleep(50);
+            &#125; catch (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+            System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                    + &quot;剩余的票数=&quot; + (--ticketNum));
+        &#125;
+    &#125;
+&#125;
+class Test&#123;
+    public static void main(String[] args) &#123;
+        //会共享对象ticketNum，但是在最后也存在线程安全
+        TestRunnable myThread = new TestRunnable();
+        Thread t1=new Thread(myThread);
+        Thread t2=new Thread(myThread);
+        t1.start();
+        t2.start();
+    &#125;
+&#125;
+</code></pre>
+<p>为什么调用t1.start会跑到myThread的run()方法中？</p>
+<p>因为Thread源码中target不为空时使用的是target的run方法</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210521190433.png" alt="image-20210521190433267"></p>
+<p>而我们使用的是有参构造器</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210521190539.png" alt="image-20210521190539425"></p>
+<h5 id="比较创建线程的两种方式。"><a href="#比较创建线程的两种方式。" class="headerlink" title="比较创建线程的两种方式。"></a>比较创建线程的两种方式。</h5><p>开发中：优先选择:实现Runnable接口的方式原因:</p>
+<p>1、实现的方式没有类的单继承性的局限性</p>
+<p>2、实现的方式更适合来处理多个线程有共享数据的情况。</p>
+<p>联系: public class Thread impLements Runnable</p>
+<p>相同点：两种方式都需要重写run(),将线程要执行的逻辑声明在run()中。目前两个方法，想要启动线程，都是调用Tread类中的start()。</p>
+<h3 id="（三）Callable接口实现多线程"><a href="#（三）Callable接口实现多线程" class="headerlink" title="（三）Callable接口实现多线程"></a>（三）Callable接口实现多线程</h3><p>创建多线程的方式三:实现Callable接口</p>
+<p>Callable实现多线程有返回值，但是一般常用的还是Runnable</p>
+<p>与使用Runnable相比，Callable功能更强大些</p>
+<p>1、相比run()方法，可以有返回值，</p>
+<p>2、方法可以抛出异常，</p>
+<p>3、支持泛型的返回值</p>
+<p>4、需要借助FutureTask类，比如获取返回结果</p>
+<pre><code class="java">public class CallableTest implements Callable&lt;String&gt; &#123;
+    private int ticket=100;
+    @Override
+    public String call() throws Exception &#123;
+        while (true) &#123;
+            if(this.ticket&gt;0)&#123;
+                System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                        + &quot;剩余的票数=&quot; + (--ticket));
+            &#125;else &#123;
+                break;
+            &#125;
+        &#125;
+        return &quot;票出售完了&quot;;
+    &#125;
+&#125;
+class Test1&#123;
+    public static void main(String[] args) throws ExecutionException, InterruptedException &#123;
+        //创建Callable接口实现类的对象
+        CallableTest callableThread = new CallableTest();
+        //将此Callable接口实现类的对象作为传递到FutureTask构造器中，创建FutureTask对象
+        FutureTask&lt;String&gt; task1 = new FutureTask&lt;&gt;(callableThread1);
+        //将FutureTask的对象作为参数传递到Thread类的构造器中，创建Thread，并.start()
+        new Thread(task1).start();
+
+        //多线程执行完可以取得内容，依靠FutureTask的父接口中的get()方法实现
+        System.out.println(&quot;A线程的返回结果：&quot;+task1.get());
+
+    &#125;
+&#125;
+</code></pre>
+<h3 id="（四）使用线程池"><a href="#（四）使用线程池" class="headerlink" title="（四）使用线程池"></a>（四）使用线程池</h3><p>创建线程的方式四:使用线程池<br>好处：<br>    1、提高响应速度(减少了创建新线程的时间)</p>
+<p>​    2、降低资源消耗（重复利用线程池中线程，不需要每次都创建)</p>
+<p>​    3、便于线程管理<br>​        corePooLsize：核心池的大小</p>
+<p>​        maximumPooLsize：最大线程数</p>
+<p>​        keepALiveTime：线程没有任务时最多保持多长时间后会终止</p>
+<pre><code class="java">public class ThreadPool &#123;
+    public static void main(String[] args) &#123;
+        //1、提供指定线程数量的线程池
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        //2、执行指定的线程的操作。需要提供实现Runnable接口或者Callable接口实现类的对象
+        executorService.execute(new NumberThread());//适合使用与Runnable
+        //executorService.submit();//适合使用与Callable
+        //关闭连接池
+        executorService.shutdown();
+    &#125;
+&#125;
+class NumberThread implements Runnable&#123;
+
+    @Override
+    public void run() &#123;
+        for (int i = 0; i &lt; 100; i++) &#123;
+            if (i%2==0)&#123;
+                System.out.println(Thread.currentThread().getName()+&quot;：&quot;+i);
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>如何要对线程池进行设置，则需要将executorService强转为ThreadPoolExecutor，因为ExecutorService是一个接口，而ThreadPoolExecutor是ExecutorService子类，将装换为ThreadPoolExecutor类后有更多的设置</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210522145632.png" alt="image-20210522145625043" style="zoom:50%;">
+
+<h2 id="多线程的生命周期"><a href="#多线程的生命周期" class="headerlink" title="多线程的生命周期"></a>多线程的生命周期</h2><p>要想实现多线程，必须在主线程中创建新的线程对象。</p>
+<p>Java语言使用Thread类及其子类的对象来表示线程，在它的一个完整的生命周期中通常要经历如下的五种状态:</p>
+<p>新建：当一个Thread类或其子类的对象被声明并创建时，新生的线程对象处于新建状态</p>
+<p>就绪：处于新建状态的线程被start()后，将进入线程队列等待CPU时间片，此时它已具备了运行的条件，只是没分配到CPU资源</p>
+<p>运行：当就绪的线程被调度并获得CPU资源时,便进入运行状态，run()方法定义了线程的操作和功能</p>
+<p>阻塞：在某种特殊情况下，被人为挂起或执行输入输出操作时，让出 CPU并临时中止自己的执行，进入阻塞状态</p>
+<p>死亡：线程完成了它的全部工作或线程被提前强制性地中止或出现异常导致结束</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210521202104.png" alt="image-20210521202104374" style="zoom:50%;">
+
+<h2 id="线程安全问题"><a href="#线程安全问题" class="headerlink" title="线程安全问题"></a>线程安全问题</h2><h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><p>操作共享数据的代码，既为需要被同步的代码。不可包含代码过多（比如将while都包括了，哪就是一个线程拿到cpu就一直运行了），或包含代码过少</p>
+<p><strong>共享数据</strong>：多个线程共同操作的变量，比如：买票中的票数的值</p>
+<p><strong>同步监视器</strong>：俗称：锁。任何一个类的对象都可以当成锁。要求：多个线程必须要共用一把锁。</p>
+<p>补充：在实现Runnable接口创建多线程的方式中，我们可以考虑使用this当做同步监视器。（具体问题具体分析，慎用this，要确保this是否可以保证唯一）</p>
+<p>方式一：同步代码块</p>
+<p>synchronized(同步监视器){</p>
+<p>//需要被同步的代码</p>
+<p>}</p>
+<pre><code class="java"> @Override
+    public void run() &#123;
+        while (true) &#123;
+            //此时this，是指创建的Runnable对象，也就是上面使用Runnable创建线程中的myThread对象
+            //在Thread中不能使用this，而使用当前类名.class ，如  synchronized (MyThread.class)
+            synchronized (this) &#123;
+                //同步代码块  synchronized (对象),可以在（）里写一个this，也可以在run（）方法外随便new 一个对象当做一个同步监视器，但不能在run方法里面new一个对象当做同步监视器，不然每个线程都有一个独立的锁，就没有效果了
+                if (ticketNum &lt;= 0) &#123;
+                    System.out.println(&quot;售票结束...&quot;);
+                    return;
+                &#125;
+                try &#123;
+                    Thread.sleep(50);
+                &#125; catch (InterruptedException e) &#123;
+                    e.printStackTrace();
+                &#125;
+                System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                        + &quot;剩余的票数=&quot; + (--ticketNum));
+            &#125;
+        &#125;
+    &#125;
+</code></pre>
+<p><strong>一个细节点</strong>，在Runnable创建线程时由于最后start是 new Thread(myRunnable).start();几个线程都是用的同一个myRunnable，因此当做同步监视器可以用Object obj=new Object用obj当做同步监视器，而在Thread创建线程时，多线程需要多个new Thread()，因此需要再Object obj=new Object前加一个static关键字保证多个线程使用同一个同步监视器</p>
+<p>同步的好处：解决了线程的安全问题</p>
+<p>同步的局限性：只有一个线程参与，其他线程等待，相当于一个单线程的过程，效率低一些</p>
+<p>方式二：同步方法：</p>
+<p>如果操作共享数据的代码完整的声明在一个方法中，我们不妨将此方法声明同步</p>
+<pre><code class="java">//对应Runnable创建的线程，Thread创建的线程还要加static
+public synchronized void show() &#123;//同步监视器：this
+        if (ticketNum &lt;= 0) &#123;
+            System.out.println(&quot;售票结束...&quot;);
+            flag = false;
+            return;
+        &#125;
+        try &#123;
+            Thread.sleep(50);
+        &#125; catch (InterruptedException e) &#123;
+            e.printStackTrace();
+        &#125;
+        System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                + &quot;剩余的票数=&quot; + (--ticketNum));
+    &#125;
+</code></pre>
+<p>1、同步方法任然涉及到同步监视器，只是不需要我们显式声明。</p>
+<p>2、非静态的同步方法，同步监视器是：this，</p>
+<p>​    静态的同步方法，同步监视器是：当前类本身</p>
+<h3 id="lock"><a href="#lock" class="headerlink" title="lock"></a>lock</h3><pre><code class="java">public class LockTest implements Runnable &#123;
+    private int ticketNum = 100;
+    ReentrantLock lock = new ReentrantLock();
+    @Override
+    public void run() &#123;
+        while (true) &#123;
+            lock.lock();
+            try &#123;
+                if (ticketNum&gt;0) &#123;
+                    System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                            + &quot;剩余的票数=&quot; + (--ticketNum));
+                &#125;else&#123;
+                    break;
+                &#125;
+            &#125; finally &#123;
+                lock.unlock();
+            &#125;
+        &#125;
+
+    &#125;
+&#125;
+</code></pre>
+<h3 id="1、面试题：synchronized与lock的异同？"><a href="#1、面试题：synchronized与lock的异同？" class="headerlink" title="1、面试题：synchronized与lock的异同？"></a>1、面试题：synchronized与lock的异同？</h3><p>​    相同：二者可以解决线程安全问题</p>
+<p>​    不同：synchronized机制在执行完相应的同步代码以后，自动的释放同步监视器，lock需要手动的启动同步（lock()），同时结束同步也需要手动的实现（unlock()）</p>
+<p>2、如何解决线程安全问题？有几种方式</p>
+<p>​    用synchronized或者lock。有三种，同步代码块、同步方法和lock</p>
+<h2 id="线程通信"><a href="#线程通信" class="headerlink" title="线程通信"></a>线程通信</h2><p>wait()：一旦执行此方法，当前线程就进行阻塞状态，并释放同步监视器</p>
+<p>notify()：一旦执行此方法，就会唤醒被wait的一个线程 ，如果多个线程被wait，就唤醒优先级高的线程</p>
+<p>notifyAll()：一旦执行此方法，就会唤醒所有被wait的线程。</p>
+<p>说明：</p>
+<p>1、wait()、notify()、notifyAll()三个方法必须使用在同步代码块或者同步方法中。</p>
+<p>2、wait()、notify()、notifyAll()三个方法三个方法的调用者必须是同步代码块或者同步方法中的同步监视器，否则会出现IllegalMonitorStateException</p>
+<p>3、wait()、notify()、notifyAll()三个方法是在java.lang.Object类中</p>
+<pre><code class="java">public class Synchronized implements Runnable &#123;
+    private int ticketNum = 100;
+    Object object=new Object();
+    @Override
+    public void run() &#123;
+        while (true) &#123;
+            synchronized (object) &#123; //同步代码块  synchronized (对象)
+                object.notify();//使用同步监视器.方法（原因：上述说明3）
+                if (ticketNum &lt;= 0) &#123;
+                    System.out.println(&quot;售票结束...&quot;);
+                    return;
+                &#125;
+                try &#123;
+                    object.wait();
+                &#125; catch (InterruptedException e) &#123;
+                    e.printStackTrace();
+                &#125;
+                System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                        + &quot;剩余的票数=&quot; + (--ticketNum));
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h3 id="面试题-sleep-和wait-的异同"><a href="#面试题-sleep-和wait-的异同" class="headerlink" title="面试题:sleep()和wait()的异同"></a>面试题:sleep()和wait()的异同</h3><p>1、相同点：一旦执行方法，都可以使得当前的线程进入阻塞状态</p>
+<p>2、不同点：</p>
+<p>​        （1）两个方法声明的位置不同：Thread类中声明sleep(),Object类中声明wait()</p>
+<p>​        （2）调用的范围不同：sleep()可以在任何需要的场景下调用，wait()方法必须用在同步代码块或者同步方法使用同步监视器来调用</p>
+<p>​        （3）关于是否释放同步监视器：都在同步代码块或者同步方法中sleep()会自动释放锁，而wait()需要手动释放</p>
+<p>​            </p>
+]]></content>
+      <categories>
+        <category>多线程</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
       </tags>
   </entry>
 </search>
