@@ -365,10 +365,10 @@ public void testObjectInputStream()&#123;
 <p>补充：ObjectOutputStream和ObjectInputStream不能序列化static和transient修饰的成员变量</p>
 ]]></content>
       <categories>
-        <category>IO</category>
+        <category>java</category>
       </categories>
       <tags>
-        <tag>java</tag>
+        <tag>IO</tag>
       </tags>
   </entry>
   <entry>
@@ -1368,10 +1368,10 @@ public void receiver() throws IOException &#123;
 </code></pre>
 ]]></content>
       <categories>
-        <category>网络编程</category>
+        <category>java</category>
       </categories>
       <tags>
-        <tag>java</tag>
+        <tag>网络编程</tag>
       </tags>
   </entry>
   <entry>
@@ -2446,10 +2446,10 @@ TreeMap map=new TreeMap(comparator);
 <p>Collections类中提供了多个synchronizedXxx()方法，该方法可变将制定集合包装成线程同步的集合，从而可以解决多线程并发访问集合时的线程安全问题</p>
 ]]></content>
       <categories>
-        <category>集合</category>
+        <category>java</category>
       </categories>
       <tags>
-        <tag>java</tag>
+        <tag>集合</tag>
       </tags>
   </entry>
   <entry>
@@ -2785,10 +2785,10 @@ public synchronized void show() &#123;//同步监视器：this
 <p>​            </p>
 ]]></content>
       <categories>
-        <category>多线程</category>
+        <category>java</category>
       </categories>
       <tags>
-        <tag>java</tag>
+        <tag>多线程</tag>
       </tags>
   </entry>
 </search>
