@@ -1,0 +1,3717 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>IO流复习</title>
+    <url>/2021/05/28/IO%E6%B5%81/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="IO流复习"><a href="#IO流复习" class="headerlink" title="IO流复习"></a>IO流复习</h1><h2 id="File创建的几种方式"><a href="#File创建的几种方式" class="headerlink" title="File创建的几种方式"></a>File创建的几种方式</h2><p>FiLe类的使用</p>
+<p>1、File类的一个对象，代表一个文件或一个文件目录(俗称:文件夹)</p>
+<p>2、File类声明在java.io包下</p>
+<p>3、File类中涉及到关于文件或文件目录的创建、删除、重命名、修改时间、文件大小等方法，并未涉及到写入或读取文件内容的操作。如果需要读取或写入文件内容，必须使用Io流来完成。</p>
+<p>4、后续File类的对象常会作为参照写入io流的构造器中</p>
+<pre><code class="java">//构造器1
+File file = new File(&quot;hello.txt&quot;);//相对于当前module
+File file1 = new File(&quot;E:\\Java\\复习\\IO\\IOStudy01&quot;);
+System.out.println(file);
+System.out.println(file1);
+//构造器2
+File file2 = new File(&quot;E:\\Java\\复习\\IO\\IOStudy01&quot;, &quot;javaSenior&quot;);
+System.out.println(file2);
+//构造器3
+File file3 = new File(file2, &quot;hi.txt&quot;);
+System.out.println(file3);
+</code></pre>
+<h3 id="File常用方法"><a href="#File常用方法" class="headerlink" title="File常用方法"></a>File常用方法</h3><p>public String getAbsolutePath()：获取绝对路径</p>
+<p>public String getPath() ：获取路径</p>
+<p>public String getName()：获取名称</p>
+<p>public String getParent()：获取上层文件目录路径。若无，返回null</p>
+<p>public long length()：获取文件长度（即:字节数）。不能获取目录的长度。</p>
+<p>public long lastModified()：获取最后一次的修改时间，毫秒值</p>
+<p>public String[] list()：获取指定目录下的所有文件或者文件目录的名称数组</p>
+<p>public File[] listFiles()：获取指定目录下的所有文件或者文件目录的File数组</p>
+<p>文件重命名</p>
+<pre><code class="java">File file = new File(&quot;hello.txt&quot;);//重命名的文件
+File file1 = new File(&quot;E:\\Java\\复习\\IO\\IOStudy01\\hi.txt&quot;);//必须不存在的
+boolean b = file.renameTo(file1);
+System.out.println(&quot;是否重命名成功：&quot;+b );
+</code></pre>
+<h3 id="File类判断方法"><a href="#File类判断方法" class="headerlink" title="File类判断方法"></a>File类判断方法</h3><p>public boolean isDirectory()：判断是否是文件目录</p>
+<p>public boolean isFile()：判断是否是文件</p>
+<p>public boolean exists()：判断是否存在</p>
+<p>public boolean canRead( )：判断是否可读</p>
+<p>public boolean canwrite()：判断是否可写</p>
+<p>public boolean isHidden()：判断是否隐藏</p>
+<h3 id="File文件的创建"><a href="#File文件的创建" class="headerlink" title="File文件的创建"></a>File文件的创建</h3><p>public boolean createNewFile()：创建文件。若文件存在，则不创建，返回false</p>
+<p>public boolean mkdir()：创建文件目录。如果此文件目录存在，就不创建了。如果此文件目录的上层目录不存在，也不创建</p>
+<p>public boolean mkdirs()：创建文件目录。如果上层文件目录不存在，一并创建</p>
+<p>public boolean delete()：删除文件或者文件夹</p>
+<pre><code class="java">@Test
+public void test03() throws IOException &#123;
+    File file = new File(&quot;hi.txt&quot;);
+    if (file.exists())&#123;
+        file.delete();
+        System.out.println(&quot;文件删除成功&quot;);
+    &#125;else &#123;
+        file.createNewFile();
+        System.out.println(&quot;文件创建成功&quot;);
+    &#125;
+&#125;
+</code></pre>
+<h2 id="javaIO"><a href="#javaIO" class="headerlink" title="javaIO"></a>javaIO</h2><p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210523151243.png" alt="image-20210523151235824"></p>
+<h3 id="流的分类"><a href="#流的分类" class="headerlink" title="流的分类"></a>流的分类</h3><p>按操作数据单位不同分为：字节流（8bit），字符流（16bit）</p>
+<p>按数据流的流向不同分为：输入流，输出流</p>
+<p>按流的角色的不同分为：节点流，处理流</p>
+<table>
+<thead>
+<tr>
+<th>（<strong>抽象</strong>基类)</th>
+<th>字节流</th>
+<th>字符流</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>输入流</td>
+<td>InputStream</td>
+<td>Reader</td>
+</tr>
+<tr>
+<td>输出流</td>
+<td>OutputStream</td>
+<td>Writer</td>
+</tr>
+</tbody></table>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210525204208.png" alt="image-20210525204200807" style="zoom:50%;">
+
+<p>蓝色的是要重点注意的</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210523152156.png" alt="image-20210523152156213" style="zoom:50%;">
+
+<h3 id="字符流"><a href="#字符流" class="headerlink" title="字符流"></a>字符流</h3><h4 id="FileReader"><a href="#FileReader" class="headerlink" title="FileReader"></a>FileReader</h4><p>说明：</p>
+<p>1、read()的理解：返回读入的一个字符，并输出到控制台</p>
+<p>2、异常的处理：为了保证流资源一定可以执行关闭操作，需要使用try-catch-finally</p>
+<p>3、读入的文件一定要存在，否则会报FileNotFoundException</p>
+<p>例如：hi.txt文件内容读入程序中，并输出到控制台</p>
+<pre><code class="java">@Test
+public void testFileReader() &#123;
+
+    //1、实例化File类的对象，指明要操作的文件
+    File file = new File(&quot;hi.txt&quot;);
+    System.out.println(file.getAbsolutePath());
+    //2、提供具体的流
+    FileReader reader = null;
+    try &#123;
+        reader = new FileReader(file);
+        //3、数据的读入，read()：返回读入的一个字符，如果达到文件末尾，返回-1
+        //方法一
+        int data = reader.read();
+        while (data != -1) &#123;
+            System.out.print((char) data);
+            data = reader.read();
+        &#125;
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        //4、流的关闭操作
+        try &#123;
+            if (reader != null) &#123;
+                reader.close();
+            &#125;
+        &#125; catch (IOException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>上述代码的第三步read的优化</p>
+<pre><code class="java">//方式二
+//read(char[] cbuf)：返回每次读入cbuf数据中的字符的个数，如果达到文件末尾返回-1；
+char[] buffer=new char[5];
+int len;
+while ((len=reader.read(buffer))!=-1)&#123;
+    /*for (int i = 0; i &lt; len; i++) &#123;
+                    System.out.print(buffer[i]);
+       &#125;*/
+    String str=new String(buffer,0,len);
+    System.out.println(str);
+&#125;
+</code></pre>
+<h4 id="FileWriter"><a href="#FileWriter" class="headerlink" title="FileWriter"></a>FileWriter</h4><p>从内存中写出数据到硬盘的文件里</p>
+<p>说明：</p>
+<p>1、输出操作，对应的File可以不存在，不会报异常</p>
+<p>2、File对应的硬盘文件如果不存在，在输出的过程中，会自动创建此文件，</p>
+<p>​    File对应的硬盘文件如果存在：如果流使用的构造器是：FileWriter(file,false)/FileWriter(file)：对原有文件的覆盖</p>
+<p>​    如果使用的构造器是：FileWriter(file,true)：不会对原有文件覆盖，而是在原有文件基础上追加内容</p>
+<pre><code class="java">@Test
+public void testFileWriter() throws IOException &#123;
+    //1、提供File类的对象，指明写出到的文件
+    File file = new File(&quot;hello.txt&quot;);
+    //2、提供FileWriter的对象，用于数据的写出
+    FileWriter fileWriter = new FileWriter(file);
+    //3、写出的操作
+    fileWriter.write(&quot;I have a handsome,&quot;.toCharArray());
+    fileWriter.write(&quot;you need to have a dream!&quot;);
+    //4、流资源关闭
+    fileWriter.close();
+&#125;
+</code></pre>
+<h4 id="FileReader与FileWriter"><a href="#FileReader与FileWriter" class="headerlink" title="FileReader与FileWriter"></a>FileReader与FileWriter</h4><p>将一个文件通过FileReader读取文件，</p>
+<pre><code class="java">@Test
+public void testFileWriterWithFileReader() &#123;
+    //1、提供File类的对象，指明写出到的文件
+    File srcFile = new File(&quot;hello.txt&quot;);
+    File destFile = new File(&quot;hello2.txt&quot;);
+    FileReader fileReader = null;
+    FileWriter fileWriter = null;
+    try &#123;
+        //2、提供FileWriter的对象，用于数据的写出
+        fileReader = new FileReader(srcFile);
+        fileWriter = new FileWriter(destFile);
+        //3、数据的读入和写出操作
+        char[] buffer=new char[5];
+        int len;//记录每次读入到buffer数据的字符的个数
+        while ((len=fileReader.read(buffer))!=-1)&#123;
+            //每次写出len个字符
+            fileWriter.write(buffer,0,len);
+        &#125;
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        //4、流资源关闭
+        try &#123;
+            if (fileReader != null) &#123;
+                fileReader.close();
+            &#125;
+            if (fileWriter != null) &#123;
+                fileWriter.close();
+            &#125;
+        &#125; catch (IOException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h3 id="字节流"><a href="#字节流" class="headerlink" title="字节流"></a>字节流</h3><h4 id="FileInputStream与OutputStream"><a href="#FileInputStream与OutputStream" class="headerlink" title="FileInputStream与OutputStream"></a>FileInputStream与OutputStream</h4><p>操作和上面的FileReader和FileWriter一样的</p>
+<pre><code class="java">@Test
+public void testFileInputStream() &#123;
+    //造文件
+    File srcFile = new File(&quot;touxiang.png&quot;);
+    File destFile = new File(&quot;touxiang1.png&quot;);
+    //流
+    FileInputStream fileInputStream = null;
+    FileOutputStream fileOutputStream = null;
+    try &#123;
+        fileInputStream = new FileInputStream(srcFile);
+        fileOutputStream = new FileOutputStream(destFile);
+        byte[] buffer=new byte[1024];
+        int length;
+        while ((length=fileInputStream.read(buffer))!=-1)&#123;
+            fileOutputStream.write(buffer,0,length);
+        &#125;
+
+    &#125; catch (FileNotFoundException e) &#123;
+        e.printStackTrace();
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        try &#123;
+            if (fileInputStream != null) &#123;
+                fileInputStream.close();
+            &#125;
+            if (fileOutputStream != null) &#123;
+                fileOutputStream.close();
+            &#125;
+        &#125; catch (IOException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>读写字符可以使用缓冲流BufferedInputStream和BufferedOutputStream，来提高读写速度，</p>
+<p>读写字节可以使用BufferedReader和BufferedWriter与上诉类似</p>
+<p>提高读写速度的原因：内部提供一个缓冲区</p>
+<pre><code class="java">//使用缓冲流复制字节文件
+@Test
+public void testBuffFileInputStream() &#123;
+    //造文件
+    File srcFile = new File(&quot;touxiang.png&quot;);
+    File destFile = new File(&quot;touxiang1.png&quot;);
+    //流
+    FileInputStream fileInputStream = null;
+    FileOutputStream fileOutputStream = null;
+    BufferedInputStream bufferedInputStream = null;
+    BufferedOutputStream bufferedOutputStream = null;
+    try &#123;
+        //造流
+        fileInputStream = new FileInputStream(srcFile);
+        fileOutputStream = new FileOutputStream(destFile);
+        //造缓冲流
+        bufferedInputStream = new BufferedInputStream(fileInputStream);
+        bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = bufferedInputStream.read(buffer)) != -1) &#123;
+            bufferedOutputStream.write(buffer, 0, length);
+        &#125;
+
+    &#125; catch (FileNotFoundException e) &#123;
+        e.printStackTrace();
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        try &#123;
+            //要求先关闭外层的流，在关闭内层的流，因此先关缓冲流
+            if (bufferedInputStream != null) &#123;
+                bufferedInputStream.close();
+            &#125;
+            if (bufferedOutputStream != null) &#123;
+                bufferedInputStream.close();
+            &#125;
+            //关闭外层流的时候，内层流会自动关闭
+            if (fileInputStream != null) &#123;
+                fileInputStream.close();
+            &#125;
+            if (fileOutputStream != null) &#123;
+                fileOutputStream.close();
+            &#125;
+        &#125; catch (IOException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h4 id="转化流"><a href="#转化流" class="headerlink" title="转化流"></a>转化流</h4><p>处理流之二:转换流的使用</p>
+<p>1、转换流:属于字符流</p>
+<p>InputStreamReader：将一个字节的输入流转换为字符的输入流</p>
+<p>outputStreamwriter：将一个字符的输出流转换为字节的输出流</p>
+<p>2、作用:提供字节流与字符流之间的转换</p>
+<p>3、解码:字节、字节数组—&gt;字符数组、字符串</p>
+<p>​    编码:字符数组、字符串—&gt;字节、字节数组</p>
+<p>4、字符集</p>
+<p>ASCII：美国标准信息交换码。一个字节的7位可以表示。</p>
+<p>IS08859-1：拉丁码表。欧洲码表用一个字节的8位表示。</p>
+<p>GB2312：中国的中文编码表。最多两个字节编码所有字符</p>
+<p>GBK：中国的中文编码表升级，融合了更多的中文文字符号。最多两个字节编码</p>
+<p>Unicode：国际标准码，融合了目前人类使用的所有字符。为每个字符分配唯一的字符码。所有的文字都用两个字节来表示</p>
+<p>UTF-8：变长的编码方式，可用1-4个字节来表示一个字符。</p>
+<pre><code class="java">/*
+    InputStreamReader的使用，实现字节的输入流到字符的输入流的转换
+    * */
+@Test
+public void test01() throws IOException &#123;
+    FileInputStream fis1 = new FileInputStream(&quot;hello.txt&quot;);
+    InputStreamReader isr = new InputStreamReader(fis1, &quot;gbk&quot;);
+    char[] buffer=new char[10];
+    int len;
+    while ((len=isr.read(buffer))!=-1)&#123;
+        String str = new String(buffer, 0, len);
+        System.out.println(str);
+    &#125;
+    isr.close();
+&#125;
+</code></pre>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>序列化过程：将内存中的java对象报存到磁盘中或者通过网络传输出去，使用ObjectOutputStream是实现。</p>
+<p>反序列化：将磁盘文件中的对象还原为内存中的一个java对象。</p>
+<p>序列化</p>
+<pre><code class="java">@Test
+public void testObjectOutputStream()&#123;
+    ObjectOutputStream oos = null;
+    try &#123;
+        oos = new ObjectOutputStream(new FileOutputStream(&quot;object.dat&quot;));
+        oos.writeObject(new String(&quot;我爱北京天安门&quot;));
+
+        oos.flush();//刷新操作
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125;finally &#123;
+        if (oos!=null)&#123;
+            try &#123;
+                oos.close();
+            &#125; catch (IOException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>反序列化</p>
+<pre><code class="java"> @Test
+public void testObjectInputStream()&#123;
+    ObjectInputStream ois = null;
+    try &#123;
+        ois = new ObjectInputStream(new FileInputStream(&quot;object.dat&quot;));
+        Object obj = ois.readObject();
+        String str = (String) obj;
+        System.out.println(str);
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; catch (ClassNotFoundException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        if (ois!=null)&#123;
+            try &#123;
+                ois.close();
+            &#125; catch (IOException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>对象序列化</p>
+<p>对象虚满足如下的要求，方可序列化</p>
+<p>1、需要实现接口：Serializable</p>
+<p>2、当前类提供一个全局常量：serialVersionUID，随便写一个值，是用来反序列化时进行验证使用的</p>
+<pre><code class="java">public static final long serialVersionUID = 42L;
+</code></pre>
+<p>3、除了当前对象类需要实现Serializable接口之外。HIA必须保证其内部所有属性也必须是可序列化的。（默认情况下，基本数据类型可序列化）</p>
+<p>补充：ObjectOutputStream和ObjectInputStream不能序列化static和transient修饰的成员变量</p>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>IO</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mybatis-plus学习使用</title>
+    <url>/2021/04/17/Mybatis-plus%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Mybatis-plus学习使用"><a href="#Mybatis-plus学习使用" class="headerlink" title="Mybatis-plus学习使用"></a>Mybatis-plus学习使用</h1><p>官方网站：[<a href="https://mp.baomidou.com/]">https://mp.baomidou.com/]</a>: </p>
+<h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h3><p>导入依赖：</p>
+<pre><code class="xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;3.4.1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<span id="more"></span>
+
+<p>配置数据库</p>
+<pre><code class="properties">spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/mybatis-plus?characterEncoding=UTF-8&amp;serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=123456
+</code></pre>
+<p>在启动类上加 @MapperScan(“com.lyj.dao”)</p>
+<pre><code class="Java">package com.lyj;
+
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+@MapperScan(&quot;com.lyj.dao&quot;)
+public class MybatisPlusApplication &#123;
+    public static void main(String[] args) &#123;
+        SpringApplication.run(MybatisPlusApplication.class, args);
+    &#125;
+&#125;
+</code></pre>
+<p>创建实体类User 字段与数据库的字段对应</p>
+<pre><code class="java">
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Accessors(chain = true)
+@TableName(value = &quot;t_user&quot;)//给实体类指定表名 ，默认将类名作为表名
+public class User &#123;
+    @TableId(value = &quot;id&quot;,type = IdType.AUTO)//指定字段名，type字段的类型
+    private String id;
+    @TableField(value = &quot;name&quot;)
+    private String name;
+    private Integer age;
+    private Date bir;
+    @TableField(exist = false)//表示aaa不映射数据表中的任何字段
+    private int aaa;
+&#125;
+</code></pre>
+<p>建立dao层,只需要继承BaseMapper<T></T></p>
+<pre><code class="java">//使用mybatis-plus增强接口
+@Repository
+public interface UserDao extends BaseMapper&lt;User&gt; &#123;
+
+&#125;
+</code></pre>
+<p>Test:</p>
+<pre><code class="java">@SpringBootTest
+class MybatisPlusApplicationTests &#123;
+    @Autowired
+    private UserDao userDao;
+    @Test
+    void contextLoads() &#123;
+        List&lt;User&gt; users = userDao.selectList(null);
+        for (User user : users) &#123;
+            System.out.println(user);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210504220743.png" alt="20210202224840690"></p>
+<p>其余的测试：QueryWrapper条件控制器;为条件查询的对象，加入QueryWrapper对象则表示加入条件查询，</p>
+<pre><code class="java">@SpringBootTest
+class MybatisPlusApplicationTests &#123;
+@Autowired
+    private UserDao userDao;
+    @Test
+    void contextLoads() &#123;
+        List&lt;User&gt; users = userDao.selectList(null);
+
+        //条件查询
+       /* QueryWrapper&lt;User&gt; queryWrapper = new QueryWrapper&lt;&gt;();
+        queryWrapper.eq(&quot;age&quot;,23);//等值查询，age==21的
+        queryWrapper.lt(&quot;age&quot;,21);//设置小于查询
+        queryWrapper.le(&quot;age&quot;,23);//小于等于
+        queryWrapper.gt(&quot;age&quot;,23);//大于查询， ge大于等于
+       List&lt;User&gt; users =  userDao.selectList(queryWrapper);*/
+
+
+        //模糊查询
+        /* QueryWrapper&lt;User&gt; queryWrapper = new QueryWrapper&lt;&gt;();
+          queryWrapper.like(&quot;name&quot;,&quot;龙&quot;);
+        //queryWrapper.likeLeft(&quot;name&quot;,&quot;%机&quot;);//以xxx结尾
+        //queryWrapper.likeRight(&quot;name&quot;,&quot;龙%);//以xxx开头
+        List&lt;User&gt; users = userDao.selectList(queryWrapper);
+        */
+
+        for (User user : users) &#123;
+            System.out.println(user);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h4 id="AbstractWrapper-条件控制器"><a href="#AbstractWrapper-条件控制器" class="headerlink" title="AbstractWrapper(条件控制器)"></a>AbstractWrapper(条件控制器)</h4><p>QueryWrapper(LambdaQueryWrapper) 和 UpdateWrapper(LambdaUpdateWrapper) 的父类<br>用于生成 sql 的 where 条件, entity 属性也用于生成 sql 的 where 条件<br>注意: entity 生成的 where 条件与 使用各个 api 生成的 where 条件<strong>没有任何关联行为</strong></p>
+<h3 id="各个注解的使用"><a href="#各个注解的使用" class="headerlink" title="各个注解的使用"></a>各个注解的使用</h3><p>在实体类里面</p>
+<pre><code class="java">@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Accessors(chain = true)
+@TableName(value = &quot;t_user&quot;)//给实体类指定表名 ，默认将类名作为表名
+public class User &#123;
+    @TableId(value = &quot;id&quot;,type = IdType.AUTO)//指定字段名，type字段的类型
+    private String id;
+    @TableField(value = &quot;name&quot;)
+    private String name;
+    private Integer age;
+    private Date bir;
+    @TableField(exist = false)//表示aaa不映射数据表中的任何字段
+    private int aaa;
+&#125;
+</code></pre>
+<h4 id="TableName"><a href="#TableName" class="headerlink" title="@TableName"></a>@TableName</h4><p>指定表的名字，当实体类与数据库的类名不一致时可以是@TableName指定数据库表名，默认将类名作为表名</p>
+<h4 id="TableId"><a href="#TableId" class="headerlink" title="@TableId"></a>@TableId</h4><p>指定字段的名字，type表示字段的类型</p>
+<h4 id="TableField"><a href="#TableField" class="headerlink" title="@TableField()"></a>@TableField()</h4><p>@TableField(value = “name”)指定字段名，</p>
+<p>@TableField(exist = false)还可以表示字段不参与数据库的映射</p>
+<h3 id="分页插件的使用"><a href="#分页插件的使用" class="headerlink" title="分页插件的使用"></a>分页插件的使用</h3><p>加入分页过滤器（必须配置）</p>
+<pre><code class="java">//Spring boot方式
+@Configuration
+@MapperScan(&quot;com.lyj.dao&quot;)
+public class MybatisPlusConfig &#123;
+
+    @Bean
+    public PaginationInterceptor paginationInterceptor() &#123;
+        PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+        // 设置请求的页面大于最大页后操作， true调回到首页，false 继续请求  默认false
+        // paginationInterceptor.setOverflow(false);
+        // 设置最大单页限制数量，默认 500 条，-1 不受限制
+        // paginationInterceptor.setLimit(500);
+        // 开启 count 的 join 优化,只针对部分 left join
+        paginationInterceptor.setCountSqlParser(new JsqlParserCountOptimize(true));
+        return paginationInterceptor;
+    &#125;
+&#125;
+</code></pre>
+<p>Test:  参数1;当前页 默认为1   参数2：每页显示记录数 默认10</p>
+<pre><code class="java">@Test
+    public void testFindPaged()&#123;
+        //参数1;当前页 默认为1   参数2：每页显示记录数 默认10
+        IPage&lt;User&gt; page =new Page&lt;&gt;(1,10);
+        IPage&lt;User&gt; userIPage = userDao.selectPage(page, null);
+        long total = userIPage.getTotal();
+        System.out.println(&quot;总记录数：&quot;+total);
+        List&lt;User&gt; userList = userIPage.getRecords();
+        for (User user : userList) &#123;
+            System.out.println(user);
+        &#125;
+    &#125;
+</code></pre>
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>mybatis-plus</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mybatis动态Sql</title>
+    <url>/2021/05/14/Mybatis%E5%8A%A8%E6%80%81Sql/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Mybatis动态Sql"><a href="#Mybatis动态Sql" class="headerlink" title="Mybatis动态Sql"></a>Mybatis动态Sql</h1><h2 id="if"><a href="#if" class="headerlink" title="if"></a>if</h2><p>test: 动态sql的判断条件</p>
+<p>问题：当第一个为空的时候会导致sql拼接错误。</p>
+<p>方法一：在where后加上一个1=1 后面的<if>标签里全部加上and（不推荐）。</if></p>
+<p>方法二：使用<where></where>标签</p>
+<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
+     resultType=&quot;Blog&quot;&gt;
+  SELECT * FROM BLOG
+  WHERE
+  &lt;if test=&quot;state != null&quot;&gt;
+    state = #&#123;state&#125;
+  &lt;/if&gt;
+  &lt;if test=&quot;title != null&quot;&gt;
+    AND title like #&#123;title&#125;
+  &lt;/if&gt;
+  &lt;if test=&quot;author != null and author.name != null&quot;&gt;
+    AND author_name like #&#123;author.name&#125;
+  &lt;/if&gt;
+&lt;/select&gt;
+</code></pre>
+<h3 id="where"><a href="#where" class="headerlink" title="where"></a>where</h3><p><em>where</em> 元素只会在子元素返回任何内容的情况下才插入 “WHERE” 子句。而且，若子句的开头为 “AND” 或 “OR”，<em>where</em> 元素也会将它们去除。</p>
+<p>问题：当<if>标签里的and写在后面就会出现sql拼接错误。</if></p>
+<p>使用<tirm>标签解决</tirm></p>
+<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
+     resultType=&quot;Blog&quot;&gt;
+  SELECT * FROM BLOG
+  &lt;where&gt;
+    &lt;if test=&quot;state != null&quot;&gt;
+         state = #&#123;state&#125;
+    &lt;/if&gt;
+    &lt;if test=&quot;title != null&quot;&gt;
+        AND title like #&#123;title&#125;
+    &lt;/if&gt;
+    &lt;if test=&quot;author != null and author.name != null&quot;&gt;
+        AND author_name like #&#123;author.name&#125;
+    &lt;/if&gt;
+  &lt;/where&gt;
+&lt;/select&gt;
+</code></pre>
+<h3 id="tirm"><a href="#tirm" class="headerlink" title="tirm"></a>tirm</h3><p>prefix：前缀，trim标签题中是整个字符串拼串后的结果。prefix给拼串后的整个字符串加一个前缀。</p>
+<p>prefixOverrides：前缀覆盖，去掉整个字符串前面多余的字符</p>
+<p>suffix：后缀拼串后的整个字符串加一个后缀。</p>
+<p>suffixOverride：后缀覆盖，去掉整个字符串后面多余的字符</p>
+<pre><code class="xml">&lt;trim prefix=&quot;WHERE&quot; prefixOverrides=&quot;AND |OR &quot;&gt;
+  ...
+&lt;/trim&gt;
+</code></pre>
+<h2 id="choose、when、otherwise"><a href="#choose、when、otherwise" class="headerlink" title="choose、when、otherwise"></a>choose、when、otherwise</h2><p>MyBatis 提供了 choose 元素，</p>
+<p>它有点像 Java 中的 switch 语句。</p>
+<p>when元素，它有点像 Java 中的 switch中的case语句。</p>
+<p>otherwise元素，它有点像 Java 中的 switch中的default 语句。</p>
+<pre><code class="xml">&lt;select id=&quot;findActiveBlogLike&quot;
+     resultType=&quot;Blog&quot;&gt;
+  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  &lt;choose&gt;
+    &lt;when test=&quot;title != null&quot;&gt;
+      AND title like #&#123;title&#125;
+    &lt;/when&gt;
+    &lt;when test=&quot;author != null and author.name != null&quot;&gt;
+      AND author_name like #&#123;author.name&#125;
+    &lt;/when&gt;
+    &lt;otherwise&gt;
+      AND featured = 1
+    &lt;/otherwise&gt;
+  &lt;/choose&gt;
+&lt;/select&gt;
+</code></pre>
+<h2 id="内置参数"><a href="#内置参数" class="headerlink" title="内置参数"></a>内置参数</h2><p>mybatis默认还有两个内置参数：</p>
+<p>​    _parameter：代表整个参数</p>
+<p>​        单个参数：_parameter就是这个参数</p>
+<p>​        多个参数：参数会被封装为一个map：_parameter就是</p>
+<p>​    _databaseId：如果配置了databaseIdProvider标签。</p>
+<p>​                        _databaseId就是代表当前数据库的别名mysql（指的是mysql或者oracle）</p>
+<h2 id="Bind"><a href="#Bind" class="headerlink" title="Bind"></a>Bind</h2><p>​    <code>bind</code> 元素允许你在 OGNL 表达式以外创建一个变量，并将其绑定到当前的上下文。比如：</p>
+<pre><code class="sql">&lt;select id=&quot;selectBlogsLike&quot; resultType=&quot;Blog&quot;&gt;
+  &lt;bind name=&quot;pattern&quot; value=&quot;&#39;%&#39; + _parameter.getTitle() + &#39;%&#39;&quot; /&gt;
+  SELECT * FROM BLOG
+  WHERE title LIKE #&#123;pattern&#125;
+&lt;/select&gt;
+</code></pre>
+<h2 id="mybatis缓存"><a href="#mybatis缓存" class="headerlink" title="mybatis缓存"></a>mybatis缓存</h2><h3 id="一级缓存：（本地缓存）"><a href="#一级缓存：（本地缓存）" class="headerlink" title="一级缓存：（本地缓存）"></a>一级缓存：（本地缓存）</h3><p>sqlSession级别的缓存。一级缓存是一直开启的；SqlSession级别的一个Mybatis缓存，与数据库同一次会话期间查询到的数据会放在本地缓存中</p>
+<p>以后如果需要后期相同的数据。直接从缓存中拿，没必要再去查询数据库</p>
+<p>一级缓存失效情况（没有使用到当前一级缓存的情况，效果就是，还需要再想数据库发出查询）</p>
+<p>1、sqlSession不同</p>
+<p>2、sqlSession相同，查询条件不同。（当前一级缓存中还没有这个数据）</p>
+<p>3、sqlSession相同，两个查询之间执行了增删该操作（这次增删改可能对当前数据有影响）</p>
+<p>4、sqlSession相同，手动清除一级缓存（缓存清空）</p>
+<h3 id="二级缓存：（全局缓存）"><a href="#二级缓存：（全局缓存）" class="headerlink" title="二级缓存：（全局缓存）"></a>二级缓存：（全局缓存）</h3><p>基于namespace级别的缓存：一个namespace对应一个二级缓存</p>
+<p>1、一个会话，查询一条数据，这个数据就会被放在当前会话的一级缓存中；</p>
+<p>2、如果当前会话关闭了，一级缓存中的数据会被保存到二级缓存中；新的会话查询信息，就可以参照二级缓存</p>
+<p>3、不同namespace查询胡的数据会放在自己对应的缓存中（mapper)</p>
+<p>要启用全局的二级缓存，只需要在你的 SQL 映射文件中添加一行：</p>
+<pre><code class="xml">&lt;cache/&gt;
+</code></pre>
+<p>基本上就是这样。这个简单语句的效果如下:</p>
+<ul>
+<li><p>映射语句文件中的所有 select 语句的结果将会被缓存。</p>
+</li>
+<li><p>映射语句文件中的所有 insert、update 和 delete 语句会刷新缓存。</p>
+</li>
+<li><p>缓存会使用最近最少使用算法（LRU, Least Recently Used）算法来清除不需要的缓存。</p>
+</li>
+<li><p>缓存不会定时进行刷新（也就是说，没有刷新间隔）。</p>
+</li>
+<li><p>缓存会保存列表或对象（无论查询方法返回哪种）的 1024 个引用。</p>
+</li>
+<li><p>缓存会被视为读/写缓存，这意味着获取到的对象并不是共享的，可以安全地被调用者修改，而不干扰其他调用者或线程所做的潜在修改。</p>
+<h3 id="缓存原理"><a href="#缓存原理" class="headerlink" title="缓存原理"></a>缓存原理</h3><p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514135140.png" alt="image-20210513164854481"></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mybatis逆向工程使用</title>
+    <url>/2021/05/14/Mybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Mybatis逆向工程使用"><a href="#Mybatis逆向工程使用" class="headerlink" title="Mybatis逆向工程使用"></a>Mybatis逆向工程使用</h1><p>官方地址：<a href="https://github.com/mybatis/generator">mybatis/generator: A code generator for MyBatis. (github.com)</a></p>
+<p>导入需要的jar包</p>
+<pre><code class="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-generator&lt;/artifactId&gt;
+    &lt;version&gt;1.4.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-generator-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;1.4.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>在项目名称下创建generatorConfig.xml（与src同一级别），各个组件的官方介绍<a href="http://mybatis.org/generator/configreference/xmlconfig.html">MyBatis Generator Core – MyBatis Generator XML Configuration File Reference</a></p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE generatorConfiguration
+        PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot;&gt;
+
+&lt;generatorConfiguration&gt;
+    &lt;context id=&quot;DB2Tables&quot; targetRuntime=&quot;MyBatis3&quot;&gt;
+        &lt;jdbcConnection driverClass=&quot;com.mysql.cj.jdbc.Driver&quot;
+                        connectionURL=&quot;jdbc:mysql://localhost:3306/bjpowernode?serverTimezone=UTC&quot;
+                        userId=&quot;root&quot;
+                        password=&quot;123456&quot;&gt;
+        &lt;/jdbcConnection&gt;
+
+        &lt;javaTypeResolver &gt;
+            &lt;property name=&quot;forceBigDecimals&quot; value=&quot;false&quot; /&gt;
+        &lt;/javaTypeResolver&gt;
+        &lt;!--javaModelGenerator,指定javaBean的生成策略--&gt;
+        &lt;javaModelGenerator targetPackage=&quot;com.lyj.pojo&quot; targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+            &lt;property name=&quot;trimStrings&quot; value=&quot;true&quot; /&gt;
+        &lt;/javaModelGenerator&gt;
+        &lt;!--sqlMapGenerator指定sql映射（Mapper）的生成策略--&gt;
+        &lt;sqlMapGenerator targetPackage=&quot;com.lyj.dao.xml&quot;  targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+        &lt;/sqlMapGenerator&gt;
+        &lt;!--javaClientGenerator指定mapper接口所在位置--&gt;
+        &lt;javaClientGenerator type=&quot;XMLMAPPER&quot; targetPackage=&quot;com.lyj.dao&quot;  targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+        &lt;/javaClientGenerator&gt;
+        &lt;!--指定逆向分析哪些表：根据这些表创建javabean--&gt;
+        &lt;table tableName=&quot;dept&quot; domainObjectName=&quot;Department&quot;/&gt;
+        &lt;table tableName=&quot;emp&quot; domainObjectName=&quot;Employee&quot;/&gt;
+    &lt;/context&gt;
+&lt;/generatorConfiguration&gt;
+</code></pre>
+<p>在测试类里面进行运行代码</p>
+<pre><code class="java">@Test
+    public void generator() throws IOException, XMLParserException, InvalidConfigurationException, SQLException, InterruptedException &#123;
+        List&lt;String&gt; warnings = new ArrayList&lt;String&gt;();
+        boolean overwrite = true;
+        File configFile = new File(&quot;generatorConfig.xml&quot;); //xml地址
+        ConfigurationParser cp = new ConfigurationParser(warnings);
+        Configuration config = cp.parseConfiguration(configFile);
+        DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+        MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
+        myBatisGenerator.generate(null);
+    &#125;
+</code></pre>
+<p>最后就可以生成代码和文件</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514094825.png" alt="image-20210514094825578"></p>
+<p>如何使用targetRuntime=”MyBatis3”会产生一些条件查询的方法，因此要多一写xxxExample的类，具体看<a href="http://mybatis.org/generator/configreference/context.html">MyBatis Generator Core – The  Element</a></p>
+<table>
+<thead>
+<tr>
+<th>targetRuntime的值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>MyBatis3</strong></td>
+<td>使用该值，MBG将生成与MyBatis 3.0或更高版本以及JSE 5.0或更高版本兼容的对象（例如Java模型和mapper接口将使用通用类型）。 这些生成的对象中的“示例”方法实际上支持无限的动态where子句。 此外，使用这些生成器生成的Java对象支持许多JSE 5.0功能，包括参数化类型和注释。</td>
+</tr>
+<tr>
+<td><strong>MyBatis3Simple</strong></td>
+<td>使用该值，MBG将生成与MyBatis 3.0或更高版本以及JSE 5.0或更高版本兼容的对象（例如Java模型和mapper接口将使用通用类型）。 用此目标运行时生成的映射器是非常基本的CRUD操作，仅没有“示例”方法且动态SQL很少。 用这些生成器生成的Java对象支持许多JSE 5.0功能，包括参数化类型和注释。</td>
+</tr>
+</tbody></table>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514094620.png" alt="image-20210514094613433"></p>
+<p>测试</p>
+<pre><code class="java">@Test
+public void mytest01() throws IOException &#123;
+    String resource = &quot;mybatis-config.xml&quot;;
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    
+    EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+    //使用EmployeeExample来封装条件
+    EmployeeExample example = new EmployeeExample();
+    //创建一个Criteria,这个criteria就是拼装条件
+    EmployeeExample.Criteria criteria = example.createCriteria();
+    criteria.andEnameLike(&quot;%S%&quot;);
+    //第二个criteria，使用or来拼接上,或满足criteria或者满足criteria2
+    EmployeeExample.Criteria criteria2 = example.createCriteria();
+    criteria2.andEnameLike(&quot;%T%&quot;);
+    //拼接第二个criteria
+    example.or(criteria2);
+    
+    List&lt;Employee&gt; employees = mapper.selectByExample(example);
+    for (Employee employee : employees) &#123;
+        System.out.println(employee.getEname());
+    &#125;
+&#125;
+</code></pre>
+<p>运行结果：</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514133215.png" alt="image-20210514133215219"></p>
+]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring+SpringMVC+Mybatis整合</title>
+    <url>/2021/05/15/Spring+SpringMVC+Mybatis%E6%95%B4%E5%90%88/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Spring-SpringMVC-Mybatis整合"><a href="#Spring-SpringMVC-Mybatis整合" class="headerlink" title="Spring+SpringMVC+Mybatis整合"></a>Spring+SpringMVC+Mybatis整合</h1><p>1、创建一个maven项目并且添加web框架</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210515190605.png" alt="image-20210515190557883" style="zoom: 50%;">
+
+
+
+<h2 id="2、整合spring-springMVC-mybatis配置文件"><a href="#2、整合spring-springMVC-mybatis配置文件" class="headerlink" title="2、整合spring+springMVC+mybatis配置文件"></a>2、整合spring+springMVC+mybatis配置文件</h2><p>1、导入相关依赖</p>
+<pre><code class="xml"> &lt;dependencies&gt;
+     &lt;!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc --&gt;
+     &lt;dependency&gt;
+         &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+         &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+         &lt;version&gt;5.3.6&lt;/version&gt;
+     &lt;/dependency&gt;
+     &lt;!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring --&gt;
+     &lt;dependency&gt;
+         &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+         &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+         &lt;version&gt;2.0.6&lt;/version&gt;
+     &lt;/dependency&gt;
+     &lt;!-- https://mvnrepository.com/artifact/com.alibaba/druid --&gt;
+     &lt;dependency&gt;
+         &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+         &lt;artifactId&gt;druid&lt;/artifactId&gt;
+         &lt;version&gt;1.1.23&lt;/version&gt;
+     &lt;/dependency&gt;
+     &lt;!-- https://mvnrepository.com/artifact/log4j/log4j --&gt;
+     &lt;dependency&gt;
+         &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+         &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;
+         &lt;version&gt;5.3.2&lt;/version&gt;
+     &lt;/dependency&gt;
+&lt;/dependencies&gt;
+ &lt;build&gt;
+     &lt;resources&gt;
+         &lt;resource&gt;
+             &lt;directory&gt;src/main/java&lt;/directory&gt;
+             &lt;includes&gt;
+                 &lt;include&gt;**/*.properties&lt;/include&gt;
+                 &lt;include&gt;**/*.xml&lt;/include&gt;
+             &lt;/includes&gt;
+         &lt;/resource&gt;
+     &lt;/resources&gt;
+&lt;/build&gt;
+</code></pre>
+<p>2、创建mybatis配置文件mybatis-config.xml，里面主要写一些mybatis的属性设置熟悉比如<setting>标签</setting></p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE configuration
+        PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;
+&lt;configuration&gt;
+
+&lt;/configuration&gt;
+</code></pre>
+<p>3、创建spring配置配置文件applationContext.xml</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
+       xmlns:mybatis=&quot;http://mybatis.org/schema/mybatis-spring&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://mybatis.org/schema/mybatis-spring
+       http://mybatis.org/schema/mybatis-spring.xsd&quot;&gt;
+    &lt;!--Spring希望管理所有的业务逻辑组件,Controller交给SpringMVC容器管理--&gt;
+    &lt;context:component-scan base-package=&quot;com.lyj&quot;&gt;
+      &lt;context:exclude-filter type=&quot;annotation&quot; expression=&quot;org.springframework.stereotype.Controller&quot;/&gt;
+    &lt;/context:component-scan&gt;
+    &lt;!--Spring用来控制业务逻辑。数据源、事务--&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;com.alibaba.druid.pool.DruidDataSource&quot;&gt;
+        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.cj.jdbc.Driver&quot; /&gt;
+        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/bjpowernode?useSSL=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;serverTimezone=UTC&quot; /&gt;
+        &lt;property name=&quot;username&quot; value=&quot;root&quot; /&gt;
+        &lt;property name=&quot;password&quot; value=&quot;123456&quot; /&gt;
+    &lt;/bean&gt;
+    &lt;!--事务管理器--&gt;
+    &lt;!-- transaction manager, use DataSourceTransactionManager&quot; for JDBC local tx --&gt;
+    &lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;
+    &lt;/bean&gt;
+    &lt;!--开启注解事务支持--&gt;
+    &lt;tx:annotation-driven /&gt;
+    &lt;!--整合mybatis 1、spring管理所有组件。mapper的实现类 2、spring用来管理事务--&gt;
+    &lt;!--创建sqlSessionFactory--&gt;
+    &lt;bean id=&quot;sqlSessionFactoryBean&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;
+        &lt;!--导入mybatis配置文件--&gt;
+        &lt;property name=&quot;configLocation&quot; value=&quot;classpath:mybatis-config.xml&quot;/&gt;
+        &lt;!--指定mapper文章--&gt;
+        &lt;property name=&quot;mapperLocations&quot; value=&quot;classpath:com/lyj/dao/xml/*.xml&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;!--扫描所有mapper接口的实现，让这些mapper能够自动注入--&gt;
+    &lt;mybatis:scan base-package=&quot;com.lyj.dao&quot;/&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>4、在web.xml文件中导入spring配置文件</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;
+         version=&quot;4.0&quot;&gt;
+    &lt;context-param&gt;
+        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+        &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;
+    &lt;/context-param&gt;
+    &lt;!--监听器--&gt;
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+    &lt;/listener&gt;
+&lt;/web-app&gt;
+</code></pre>
+<p>5、与SpringMVC的配置文件springmvc-config.xml进行整合</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd&quot;&gt;
+
+    &lt;!--值扫描过滤器--&gt;
+    &lt;context:component-scan base-package=&quot;com.lyj&quot; use-default-filters=&quot;false&quot;&gt;
+        &lt;context:include-filter type=&quot;annotation&quot; expression=&quot;org.springframework.stereotype.Controller&quot;/&gt;
+    &lt;/context:component-scan&gt;
+    &lt;!--视图解析器--&gt;
+    &lt;bean class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;!--使用mvc:annotation-driven代替上边注解映射器和注解适配器 配置 如果使用mvc:annotation-driven就不用配置上面的
+        RequestMappingHandlerMapping和RequestMappingHandlerAdapter--&gt;
+    &lt;mvc:annotation-driven/&gt;
+    &lt;mvc:default-servlet-handler/&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>6、在web.xml中整合SpringMVC配置文件</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;
+         version=&quot;4.0&quot;&gt;
+    &lt;context-param&gt;
+        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+        &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;
+    &lt;/context-param&gt;
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+    &lt;/listener&gt;
+    &lt;!--springMVC--&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;springmcv&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+            &lt;param-value&gt;classpath:springmvc-config.xml&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;springmcv&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+</code></pre>
+<p>也可以在spring配置文件applationContext.xml中通过<import resource="classpath:springmvc-config.xml">导入SpringMVC配置文件</import></p>
+<p>然后在将上述web.xml 改为</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;
+         version=&quot;4.0&quot;&gt;
+    &lt;context-param&gt;
+        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+        &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;
+    &lt;/context-param&gt;
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+    &lt;/listener&gt;
+    &lt;!--springMVC--&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;springmcv&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+            &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;springmcv&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+</code></pre>
+<p>注意如果配置了监听器<br><listener><br>    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class><br></listener><br>就必须配置，否则就会报错<br><context-param><br>    <param-name>contextConfigLocation</param-name><br>    <param-value>classpath:applicationContext.xml</param-value><br></context-param></p>
+<p>7、这样就spring+SpringMVC+mybatis就配置好了</p>
+<p>测试：</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210515193738.png" alt="image-20210515193738118" style="zoom:50%;">
+
+
+
+]]></content>
+      <categories>
+        <category>ssm</category>
+      </categories>
+      <tags>
+        <tag>ssm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Springboot三大核心注解</title>
+    <url>/2021/09/07/Springboot%E4%B8%89%E5%A4%A7%E6%A0%B8%E5%BF%83%E6%B3%A8%E8%A7%A3/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Springboot三大核心注解"><a href="#Springboot三大核心注解" class="headerlink" title="Springboot三大核心注解"></a>Springboot三大核心注解</h1><h2 id="SpringBootConfiguration"><a href="#SpringBootConfiguration" class="headerlink" title="@SpringBootConfiguration"></a>@SpringBootConfiguration</h2><p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210906210149.png" alt="image-20210906210142787"></p>
+<p>根据源码分析于@SpringBootConfiguration就是一个Configuration</p>
+<h2 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h2><p>@ComponentScan：配置扫描路径（默认为当前目录下）</p>
+<h2 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h2><p>@EnableAutoConfiguration：开启自动配置，其源码中又主要包含@AutoConfigurationPackage和@Import(AutoConfigurationImportSelector.class)两个注解：</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210906210520.png" alt="image-20210906210520660"></p>
+<h3 id="AutoConfigurationPackage"><a href="#AutoConfigurationPackage" class="headerlink" title="@AutoConfigurationPackage"></a>@AutoConfigurationPackage</h3><p>@AutoConfigurationPackage：自动配置包，导入Registrar内部类，利用Registrar给容器导入一系列组件</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210906210742.png" alt="image-20210906210741994"></p>
+<p>使用Registrar中的方法registerBeanDefinitions(AnnotationMetadata metadata, BeanDefinitionRegistry registry)注册 Bean 定义，new PackageImports(metadata).getPackageNames()的值就是将该包下的组件导入</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210906210940.png" alt="image-20210906210940038"></p>
+<h3 id="Import-AutoConfigurationImportSelector-class"><a href="#Import-AutoConfigurationImportSelector-class" class="headerlink" title="@Import(AutoConfigurationImportSelector.class)"></a>@Import(AutoConfigurationImportSelector.class)</h3><blockquote>
+<p>1、利用getAutoConfigurationEntry(annotationMetadata);给容器中批量导入一些组件 </p>
+<p>2、调用List<String> configurations = getCandidateConfigurations(annotationMetadata, attributes)获取到所有需要导入到容器中的配置类 </String></p>
+<p>3、利用工厂加载 Map&lt;String, List<String>&gt; loadSpringFactories(@Nullable ClassLoader classLoader)；得到所有的组件 </String></p>
+<p>4、从META-INF/spring.factories位置来加载一个文件。 默认扫描我们当前系统里面所有META-INF/spring.factories位置的文件    spring-boot-autoconfigure-2.3.4.RELEASE.jar包里面也有META-INF/spring.factories    </p>
+</blockquote>
+<p>调用AutoConfigurationImportSelector中的process方法，利用getAutoConfigurationEntry(annotationMetadata)给容器批量导入一些组件</p>
+<pre><code class="java">@Override
+public void process(AnnotationMetadata annotationMetadata, DeferredImportSelector deferredImportSelector) &#123;
+   Assert.state(deferredImportSelector instanceof AutoConfigurationImportSelector,
+         () -&gt; String.format(&quot;Only %s implementations are supported, got %s&quot;,
+               AutoConfigurationImportSelector.class.getSimpleName(),
+               deferredImportSelector.getClass().getName()));
+    
+   AutoConfigurationEntry autoConfigurationEntry = ((AutoConfigurationImportSelector) deferredImportSelector)
+         .getAutoConfigurationEntry(annotationMetadata);//核心代码
+    
+   this.autoConfigurationEntries.add(autoConfigurationEntry);
+   for (String importClassName : autoConfigurationEntry.getConfigurations()) &#123;
+      this.entries.putIfAbsent(importClassName, annotationMetadata);
+   &#125;
+&#125;
+</code></pre>
+<h4 id="getAutoConfigurationEntry-annotationMetadata-源码"><a href="#getAutoConfigurationEntry-annotationMetadata-源码" class="headerlink" title="getAutoConfigurationEntry(annotationMetadata)源码"></a>getAutoConfigurationEntry(annotationMetadata)源码</h4><pre><code>protected AutoConfigurationEntry getAutoConfigurationEntry(AnnotationMetadata annotationMetadata) &#123;
+   if (!isEnabled(annotationMetadata)) &#123;
+      return EMPTY_ENTRY;
+   &#125;
+   AnnotationAttributes attributes = getAttributes(annotationMetadata);
+   //获取候选配置
+   List&lt;String&gt; configurations = getCandidateConfigurations(annotationMetadata, attributes);
+   //删除重复配置
+   configurations = removeDuplicates(configurations);
+   //获取排除项
+   Set&lt;String&gt; exclusions = getExclusions(annotationMetadata, attributes);
+   checkExcludedClasses(configurations, exclusions);
+   //删除排除项
+   configurations.removeAll(exclusions);
+   configurations = getConfigurationClassFilter().filter(configurations);
+   fireAutoConfigurationImportEvents(configurations, exclusions);
+   return new AutoConfigurationEntry(configurations, exclusions);
+&#125;
+</code></pre>
+<h4 id="getCandidateConfigurations-annotationMetadata-attributes-源码"><a href="#getCandidateConfigurations-annotationMetadata-attributes-源码" class="headerlink" title="getCandidateConfigurations(annotationMetadata, attributes)源码"></a>getCandidateConfigurations(annotationMetadata, attributes)源码</h4><p>SpringFactoriesLoader.loadFactoryNames(getSpringFactoriesLoaderFactoryClass(),<br>         getBeanClassLoader());使用工厂加载器加载Map&lt;String, List<String>&gt; loadSpringFactories(@Nullable ClassLoader classLoader)获取所以的组件</String></p>
+<pre><code class="java">protected List&lt;String&gt; getCandidateConfigurations(AnnotationMetadata metadata, AnnotationAttributes attributes) &#123;
+   List&lt;String&gt; configurations = SpringFactoriesLoader.loadFactoryNames(getSpringFactoriesLoaderFactoryClass(),
+         getBeanClassLoader());
+   Assert.notEmpty(configurations, &quot;No auto configuration classes found in META-INF/spring.factories. If you &quot;
+         + &quot;are using a custom packaging, make sure that file is correct.&quot;);
+   return configurations;
+&#125;
+</code></pre>
+<h4 id="Map-lt-String-List-gt-loadSpringFactories-Nullable-ClassLoader-classLoader-源码："><a href="#Map-lt-String-List-gt-loadSpringFactories-Nullable-ClassLoader-classLoader-源码：" class="headerlink" title="Map&lt;String, List&gt; loadSpringFactories(@Nullable ClassLoader classLoader)源码："></a>Map&lt;String, List<String>&gt; loadSpringFactories(@Nullable ClassLoader classLoader)源码：</String></h4><pre><code class="java">private static Map&lt;String, List&lt;String&gt;&gt; loadSpringFactories(@Nullable ClassLoader classLoader) &#123;
+   MultiValueMap&lt;String, String&gt; result = cache.get(classLoader);
+   if (result != null) &#123;
+      return result;
+   &#125;
+
+   try &#123;
+       //获取所以META-INF/spring.factories下的组件
+      Enumeration&lt;URL&gt; urls = (classLoader != null ?
+            classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :
+            ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));
+      result = new LinkedMultiValueMap&lt;&gt;();
+      while (urls.hasMoreElements()) &#123;
+         URL url = urls.nextElement();
+         UrlResource resource = new UrlResource(url);
+         Properties properties = PropertiesLoaderUtils.loadProperties(resource);
+         for (Map.Entry&lt;?, ?&gt; entry : properties.entrySet()) &#123;
+            String factoryTypeName = ((String) entry.getKey()).trim();
+            for (String factoryImplementationName : StringUtils.commaDelimitedListToStringArray((String) entry.getValue())) &#123;
+               result.add(factoryTypeName, factoryImplementationName.trim());
+            &#125;
+         &#125;
+      &#125;
+      cache.put(classLoader, result);
+      return result;
+   &#125;
+   catch (IOException ex) &#123;
+      throw new IllegalArgumentException(&quot;Unable to load factories from location [&quot; +
+            FACTORIES_RESOURCE_LOCATION + &quot;]&quot;, ex);
+   &#125;
+&#125;
+</code></pre>
+<p>加载META-INF/spring.factories的所以组件所以默认扫描系统里面所以的META-INF/spring.factories下的组件</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210906213651.png" alt="image-20210906213651562"></p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210906213941.png" alt="image-20210906213941193" style="zoom:67%;">
+
+]]></content>
+      <categories>
+        <category>Springboot</category>
+      </categories>
+      <tags>
+        <tag>Springboot</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2021/04/16/hello-world/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><span id="more"></span>
+<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
+</code></pre>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>java后端解决跨域的几种方法</title>
+    <url>/2021/04/17/java%E5%90%8E%E7%AB%AF%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="java后端解决跨域的几种方法"><a href="#java后端解决跨域的几种方法" class="headerlink" title="java后端解决跨域的几种方法"></a>java后端解决跨域的几种方法</h1><ol>
+<li><blockquote>
+<p><code>作者：telami</code><br><code>来源：www.telami.cn/2019/springboot-resolve-cors/</code></p>
+</blockquote>
+</li>
+</ol>
+<p>前后端分离大势所趋，跨域问题更是老生常谈，随便用标题去google或百度一下，能搜出一大片解决方案，那么为啥又要写一遍呢，不急往下看。</p>
+<h4 id="问题背景："><a href="#问题背景：" class="headerlink" title="问题背景："></a>问题背景：</h4><blockquote>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">Same Origin Policy，译为“同源策略”。它是对于客户端脚本（尤其是JavaScript）的重要安全度量标准，其目的在于防止某个文档或者脚本从多个不同“origin”（源）装载。它认为自任何站点装载的信赖内容是不安全的。</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">当被浏览器半信半疑的脚本运行在沙箱时，它们应该只被允许访问来自同一站点的资源，而不是那些来自其它站点可能怀有恶意的资源。</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect"><strong>注：具有相同的Origin，也即是拥有相同的协议、主机地址以及端口。一旦这三项数据中有一项不同，那么该资源就将被认为是从不同的Origin得来的，进而不被允许访问。</strong></a></p>
+</blockquote>
+<p>CORS就是为了解决SOP问题而生的，当然CORS不是唯一的解决方案，不过这里不赘述其他解决办法了。</p>
+<span id="more"></span>
+<hr>
+<h4 id="CORS简介"><a href="#CORS简介" class="headerlink" title="CORS简介:"></a>CORS简介:</h4><blockquote>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">CORS是一个W3C标准，全称是”跨域资源共享”（Cross-origin resource sharing）。它允许浏览器向跨源(协议 + 域名 + 端口)服务器，发出XMLHttpRequest请求，从而克服了AJAX只能同源使用的限制。CORS需要浏览器和服务器同时支持。它的通信过程，都是浏览器自动完成，不需要用户参与。</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">对于开发者来说，CORS通信与同源的AJAX/Fetch通信没有差别，代码完全一样。浏览器一旦发现请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。因此，实现CORS通信的关键是服务器。只要服务器实现了CORS接口，就可以跨源通信。</a></p>
+</blockquote>
+<p><strong>浏览器将CORS请求分成两类：简单请求（simple request）和非简单请求（not-so-simple request）。</strong></p>
+<blockquote>
+<p>浏览器发出CORS简单请求，只需要在头信息之中增加一个Origin字段。</p>
+</blockquote>
+<blockquote>
+<p>浏览器发出CORS非简单请求，会在正式通信之前，增加一次OPTIONS查询请求，称为”预检”请求（preflight）。浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些HTTP动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的XMLHttpRequest请求，否则就报错。</p>
+</blockquote>
+<p>简单请求就是HEAD、GET、POST请求，并且HTTP的头信息不超出以下几种字段 Accept、Accept-Language、Content-Language、Last-Event-ID、Content-Type <strong>注：Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain</strong></p>
+<p>反之，就是非简单请求。</p>
+<p>其实实现CORS很简单，就是在服务端加一些响应头，并且这样做对前端来说是无感知的，很方便。</p>
+<h4 id="详解响应头："><a href="#详解响应头：" class="headerlink" title="详解响应头："></a>详解响应头：</h4><ul>
+<li>Access-Control-Allow-Origin 该字段必填。它的值要么是请求时Origin字段的具体值，要么是一个*，表示接受任意域名的请求。</li>
+<li>Access-Control-Allow-Methods 该字段必填。它的值是逗号分隔的一个具体的字符串或者*，表明服务器支持的所有跨域请求的方法。注意，返回的是所有支持的方法，而不单是浏览器请求的那个方法。这是为了避免多次”预检”请求。</li>
+<li>Access-Control-Expose-Headers 该字段可选。CORS请求时，XMLHttpRequest对象的getResponseHeader()方法只能拿到6个基本字段：Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma。如果想拿到其他字段，就必须在Access-Control-Expose-Headers里面指定。</li>
+<li>Access-Control-Allow-Credentials 该字段可选。它的值是一个布尔值，表示是否允许发送Cookie.默认情况下，不发生Cookie，即：false。对服务器有特殊要求的请求，比如请求方法是PUT或DELETE，或者Content-Type字段的类型是application/json，这个值只能设为true。如果服务器不要浏览器发送Cookie，删除该字段即可。</li>
+<li>Access-Control-Max-Age 该字段可选，用来指定本次预检请求的有效期，单位为秒。在有效期间，不用发出另一条预检请求。</li>
+</ul>
+<p>顺便提一下，如果在开发中，发现每次发起请求都是两条，一次OPTIONS，一次正常请求，注意是每次，那么就需要配置Access-Control-Max-Age，避免每次都发出预检请求。</p>
+<h4 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h4><h5 id="第一种办法"><a href="#第一种办法" class="headerlink" title="第一种办法:"></a>第一种办法:</h5><pre><code>import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+@Configuration
+public class CorsConfig implements WebMvcConfigurer &#123;
+    @Override
+    public void addCorsMappings(CorsRegistry registry) &#123;
+        registry.addMapping(&quot;/**&quot;)
+                .allowedOrigins(&quot;*&quot;)
+                .allowedMethods(&quot;GET&quot;, &quot;HEAD&quot;, &quot;POST&quot;, &quot;PUT&quot;, &quot;DELETE&quot;, &quot;OPTIONS&quot;)
+                .allowCredentials(true)
+                .maxAge(3600)
+                .allowedHeaders(&quot;*&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">这种方式是全局配置的，网上也大都是这种解决办法，但是很多都是基于旧的spring版本，比如 <strong>WebMvcConfigurerAdapter</strong> 在spring5.0已经被标记为Deprecated，点开源码可以看到：</a></p>
+<pre><code>/**
+ * An implementation of &#123;@link WebMvcConfigurer&#125; with empty methods allowing
+ * subclasses to override only the methods they&#39;re interested in.
+ *
+ * @author Rossen Stoyanchev
+ * @since 3.1
+ * @deprecated as of 5.0 &#123;@link WebMvcConfigurer&#125; has default methods (made
+ * possible by a Java 8 baseline) and can be implemented directly without the
+ * need for this adapter
+ */
+@Deprecated
+public abstract class WebMvcConfigurerAdapter implements WebMvcConfigurer &#123;&#125;
+</code></pre>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">像这种过时的类或者方法，spring的作者们一定会在注解上面说明原因，并告诉你新的该用哪个，这是非常优秀的编码习惯，点赞！</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">spring5最低支持到jdk1.8，所以注释中明确表明，你可以直接实现WebMvcConfigurer接口，无需再用这个适配器，因为jdk1.8支持接口中存在default-method。</a></p>
+<p>Spring Boot 基础就不介绍了，看下这个教程太全了：</p>
+<blockquote>
+<p><a href="https://github.com/javastacks/spring-boot-best-practice">https://github.com/javastacks/spring-boot-best-practice</a></p>
+</blockquote>
+<hr>
+<h5 id="第二种办法"><a href="#第二种办法" class="headerlink" title="第二种办法:"></a>第二种办法:</h5><pre><code>import org.springframework.context.annotation.Configuration;
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+@WebFilter(filterName = &quot;CorsFilter &quot;)
+@Configuration
+public class CorsFilter implements Filter &#123;
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException &#123;
+        HttpServletResponse response = (HttpServletResponse) res;
+        response.setHeader(&quot;Access-Control-Allow-Origin&quot;,&quot;*&quot;);
+        response.setHeader(&quot;Access-Control-Allow-Credentials&quot;, &quot;true&quot;);
+        response.setHeader(&quot;Access-Control-Allow-Methods&quot;, &quot;POST, GET, PATCH, DELETE, PUT&quot;);
+        response.setHeader(&quot;Access-Control-Max-Age&quot;, &quot;3600&quot;);
+        response.setHeader(&quot;Access-Control-Allow-Headers&quot;, &quot;Origin, X-Requested-With, Content-Type, Accept&quot;);
+        chain.doFilter(req, res);
+    &#125;
+&#125;
+</code></pre>
+<p>这种办法，是基于过滤器的方式，方式简单明了，就是在response中写入这些响应头，好多文章都是第一种和第二种方式都叫你配置，其实这是没有必要的，只需要一种即可。</p>
+<p>这里也吐槽一下，大家不求甚解的精神。</p>
+<hr>
+<h5 id="第三种办法："><a href="#第三种办法：" class="headerlink" title="第三种办法："></a>第三种办法：</h5><pre><code>public class GoodsController &#123;
+@CrossOrigin(origins = &quot;http://localhost:4000&quot;)
+@GetMapping(&quot;goods-url&quot;)
+public Response queryGoodsWithGoodsUrl(@RequestParam String goodsUrl) throws Exception &#123;&#125;
+&#125;  
+</code></pre>
+<p>没错就是**@CrossOrigin**注解，点开注解</p>
+<pre><code>@Target(&#123; ElementType.METHOD, ElementType.TYPE &#125;)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface CrossOrigin &#123;
+
+&#125;
+</code></pre>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">从元注解@Target可以看出，注解可以放在method、class等上面，类似RequestMapping，也就是说，整个controller下面的方法可以都受控制，也可以单个方法受控制。</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">也可以得知，这个是最小粒度的cors控制办法了，精确到单个请求级别。</a></p>
+<hr>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247516756&idx=2&sn=ab844049dd8c70244aba2d6b9286c3e9&chksm=eb500762dc278e744674eac9069ebf6eda3fdd8059952f9d1541d14561a25c71fa9685a62435&scene=21#wechat_redirect">以上三种方法都可以解决问题，最常用的应该是第一种、第二种，控制在自家几个域名范围下足以，一般没必要搞得太细。</a></p>
+<p>这三种配置方式都用了的话，谁生效呢，类似css中样式，就近原则，懂了吧。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>log4j日志输出</title>
+    <url>/2021/05/14/log4j%E6%97%A5%E5%BF%97%E8%BE%93%E5%87%BA/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="log4j日志输出"><a href="#log4j日志输出" class="headerlink" title="log4j日志输出"></a>log4j日志输出</h1><p>1、导入依赖</p>
+<pre><code class="xml">&lt;dependency&gt;
+    &lt;groupId&gt;log4j&lt;/groupId&gt;
+    &lt;artifactId&gt;log4j&lt;/artifactId&gt;
+    &lt;version&gt;1.2.17&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>2、在resources中配置log4j.properties，根据自己需求添加</p>
+<pre><code class="properties">#将等级为DEBUG的日志信息输出到console和file这两个目的地，console和file的定义在下面的代码
+log4j.rootLogger=DEBUG,console,file
+#,MAIL,DATABASE
+
+#控制台输出的相关设置
+log4j.appender.console = org.apache.log4j.ConsoleAppender
+log4j.appender.console.Target = System.out
+log4j.appender.console.Threshold=DEBUG
+log4j.appender.console.layout = org.apache.log4j.PatternLayout
+log4j.appender.console.layout.ConversionPattern=[%c]-%m%n
+
+#文件输出的相关设置
+log4j.appender.file = org.apache.log4j.RollingFileAppender
+log4j.appender.file.File=./log/kuang.log
+log4j.appender.file.MaxFileSize=10mb
+log4j.appender.file.Threshold=DEBUG
+log4j.appender.file.layout=org.apache.log4j.PatternLayout
+log4j.appender.file.layout.ConversionPattern=[%p][%d&#123;yy-MM-dd&#125;][%c]%m%n
+
+#日志输出级别
+log4j.logger.org.mybatis=DEBUG
+log4j.logger.java.sql=DEBUG
+log4j.logger.java.sql.Statement=DEBUG
+log4j.logger.java.sql.ResultSet=DEBUG
+log4j.logger.java.sql.PreparedStatement=DEBUG
+
+#### 配置输出到邮件 ###
+#log4j.appender.MAIL=org.apache.log4j.net.SMTPAppender
+#log4j.appender.MAIL.Threshold=FATAL
+#log4j.appender.MAIL.BufferSize=10
+#log4j.appender.MAIL.From=chenyl@yeqiangwei.com
+#log4j.appender.MAIL.SMTPHost=mail.hollycrm.com
+#log4j.appender.MAIL.Subject=Log4J Message
+#log4j.appender.MAIL.To=chenyl@yeqiangwei.com
+#log4j.appender.MAIL.layout=org.apache.log4j.PatternLayout
+#log4j.appender.MAIL.layout.ConversionPattern=[framework] %d - %c -%-4r [%t] %-5p %c %x - %m%n
+
+#### 配置输出到数据库 ###
+#log4j.appender.DATABASE=org.apache.log4j.jdbc.JDBCAppender
+#log4j.appender.DATABASE.URL=jdbc:mysql://localhost:3306/test
+#log4j.appender.DATABASE.driver=com.mysql.jdbc.Driver
+#log4j.appender.DATABASE.user=root
+#log4j.appender.DATABASE.password=
+#log4j.appender.DATABASE.sql=INSERT INTO LOG4J (Message) VALUES (&#39;[framework] %d - %c -%-4r [%t] %-5p %c %x - %m%n&#39;)
+#log4j.appender.DATABASE.layout=org.apache.log4j.PatternLayout
+#log4j.appender.DATABASE.layout.ConversionPattern=[framework] %d - %c -%-4r [%t] %-5p %c %x - %m%n
+#log4j.appender.A1=org.apache.log4j.DailyRollingFileAppender
+#log4j.appender.A1.File=SampleMessages.log4j
+#log4j.appender.A1.DatePattern=yyyyMMdd-HH&#39;.log4j&#39;
+#log4j.appender.A1.layout=org.apache.log4j.xml.XMLLayout
+</code></pre>
+<p>3、在mybatis-config.xml 配置文件中开启日志输出就ok了</p>
+<pre><code class="xml">&lt;settings&gt;
+    &lt;setting name=&quot;logImpl&quot; value=&quot;LOG4J&quot;/&gt;
+&lt;/settings&gt;
+</code></pre>
+]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>java常用类</title>
+    <url>/2021/06/03/%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B1%BB/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="java常用的类"><a href="#java常用的类" class="headerlink" title="java常用的类"></a>java常用的类</h1><h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><ul>
+<li>String类：代表字符串。java程序中的所有字符串字面值（如”abc”)都作为此类的实例实现</li>
+<li>String是一个final类，代表不可变的字符序列</li>
+<li>字符串是常量，用双引号引起来表示，他们的值在创建之后不能更改</li>
+<li>String对象的字符内容存储在一个字符数组value[]中的</li>
+</ul>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210529095124.png" alt="image-20210529095117804" style="zoom:50%;">
+
+<h3 id="String-str1-”abc”；与String-str2-new-String-的区别"><a href="#String-str1-”abc”；与String-str2-new-String-的区别" class="headerlink" title="String str1=”abc”；与String str2=new String();的区别"></a>String str1=”abc”；与String str2=new String();的区别</h3><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210529101136.png" alt="image-20210529101136601" style="zoom:50%;">
+
+<p>常量拼接常量是直接去常量池去找，对象拼接常量是在堆空间去开启</p>
+<pre><code class="java">public static void main(String[] args) &#123;
+    String s1 = &quot;javaEE&quot;;
+    String s2 = &quot;hadoop&quot;;
+    String s3 = &quot;javaEEhadoop&quot;;
+    String s4 = &quot;javaEE&quot; + &quot;hadoop&quot;;
+    String s5 = s1 + &quot;hadoop&quot;;
+    String s6 = &quot;javaEE&quot; + s2;
+    String s7 = s1 + s2;
+    System.out.println(s3 == s4);//true
+    System.out.println(s3 == s5);//false
+    System.out.println(s3 == s6);//false
+    System.out.println(s3 == s7);//false
+    System.out.println(s5 == s6);//false
+    System.out.println(s5 == s7);//false
+    System.out.println(s6 == s7);//false
+    String s8 = s5.intern();//返回值得到的s8使用的常量值中已经存在的javaEEhadoop
+    System.out.println(s8==s3);//true
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210529102910.png" alt="image-20210529102910252"></p>
+<h3 id="jvm："><a href="#jvm：" class="headerlink" title="jvm："></a>jvm：</h3><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210529144937.png" alt="image-20210529144930838" style="zoom:50%;">
+
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210529145011.png" alt="image-20210529145011389" style="zoom:50%;">
+
+<h3 id="String的常用方法-其余看jdk文档"><a href="#String的常用方法-其余看jdk文档" class="headerlink" title="String的常用方法(其余看jdk文档)"></a>String的常用方法(其余看jdk文档)</h3><table>
+<thead>
+<tr>
+<th align="left">方法名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>boolean``endsWith(String suffix)</code></td>
+<td>测试此字符串是否以指定的后缀结尾。</td>
+</tr>
+<tr>
+<td align="left"><code>boolean``startsWith(String prefix,  int toffset)</code></td>
+<td>测试在指定索引处开始的此字符串的子字符串是否以指定的前缀开头。</td>
+</tr>
+<tr>
+<td align="left"><code>int``length()</code></td>
+<td>返回此字符串的长度。</td>
+</tr>
+<tr>
+<td align="left"><code>char``charAt(int index)</code></td>
+<td>返回 <code>char</code>指定索引处的值。</td>
+</tr>
+<tr>
+<td align="left"><code>boolean``isEmpty()</code></td>
+<td>返回 <code>true</code>如果，且仅当 <a href="../../java/lang/String.html#length--"><code>length()</code></a>为  <code>0</code> 。</td>
+</tr>
+<tr>
+<td align="left"><code>String``toLowerCase()</code></td>
+<td>将所有在此字符 <code>String</code>使用默认语言环境的规则，以小写。</td>
+</tr>
+<tr>
+<td align="left"><code>String``toUpperCase()</code></td>
+<td>将所有在此字符 <code>String</code>使用默认语言环境的规则大写。</td>
+</tr>
+<tr>
+<td align="left"><code>String``trim()</code></td>
+<td>返回一个字符串，其值为此字符串，并删除任何前导和尾随空格。</td>
+</tr>
+<tr>
+<td align="left"><code>boolean``equals(Object anObject)</code></td>
+<td>将此字符串与指定对象进行比较。</td>
+</tr>
+<tr>
+<td align="left"><code>boolean``equalsIgnoreCase(String anotherString)</code></td>
+<td>将此 <code>String</code>与其他 <code>String</code>比较，忽略案例注意事项。</td>
+</tr>
+<tr>
+<td align="left"><code>String``concat(String str)</code></td>
+<td>将指定的字符串连接到该字符串的末尾。</td>
+</tr>
+<tr>
+<td align="left"><code>int``compareTo(String anotherString)</code></td>
+<td>按两个字符串大小。</td>
+</tr>
+<tr>
+<td align="left"><code>String``substring(int beginIndex,  int endIndex)</code></td>
+<td>返回一个字符串，它是此字符串从beginIdex开始截取到endIndex（不包括）的一个子字符串【左闭右开）</td>
+</tr>
+<tr>
+<td align="left"><code>String``substring(int beginIndex)</code></td>
+<td>返回一个字符串，它是此字符串从beginIdex开始截取到最后一个子字符串</td>
+</tr>
+<tr>
+<td align="left"><code>static String``valueOf(int i)</code></td>
+<td>返回 <code>int</code>参数的字符串 <code>int</code>形式。</td>
+</tr>
+</tbody></table>
+<h2 id="StringBuffer"><a href="#StringBuffer" class="headerlink" title="StringBuffer"></a>StringBuffer</h2><p>可变的字符序列，线程安全，效率低</p>
+<p>扩容机制：原本创建时就创建了16大小的char[]数组，当大小超过16扩容到原来的2倍+2</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210529161854.png" alt="image-20210529161854794" style="zoom:50%;">
+
+
+
+<h2 id="StringBuilder"><a href="#StringBuilder" class="headerlink" title="StringBuilder"></a>StringBuilder</h2><p>可变的字符序列，线程不安全，效率高</p>
+<p>扩容机制：因为StringBuffe和StringBuilder都基础AbstractStringBuilder因此扩容都是为原来的2倍+2</p>
+<h2 id="日期时间API"><a href="#日期时间API" class="headerlink" title="日期时间API"></a>日期时间API</h2><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210529162637.png" alt="image-20210529162637443" style="zoom:50%;">
+
+<h3 id="System"><a href="#System" class="headerlink" title="System"></a>System</h3><p>System类提供的public static long currentTimeMillis()用来返回当前时间与1970年1月1日0时0分0秒之间以毫秒为单位的时间差</p>
+<pre><code class="java">public static void main(String[] args) &#123;
+    long millis = System.currentTimeMillis();
+    System.out.println(millis);
+&#125;
+</code></pre>
+<h3 id="Date"><a href="#Date" class="headerlink" title="Date"></a>Date</h3><p>java.util.date </p>
+<p>​    —java.sql.date：对应着数据库中的日期变量</p>
+<p>toString()：显示当前的年、月、日、时、分、秒</p>
+<p>getTime()：获取当前Date对象对应的毫秒数（时间戳）</p>
+<pre><code class="java">public static void main(String[] args) &#123;
+    Date date = new Date();
+    String s = date.toString();
+    System.out.println(&quot;当前时间：&quot;+s);
+    long time = date.getTime();
+    System.out.println(&quot;当前时间戳：&quot;+time);
+&#125;
+</code></pre>
+<h3 id="SimpleDateFormat"><a href="#SimpleDateFormat" class="headerlink" title="SimpleDateFormat"></a>SimpleDateFormat</h3><p>Date类的API不易于国际化，大部分被废弃了，java.text.SimpleDateFormat类是一个不与语言环境有关的方式来格式化和解析日期的具体类</p>
+<p>它允许格式化：日期-&gt;文本、解析：文本-&gt;日期</p>
+<p><strong>无参构造器（不推荐）：</strong></p>
+<pre><code class="java">@Test
+public void test01() throws ParseException &#123;
+    //无参构造器（不推荐）
+    SimpleDateFormat sdf = new SimpleDateFormat();
+    Date date = new Date();
+    System.out.println(date.toString());
+    //格式化
+    String s = sdf.format(date);
+    System.out.println(s);
+    //解析 要求：2021-5-29 下午5:05
+    String s1=&quot;2021-5-29 下午5:05&quot;;
+    Date parse = sdf.parse(s1);
+    System.out.println(parse);
+&#125;
+</code></pre>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210529170652.png" alt="image-20210529170652584" style="zoom:50%;">
+
+<p><strong>带参数的构造器：</strong></p>
+<pre><code class="java">@Test
+public void test02() throws ParseException &#123;
+    SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd hh:mm:ss&quot;);
+    Date date = new Date();
+    //格式化
+    String s = sdf.format(date);
+    System.out.println(s);
+    //解析
+    String s1=&quot;2021-05-29 05:10:42&quot;;//要与设置的格式一致
+    Date date1 = sdf.parse(s1);
+    System.out.println(date1);
+&#125;
+</code></pre>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210529171335.png" alt="image-20210529171335279" style="zoom:50%;">
+
+<h2 id="JDK8新的日期API"><a href="#JDK8新的日期API" class="headerlink" title="JDK8新的日期API"></a>JDK8新的日期API</h2><h3 id="LocalDate、LocalTime、LocalDateTime"><a href="#LocalDate、LocalTime、LocalDateTime" class="headerlink" title="LocalDate、LocalTime、LocalDateTime"></a>LocalDate、LocalTime、LocalDateTime</h3><p>实例化方法一：通过方法now()</p>
+<pre><code class="java">public static void main(String[] args) &#123;
+    //now()：获取当前的日期、时间、日期+时间
+    LocalDate localDate = LocalDate.now();
+    LocalTime localTime = LocalTime.now();
+    LocalDateTime localDateTime = LocalDateTime.now();
+    System.out.println(localDate);
+    System.out.println(localTime);
+    System.out.println(localDateTime);
+&#125;
+</code></pre>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210529192405.png" alt="image-20210529192358121" style="zoom:50%;">
+
+<p>实例化方法二：通过方法of(),指定的年、月、日、时、分、秒没有偏移量</p>
+<pre><code class="java">public static void main(String[] args) &#123;
+    LocalDateTime localDateTime1 = LocalDateTime.of(2021, 5, 29, 19, 25, 50);
+    System.out.println(localDateTime1);
+&#125;
+</code></pre>
+<h4 id="getXxx-方法（具体看jdk文档）"><a href="#getXxx-方法（具体看jdk文档）" class="headerlink" title="getXxx()方法（具体看jdk文档）"></a>getXxx()方法（具体看jdk文档）</h4><ul>
+<li><ul>
+<li><table>
+<thead>
+<tr>
+<th>返回值</th>
+<th>方法名和描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>int</code></td>
+<td><code>get(TemporalField field)</code>  从此日期时间获取指定字段的值为 <code>int</code> 。</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>getDayOfMonth()</code>  获取月份字段。</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>getDayOfYear()</code>  获得日期字段。</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>getHour()</code>  获取时间字段。</td>
+</tr>
+<tr>
+<td><code>long</code></td>
+<td><code>getLong(TemporalField field)</code>  从此日期时间获取指定字段的值为 <code>long</code> 。</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>getMinute()</code>  获取小时字段。</td>
+</tr>
+<tr>
+<td><code>Month</code></td>
+<td><code>getMonth()</code>  使用 <code>Month</code>枚举获取月份字段。</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>getMonthValue()</code>  将月份字段从1到12。</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>getYear()</code>  获取年份字段。</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Instant（瞬时）"><a href="#Instant（瞬时）" class="headerlink" title="Instant（瞬时）"></a>Instant（瞬时）</h3><p>Instant：时间线上的一个瞬时点。这可能被用来记录应用程序中的事件时间戳</p>
+<pre><code class="java">@Test
+public void test01() &#123;
+    //now()：获取本初子午线的时间
+    Instant instant = Instant.now();
+    System.out.println(instant);//本初子午线的事件
+
+    //因为我们是东八区要加8小时
+    OffsetDateTime time = instant.atOffset(ZoneOffset.ofHours(8));
+    System.out.println(tim e);
+&#125;
+</code></pre>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java类</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>网络编程复习</title>
+    <url>/2021/05/28/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="网络编程复习"><a href="#网络编程复习" class="headerlink" title="网络编程复习"></a>网络编程复习</h1><h2 id="IP与InetAddress类"><a href="#IP与InetAddress类" class="headerlink" title="IP与InetAddress类"></a>IP与InetAddress类</h2><h4 id="IP地址："><a href="#IP地址：" class="headerlink" title="IP地址："></a>IP地址：</h4><p>1、唯一的标识Internet上的计算机（通信实体）IP地址=网络地址+主机地址</p>
+<p>2、本地回环地址：127.0.0.1     主机名：localhost</p>
+<p>3、IP地址分类方式2：IPV4和IPV6</p>
+<p>4、IP地址分类方式2：公网地址（万维网使用）和私有地址（局域网使用）。192.168.开头的就是私有地址，范围既为192.168.0.0-192.168.255.255，专门为组织机构内部使用</p>
+<p>通过InetAddress获取IP地址：</p>
+<pre><code class="java">public static void main(String[] args) &#123;
+    try &#123;
+         InetAddress address1  = InetAddress.getByName(&quot;192.168.10.14&quot;);
+            InetAddress address2  = InetAddress.getByName(&quot;www.baidu.com&quot;);
+            InetAddress address3 = InetAddress.getLocalHost();
+            System.out.println(&quot;IP为192.168.10.14的InetAddress对象：&quot;+address1);
+            System.out.println(&quot;百度的InetAddress对象：&quot;+address2);
+            System.out.println(&quot;本机的InetAddress对象：&quot;+address3);
+
+            System.out.println(&quot;获取主机域名：&quot;+address2.getHostName());
+            System.out.println(&quot;获取主机id地址：&quot;+address2.getHostAddress());
+    &#125; catch (UnknownHostException e) &#123;
+        e.printStackTrace();
+    &#125;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210524210914.png" alt="image-20210524210914400"></p>
+<h2 id="TCP与UDP"><a href="#TCP与UDP" class="headerlink" title="TCP与UDP"></a>TCP与UDP</h2><p>TCP协议:</p>
+<p>​    1、使用TCP协议前，须先建立TCP连接，形成传输数据通道</p>
+<p>​    2、传输前，采用“<strong>三次握手</strong>”方式，点对点通信，<strong>是可靠的</strong></p>
+<p>​    3、TCP协议进行通信的两个应用进程:客户端、服务端。</p>
+<p>​    4、在连接中可<strong>进行大数据量的传输</strong></p>
+<p>​    5、传输完毕，需<strong>释放已建立的连接，效率低</strong></p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210524212408.png" alt="image-20210524212408378"></p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210524212941.png" alt="image-20210524212941156"></p>
+<p>UDP协议:</p>
+<p>​    1、将数据、源、目的封装成数据包，<strong>不需要建立连接</strong></p>
+<p>​    2、每个数据报的大小限制在64K内</p>
+<p>​    3、发送不管对方是否准备好，接收方收到也不确认，故是不可靠的</p>
+<p>​    4、可以广播发送</p>
+<p>​    5、发送数据结束时<strong>无需释放资源，开销小，速度快</strong></p>
+<h2 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h2><p>Socket：端口号与IP地址的组合得出一个网络套接字：Socket</p>
+<p>客户端使用Socket</p>
+<p>​    1、创建Socket对象，指明服务器端的ip和端口号</p>
+<p>​    2、获取一个输出流，用于输出数据</p>
+<p>​    3、写出数据的操作</p>
+<p>​    4、资源的关闭</p>
+<h3 id="TCP方式发送数据"><a href="#TCP方式发送数据" class="headerlink" title="TCP方式发送数据"></a>TCP方式发送数据</h3><pre><code class="java">客户端发送内容给服务端，服务端将内容打印到控制台
+//客户端
+@Test
+public void client() &#123;
+    OutputStream os = null;
+    Socket socket = null;
+    try &#123;
+        //服务端地址
+        InetAddress address = InetAddress.getByName(&quot;127.0.0.1&quot;);
+        socket = new Socket(address, 8888);
+        os = socket.getOutputStream();
+        os.write(&quot;你好我是客户端&quot;.getBytes());
+
+    &#125; catch (UnknownHostException e) &#123;
+        e.printStackTrace();
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        if (os != null) &#123;
+            try &#123;
+                os.close();
+            &#125; catch (IOException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+        if (socket != null) &#123;
+            try &#123;
+                socket.close();
+            &#125; catch (IOException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>服务端使用Socket</p>
+<p>​    1、创建ServerSocket对象，指明自己的端口号</p>
+<p>​    2、调用accept()表示接受来自客户端的socket</p>
+<p>​    3、获取输入流</p>
+<p>​    4、读取输入流中的数据</p>
+<p>​    5、资源的关闭</p>
+<pre><code class="java">//服务端
+@Test
+public void server() throws IOException &#123;
+    ServerSocket serverSocket = null;
+    ByteArrayOutputStream baos = null;
+    Socket socket = null;
+    try &#123;
+        serverSocket = new ServerSocket(8888);
+        socket = serverSocket.accept();
+        InputStream is = socket.getInputStream();
+        /*不建议，可能会出现乱码，建议以下方式
+            int length;
+            byte[] buffer = new byte[20];
+            while ((length = is.read(buffer)) != -1) &#123;
+                String str = new String(buffer, 0, length);
+                System.out.println(str);
+            &#125;
+            */
+        baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[20];
+        int len;
+        while ((len = is.read(buffer)) != -1) &#123;
+            baos.write(buffer, 0, len);
+        &#125;
+        System.out.println(baos.toString());
+
+    &#125; catch (IOException e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        baos.close();
+        socket.close();
+        serverSocket.close();
+    &#125;
+&#125;
+</code></pre>
+<h3 id="UDP方式发送数据"><a href="#UDP方式发送数据" class="headerlink" title="UDP方式发送数据"></a>UDP方式发送数据</h3><p>发送端：</p>
+<pre><code class="java">//发送端
+@Test
+public void sender() throws IOException &#123;
+    DatagramSocket socket = new DatagramSocket();
+    String str=&quot;我是UDP方式发送的导弹&quot;;
+    byte[] data=str.getBytes();
+    InetAddress iner = InetAddress.getLocalHost();
+    DatagramPacket packet = new DatagramPacket(data, 0, data.length, iner, 8888);
+    socket.send(packet);
+    socket.close();
+&#125;
+</code></pre>
+<p>接收端</p>
+<pre><code class="java">//接收端
+@Test
+public void receiver() throws IOException &#123;
+    DatagramSocket socket = new DatagramSocket(8888);
+    byte[] buffer=new byte[100];
+    DatagramPacket packet = new DatagramPacket(buffer,0,buffer.length);
+    socket.receive(packet);
+    System.out.println(new String(packet.getData(),packet.getLength()));
+    socket.close();
+&#125;
+</code></pre>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>网络编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL复习</title>
+    <url>/2021/05/04/MySQL%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="MySQL复习"><a href="#MySQL复习" class="headerlink" title="MySQL复习"></a>MySQL复习</h1><h2 id="sql语句的分类"><a href="#sql语句的分类" class="headerlink" title="sql语句的分类"></a>sql语句的分类</h2><p>DQL(数据查询语言) ：查询语句，凡是select语句都是DML(数据操作语言) ：insert delete update ，对表当中的数据结构的增删该</p>
+<p>DDL(数据定义语言) ：create（增） drop（删） alter（改），对表结构的增删改</p>
+<p>TCL(事务控制语言) ：commit提交事务，rollback回滚事务</p>
+<p>DCL(数据控制语言) ：grant授权，revoke撤销限权等</p>
+<span id="more"></span>
+
+<h2 id="备份数据库"><a href="#备份数据库" class="headerlink" title="备份数据库"></a>备份数据库</h2><p>备份：</p>
+<pre><code>mysqldump -u root -p -B 数据库名 &gt; 备份绝对地址
+</code></pre>
+<p>恢复</p>
+<pre><code>use 数据库
+source .sql脚本绝对位置
+</code></pre>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210504213552.png" alt="image-20210502153138260"></p>
+<h2 id="mysql常用命名"><a href="#mysql常用命名" class="headerlink" title="mysql常用命名"></a>mysql常用命名</h2><p>创建数据库</p>
+<pre><code>create basedate 数据库名
+</code></pre>
+<p>使用数据库</p>
+<pre><code>use 数据库
+</code></pre>
+<p>查询当前数据库</p>
+<pre><code>select database()
+</code></pre>
+<p>查询当前版本</p>
+<pre><code>select version()
+</code></pre>
+<h2 id="sql语句"><a href="#sql语句" class="headerlink" title="sql语句"></a>sql语句</h2><p>书写顺序和执行顺序</p>
+<pre><code class="sql">select       5
+ ..
+ from        1
+ ..
+ where       2
+ ..
+ group by    3 
+ ..
+ having       4
+ ..
+ order by     6
+ ...
+
+查询语句
+</code></pre>
+<p>select * from 数据库 </p>
+<pre><code>条件查询
+</code></pre>
+<p>select * from 数据库 where 字段名=条件<br>select * from 数据库 between 条件 and 条件              (两个值之间)闭区间【】<br>select * from 数据库 where 字段名 is null               (查询指定字段为空的数据)<br>select * from 数据库 where 字段名 is not null           (查询指定字段不为空的数据)<br>select * from 数据库 where 字段名 in (具体值，。。。)      在这里面的<br>select * from 数据库 where 字段名 not in (具体值，。。。)  不在这里面的</p>
+<pre><code>模糊查询 ：两个特殊符号 ，%代表任意多个字符 ，_代表任意1个字符
+</code></pre>
+<p>select * from 数据库 where 字段名 like ‘_A%’;</p>
+<pre><code>### 排序
+</code></pre>
+<p>select * from 数据库 order by 字段名            —升序(默认)<br>select * from 数据库 order by 字段名 asc        —升序(默认)<br>select * from 数据库 order by 字段名 desc       —降序<br>select * from 数据库 order by 字段名1 asc,字段名2 desc       —根据字段1升序，当字段1的数值一样的时候，依据第二字段升降规则</p>
+<pre><code>### 分组函数count 计数 
+</code></pre>
+<p>select count(*) from 数据库</p>
+<pre><code class="markdown">sum 求和
+avg  平均值
+max  最大min 最小所有的分组函数都是对某一组进行操作 写法与count类似，自动忽越null
+**分组函数不能写在where语句中** 
+原因：因为group by是在where执行之后执行的，而分组函数是在用group by分组之后执行的 group by 和 havinggroup by ：安照某个字段或者某些字段进行分组，有group by时select后面只能跟分组函数和分组字段（不然其余字段无意义，Oracle中会报错）
+sqlselect max(sal) from emp GROUP BY job  
+查找职位的最高工资 
+先进行GROUP BY进行分组在每组使用max()函数#分组函数一般都很group by联合使用，并且任何一个分组函数都是在group by语句执行结束之后才会执行的
+当一条sql语句没有group by的话，整张表的数据为一组
+</code></pre>
+<p>having ：having是对分组之后的数据进行再次过滤，在要使用分组函数的值进行过滤是使用having，否则使用where</p>
+<pre><code class="sql">#查询有哪些部门的平均工资大于2000，返回部门和平均工资  where函数后面不能使用分组函数，所有要使用having使用，having是group by的搭档，必须在group by出现的时候使用select deotno,avg(sal) from emp group by deptno having avg(sal)&gt;2000;
+</code></pre>
+<h3 id="去重distinct"><a href="#去重distinct" class="headerlink" title="去重distinct"></a>去重distinct</h3><p>distinct只能出现在所有字段的最前面，不然就要报错</p>
+<pre><code class="sql">#两个字段联合起来去重select distinct deptno,job from emp 
+</code></pre>
+<h3 id="连接查询"><a href="#连接查询" class="headerlink" title="连接查询"></a>连接查询</h3><h4 id="内连接"><a href="#内连接" class="headerlink" title="内连接"></a>内连接</h4><p>1、等值连接 ：最大特点是条件是等量关系</p>
+<pre><code class="sql">select e.ename,d.dname from emp e join dept d on e.deptno=d.deptno 
+</code></pre>
+<pre><code class="sql">.... A表 join B表 on 连接条件 where ...
+</code></pre>
+<p>2、非等值连接：最大的特点是条件中的关系是非等量关系</p>
+<pre><code class="sql">select e.ename,e.sal,s.grade from emp e join salgrade s on e.sal between s.losal and s.hisal;
+</code></pre>
+<p>3、自连接 ：最大的特点是一张变看成两张表自己连接自己 ,inner 表示内连接（默认可不写）</p>
+<pre><code class="sql">select a.ename as &#39;员工名&#39; ,b.ename as &#39;领导名&#39; from emp a inner join emp b on a.mgr =b.empno;
+</code></pre>
+<h4 id="外连接"><a href="#外连接" class="headerlink" title="外连接"></a>外连接</h4><blockquote>
+<p>内连接和外连接有什么区别</p>
+<p>内连接：</p>
+<p>假设A和B表进行连接，使用内连接的话，凡是A表和B表能够匹配上的记录查询出来，这就是内连接。AB两张表没有主副之分，两张表示平等的</p>
+<p>外连接：</p>
+<p>假设A和B表进行连接，使用外连接的话，AB两张表中有一张表示主表，一张表示副表，主要查询主表的数据，捎带着查询副表。当副表中的数据没有和主表中的数据匹配上，副表自动模拟出NULL与之匹配</p>
+</blockquote>
+<p>1、左外连接</p>
+<pre><code class="sql">select a.ename as &#39;员工名&#39; ,b.ename as &#39;领导名&#39; from emp a left join emp b on a.mgr =b.empno;
+</code></pre>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210504213559.png" alt="image-20210503150104454"></p>
+<p>2、右外连接</p>
+<pre><code class="sql">select a.ename as &#39;员工名&#39; ,b.ename as &#39;领导名&#39; from emp b right join emp a on a.mgr =b.empno;
+</code></pre>
+<p>3、多表连接</p>
+<pre><code class="sql">select    e.ename &#39;员工&#39;,d.dname ,s.grade ,el.ename &#39;领导&#39;from    emp e join    dept don    e.deptno = d.deptnojoin    salgrade son    e.sal between s.losal and s.hisalleft join    emp elon    e.mgr = el.empno ;
+</code></pre>
+<h4 id="嵌套查询"><a href="#嵌套查询" class="headerlink" title="嵌套查询"></a>嵌套查询</h4><p>1、where 后面嵌套子查询</p>
+<pre><code class="sql">select * from emp where sal &gt; (select avg(sal) from emp);
+</code></pre>
+<p>2、from后面嵌套子查询</p>
+<pre><code class="sql">select deptno,avg(sal) as avgsal from emp group by deptno;
+#将查询的结果当成一张表
++--------+-------------+
+|deptno  | avgsal      |
++--------+-------------+
+|20      | 2175.000000 |
+|30      | 1566.666667 |
+|10      | 2916.666667 |
++--------+-------------+
+#将上面的查询结果当成临时表t，select t.*,s.gradefrom (select deptno,avg(sal) as avgsal from emp group by deptno) as tjoinsalgrade son t.avgsal between s.losal and s.hisal
+</code></pre>
+<p>3、在select后面嵌套子查询</p>
+<pre><code class="sql">select e.ename,(select d.dname from dept d  where e.deptno =d.deptno) as dname from emp e 
+</code></pre>
+<h4 id="union用法"><a href="#union用法" class="headerlink" title="union用法"></a>union用法</h4><p>MySQL UNION 操作符用于连接两个以上的 SELECT 语句的结果组合到一个结果集合中。多个 SELECT 语句会删除重复的数据。</p>
+<p>一般对于两张毫不相干的表拼接在一起 。</p>
+<pre><code class="sql">select ename,job from emp where job =&#39;MANAGER&#39;union select ename,job from emp where job = &#39;SALESMAN&#39;;
++--------+----------+
+| ename  | job      |
++--------+----------+
+| JONES  | MANAGER  |
+| BLAKE  | MANAGER  |
+| CLARK  | MANAGER  |
+| ALLEN  | SALESMAN |
+| WARD   | SALESMAN |
+| MARTIN | SALESMAN |
+| TURNER | SALESMAN |
++--------+----------+
+</code></pre>
+<h4 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h4><p>1、limit是mysql特有的，其他数据库是没有的（Oracle中rownum类似）</p>
+<p>2、limit取的是部分数据，是sql语句最后执行的一个环节 </p>
+<p>3、从0开始，0表示第一个数据，第一页：0,4   表示[0,4)，4条数据</p>
+<h3 id="建表语句"><a href="#建表语句" class="headerlink" title="建表语句"></a>建表语句</h3><pre><code class="sql">create table 表名&#123;字段名1 数据类型，字段名2 数据类型，字段名3   数据类型，。。。。&#125;
+</code></pre>
+<p>关于MySQL当中字段的数据类型？以下只说常见的<br>int             整数型(Java中的int)</p>
+<p>bigint       长整型(java中的long)</p>
+<p>float         浮点型Java中(float double)</p>
+<p>char          定长字符串(string)</p>
+<p>varchar     可变长字符串(stringBuffer/stringBuilder)</p>
+<p>date          日期类型(对应Java中的java.sql.Date类型)</p>
+<p>BLOB         二进制大对象（存储图片、视频等流媒体信息)Binary Large OBject（对应java中的object)</p>
+<p>CLOB        字符大对象（存储较大文本，比如，可以存储4G的字符串。) Character Large OBject(对应java中的object) </p>
+<h3 id="插入语句"><a href="#插入语句" class="headerlink" title="插入语句"></a>插入语句</h3><p>insert语句插入数据</p>
+<p>语法格式：insert into 表名（字段名1,字段名2,字段名3,….) value (值1,值1,值1,….)</p>
+<h3 id="修改语句"><a href="#修改语句" class="headerlink" title="修改语句"></a>修改语句</h3><p>update</p>
+<p>语法格式 update  表名 set 字段1=最终值1, 字段2=最终值2 where 字段=条件值</p>
+<h3 id="删除语句"><a href="#删除语句" class="headerlink" title="删除语句"></a>删除语句</h3><p>基本语法格式：delete from 表名 where 条件;</p>
+<p><strong>怎么删除大表中的数据：</strong></p>
+<p>用delete语句删除特别大的表会特别慢，因为delete没有释放数据的真实存储空间，所有delete效率慢，好处：可以回滚找回</p>
+<p>因此要使用truncate，删除之前一定要确定不要这些数据了，因为要用truncate删除了是表被截断，不可回滚，永久丢失。</p>
+<pre><code class="sql">truncate table empl;
+</code></pre>
+<p><strong>删表：</strong></p>
+<pre><code class="sql">drop table 表名;#通用的drop table if exists 表名; #Oracle 不支持这种写法
+</code></pre>
+<h3 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h3><p>**非空约束(not null)**：</p>
+<p>指定某一列不能为null值</p>
+<p><strong>唯一约束(unique)：</strong></p>
+<p>指定一列或几列的值不允许重复，但可以为NULL。</p>
+<p>单个字段为列级约束，多个字段联合起来添加一个约束为表级约束（两个字段不能同时重复）</p>
+<p><strong>主键约束(primary key)：</strong></p>
+<p>可以当成以上两个的合并概念，不能为空且不能重复（PK)</p>
+<p>primary key auto_increment //主键自增，以1开始每次增加1</p>
+<p>主键的相关术语：</p>
+<p>​        主键约束：primary key</p>
+<p>​        主键字段：id字段添加primary key之后，id叫做主键字段</p>
+<p>​        主键值：id字段中的每一个值都是主键值</p>
+<p>主键的作用？</p>
+<p>​    表的设计三大范式：</p>
+<p>​        第一范式就要求任何一张表都应该有主键。</p>
+<p>​    主键的作用：主键值是这行记录在这张表当中的唯一标识。（就像一个人的身份号码一样）</p>
+<p>主键的分类</p>
+<p>​    根据主键字段的字段数量来划分：</p>
+<p>​        单一主键（推荐的，常用的）</p>
+<p>​        复合主键（多个字段联合起来添加一个主键约束）（复合主键不建立使用，因为复合主键违背三范式）</p>
+<p>​    根据主键性质来划分：</p>
+<p>​        自然主键</p>
+<p>​        业务主键：主键值和系统的业务挂钩，例如：拿着银行卡的卡号作为主键，拿银行卡号作为主键（不推荐），最好不要拿着和业务挂钩的字段作为主键，因为以后的业务一旦发生改变的时候，主键值可能也需要随着发生变化，但有时好没办法变化，应该变化可能导致主键值重复</p>
+<p><strong>外键约束(foreign key)：</strong>简称FK</p>
+<p>​    关于外键约束的相关术语</p>
+<p>​        外键约束：foreign key</p>
+<p>​        外键字段：添加有外键约束的字段</p>
+<p>​        外键值：外键字段中的每一个值</p>
+<p>​    顺序要求:</p>
+<p>​        删除数据的时候,先删除子表,再删除父表。</p>
+<p>​        添加数据的时候,先添加父表,在添加子表。</p>
+<p>​        创建表的时候,先创建父表,再创建子表。</p>
+<p>​        删除表的时候,先删除子表,在删除父表。</p>
+<pre><code class="sql">#父表
+create table t_class&#123;    
+    cno int,    
+    cname varchar(255),
+    primary key(cno)
+&#125;;
+#子表
+create table t_student&#123;    
+    sno int,    
+    sname varchar(255),
+    classno int,    
+    primary key(sno),    
+    foreign key(classno) references t_class(cno)
+&#125;
+#t_student 中的classno字段引用(references)t_class表中cno字段，此时t_student表叫做字表，t_class表叫做父表
+</code></pre>
+<p>​    外键可以为NULL</p>
+<p>​    注意被引用的字段不一定是主键，但至少具又唯一约束</p>
+<p><strong>检查约束(check) ：</strong>注意Oracle数据库有check约束，但是mysql没有，目前mysql不支持check约束</p>
+<h2 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h2><p>存储引擎只有在MySQL存在，Oracle中就叫表的存储方式，MySQL支持很多存储引擎，每</p>
+<p>存储引擎都对应了一种不同的存储方式</p>
+<p>存储引擎是：在MySQL中表的不同存储方式</p>
+<p>查看MySQL支持的所有存储引擎</p>
+<pre><code>show engines \G 
+</code></pre>
+<h4 id="常见的存储引擎"><a href="#常见的存储引擎" class="headerlink" title="常见的存储引擎"></a>常见的存储引擎</h4><h5 id="MyISAM"><a href="#MyISAM" class="headerlink" title="MyISAM"></a>MyISAM</h5><pre><code class="mssql">Engine: MyISAM
+Support: YES     
+Comment: MyISAM storage engineTransactions: NO    //不支持事务         
+XA: NO      
+Savepoints: NO
+</code></pre>
+<p>MyISAM是MySQL常用的数据引擎，但不是默认的</p>
+<p>​    它管理的表具有以下特征:</p>
+<p>​        使用三个文件表示每个表:</p>
+<p>​            格式文件-存储表结构的定义( mytable.frm)</p>
+<p>​            数据文件―存储表行的内容〈 mytable.MYD)</p>
+<p>​            索引文件―存储表上索引( mytable.MYl)</p>
+<p>优点：可被压缩，节省存储空间。并且可以转换为只读表，提高检索效率</p>
+<p>缺点：不支持事务。</p>
+<h5 id="INNODB"><a href="#INNODB" class="headerlink" title="INNODB"></a>INNODB</h5><pre><code>Engine: InnoDB     
+Support: DEFAULT     
+Comment: Supports transactions, row-level locking, and foreign keysTransactions: YES          
+XA: YES  
+Savepoints: YES
+</code></pre>
+<p>优点：支持事务、行级锁、外键等。这种存储引擎数据的安全得到保障。</p>
+<p>InnoDB存储引擎是MySQL 的缺省引擎。</p>
+<p>它管理的表具有下列主要特征:</p>
+<p>​    -每个InnoDB表在数据库目录中以.frm格式文件表示</p>
+<p>​    -InnoDB 表空间tablespace被用于存储表的内容</p>
+<p>​    -提供一组用来记录事务性活动的日志文件</p>
+<p>​    -用COMMIT(提交)、SAVEPOINT及ROLLBACK(回滚)支持事务处理</p>
+<p>​    -提供全ACID兼容（原子性、一致性、隔离性、持久性）</p>
+<p>​    -在MySQL服务器崩溃后提供自动恢复</p>
+<p>​    -多版本（MVCC）和行级锁定</p>
+<p>​    -支持外键及引用的完整性，包括级联删除和更新</p>
+<h5 id="MEMORY"><a href="#MEMORY" class="headerlink" title="MEMORY"></a>MEMORY</h5><pre><code>Engine: MEMORY     
+Support: YES     
+Comment: Hash based, stored in memory, useful for temporary tablesTransactions: NO          
+XA: NO  
+Savepoints: NO
+</code></pre>
+<p>缺点：不支持事务，数据容易丢失。因为所有数据和索引都是存储在内存当中的。</p>
+<p>优点：查询速度最快的。</p>
+<p>MEMORY存储引擎管理的表具有下列特征:</p>
+<p>​    -在数据库目录内，每个表均以.frm格式的文件表示。</p>
+<p>​    -表数据及索引被存储在内存中。</p>
+<p>​    -表级锁机制。</p>
+<p>​    -不能包含TEXT 或BLOB字段。</p>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>要么同时成功，要么同时失败</p>
+<p>和事务相关的语句只有：DML语句。（insert、delete、update）</p>
+<p>事务的存在是为了保证数据的完整性，安全性</p>
+<h3 id="事务的执行机制："><a href="#事务的执行机制：" class="headerlink" title="事务的执行机制："></a>事务的执行机制：</h3><p>开启事务机制(开始)</p>
+<p>​    执行insert语句–&gt; insert…(这个执行成功之后，把这个执行记录到数据库的操作历史当中，并不会向文件中保存一条数据，不会真正的修改硬盘上的数据。)</p>
+<p>​    执行update语句—&gt;update…(这个执行也是记录一下历史操作，不会真正的修改硬盘上的数据)</p>
+<p>​    执行delete语句—-&gt;delete..(这个执行也是记录一下历史操作【记录到缓存】，不会真正的修改硬盘上的数据)</p>
+<p>提交事务或者回滚事务（结束)</p>
+<p>提交事务：删除历史记录，并保存到硬盘（保存并退出）</p>
+<p>回滚事务：删除历史记录，不保存到硬盘（强制退出）</p>
+<h3 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h3><p>事务包括四大特性：ACID<br>        A: 原子性：事务是最小的工作单元，不可再分。<br>        C: 一致性：事务必须保证多条DML语句同时成功或者同时失败。<br>        I：隔离性：事务A与事务B之间具有隔离。<br>        D：持久性：持久性说的是最终数据必须持久化到硬盘文件中，事务才算成功的结束。</p>
+<h3 id="事务之间的隔离性"><a href="#事务之间的隔离性" class="headerlink" title="事务之间的隔离性"></a>事务之间的隔离性</h3><p>事务隔离性存在隔离级别，理论上隔离级别包括4个：<br>            第一级别：读未提交（read uncommitted）<br>                对方事务还没有提交，我们当前事务可以读取到对方未提交的数据。<br>                读未提交存在脏读（Dirty Read）现象：表示读到了脏的数据。<br>            第二级别：读已提交（read committed）<br>                对方事务提交之后的数据我方可以读取到。<br>                这种隔离级别解决了: 脏读现象没有了。<br>                读已提交存在的问题是：不可重复读。<br>            第三级别：可重复读（repeatable read）（mysql事务默认级别）<br>                这种隔离级别解决了：不可重复读问题。<br>                这种隔离级别存在的问题是：读取到的数据是幻象。<br>            第四级别：序列化读/串行化读（serializable）<br>                解决了所有问题。<br>                效率低。需要事务排队。<br>        oracle数据库默认的隔离级别是：读已提交。（第二级别）<br>        mysql数据库默认的隔离级别是：可重复读。（第三级别）</p>
+<p><strong>BEGIN</strong> 开始一个事务</p>
+<p><strong>ROLLBACK</strong> 事务回滚</p>
+<p><strong>COMMIT</strong> 事务确认</p>
+<p>1.脏读</p>
+<p>​    A事务读取B事务尚未提交的更改数据，并在这个数据的基础上进行操作，这时候如果事务B回滚，那么A事务读到的数据是不被承认的。</p>
+<p>2.不可重复读</p>
+<p>​    不可重复读是指A事务读取了B事务已经提交的更改数据。假如A在取款事务的过程中，B往该账户转账100，A两次读取的余额发生不一致。</p>
+<p>3.幻读</p>
+<p>​    A事务读取B事务提交的新增数据,会引发幻读问题。幻读一般发生在计算统计数据的事务中，例如银行系统在同一个事务中两次统计存款账户的总金额，在两次统计中，刚好新增了一个存款账户，存入了100，这时候两次统计的总金额不一致。</p>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h3 id="4-1、什么是索引？有什么用？"><a href="#4-1、什么是索引？有什么用？" class="headerlink" title="4.1、什么是索引？有什么用？"></a>4.1、什么是索引？有什么用？</h3><p>​        索引就相当于一本书的目录，通过目录可以快速的找到对应的资源。</p>
+<p>​        在数据库方面，查询一张表的时候有两种检索方式：</p>
+<p>​            第一种方式：全表扫描</p>
+<p>​            第二种方式：根据索引检索（效率很高）</p>
+<p>​        索引为什么可以提高检索效率呢？</p>
+<p>​            其实最根本的原理是缩小了扫描的范围。</p>
+<p>​        索引虽然可以提高检索效率，但是不能随意的添加索引，因为索引也是数据库当中的对象，也需要数据库不断的维护。是有维护成本的。比如，表中的数据经常被修改这样就不适合添加索引，因为数据一旦修改，索引需要重新排序，进行维护。添加索引是给某一个字段，或者说某些字段添加索引。</p>
+<pre><code class="sql">select ename,sal from emp where ename = &#39;SMITH&#39;;#当ename字段上没有添加索引的时候，以上sql语句会进行全表扫描，扫描ename字段中所有的值。#当ename字段上添加索引的时候，以上sql语句会根据索引扫描，快速定位。
+</code></pre>
+<h3 id="4-2、怎么创建索引对象？怎么删除索引对象？"><a href="#4-2、怎么创建索引对象？怎么删除索引对象？" class="headerlink" title="4.2、怎么创建索引对象？怎么删除索引对象？"></a>4.2、怎么创建索引对象？怎么删除索引对象？</h3><p>​    创建索引对象：</p>
+<p>​    create index 索引名称 on 表名(字段名);</p>
+<p>​    删除索引对象：</p>
+<p>​    drop index 索引名称 on 表名;</p>
+<h3 id="4-3、什么时候考虑给字段添加索引？（满足什么条件）"><a href="#4-3、什么时候考虑给字段添加索引？（满足什么条件）" class="headerlink" title="4.3、什么时候考虑给字段添加索引？（满足什么条件）"></a>4.3、什么时候考虑给字段添加索引？（满足什么条件）</h3><p>​    数据量庞大。（根据客户的需求，根据线上的环境）</p>
+<p>​    该字段很少的DML操作。（因为字段进行修改操作，索引也需要维护）</p>
+<p>​    该字段经常出现在where子句中。（经常根据哪个字段查询）</p>
+<h3 id="4-4、注意：主键和具有unique约束的字段自动会添加索引。"><a href="#4-4、注意：主键和具有unique约束的字段自动会添加索引。" class="headerlink" title="4.4、注意：主键和具有unique约束的字段自动会添加索引。"></a>4.4、注意：主键和具有unique约束的字段自动会添加索引。</h3><p>​    根据主键查询效率较高。尽量根据主键检索。</p>
+<h3 id="4-5、查看sql语句的执行计划："><a href="#4-5、查看sql语句的执行计划：" class="headerlink" title="4.5、查看sql语句的执行计划："></a>4.5、查看sql语句的执行计划：</h3><p>​    mysql&gt; explain select ename,sal from emp where sal = 5000;<br>​    +—-+————-+——-+——+—————+——+———+——+——+————-+<br>​    | id | select_type | table | type | possible_keys | key  | key_len | ref  | rows | Extra       |<br>​    +—-+————-+——-+——+—————+——+———+——+——+————-+<br>​    |  1 | SIMPLE      | emp   | ALL  | NULL          | NULL | NULL    | NULL |   14 | Using where |<br>​    +—-+————-+——-+——+—————+——+———+——+——+————-+</p>
+<pre><code>给薪资sal字段添加索引：create index emp_sal_index on emp(sal);mysql&gt; explain select ename,sal from emp where sal = 5000;
++----+-------------+-------+------+---------------+---------------+---------+-------+------+-------------+| id | select_type | table | type | possible_keys | key           | key_len | ref   | rows | Extra       |+----+-------------+-------+------+---------------+---------------+---------+-------+------+-------------+|  1 | SIMPLE      | emp   | ref  | emp_sal_index | emp_sal_index | 9       | const |    1 | Using where |+----+-------------+-------+------+---------------+---------------+---------+-------+------+-------------+
+</code></pre>
+<h3 id="4-6、索引底层采用的数据结构是：B-Tree"><a href="#4-6、索引底层采用的数据结构是：B-Tree" class="headerlink" title="4.6、索引底层采用的数据结构是：B + Tree"></a>4.6、索引底层采用的数据结构是：B + Tree</h3><h3 id="4-7、索引的实现原理？"><a href="#4-7、索引的实现原理？" class="headerlink" title="4.7、索引的实现原理？"></a>4.7、索引的实现原理？</h3><p>​    通过B+Tree缩小扫描范围，底层索引进行了排序，分区，索引会携带数据在表中的“物理地址”，最终通过索引检索到数据之后，获取到关联的物理地址，通过物理地址定位表中的数据，效率是最高的。<br>​        select ename from emp where ename = ‘SMITH’;</p>
+<p>​        通过索引转换为：</p>
+<p>​        select ename from emp where 物理地址 = 0x3;</p>
+<h3 id="4-8、索引的分类？"><a href="#4-8、索引的分类？" class="headerlink" title="4.8、索引的分类？"></a>4.8、索引的分类？</h3><p>​    单一索引：给单个字段添加索引</p>
+<p>​    复合索引:  给多个字段联合起来添加1个索引</p>
+<p>​    主键索引：主键上会自动添加索引</p>
+<p>​    唯一索引：有unique约束的字段上会自动添加索引<br>​    ….</p>
+<h3 id="4-9、索引什么时候失效？"><a href="#4-9、索引什么时候失效？" class="headerlink" title="4.9、索引什么时候失效？"></a>4.9、索引什么时候失效？</h3><p>​    select ename from emp where ename like ‘%A%’;</p>
+<p>​    模糊查询的时候，第一个通配符使用的是%，这个时候索引是失效的。</p>
+<h2 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h2><h3 id="什么是视图？"><a href="#什么是视图？" class="headerlink" title="什么是视图？"></a>什么是视图？</h3><p>​        站在不同的角度去看到数据。（同一张表的数据，通过不同的角度去看待）。</p>
+<h3 id="怎么创建视图？怎么删除视图？"><a href="#怎么创建视图？怎么删除视图？" class="headerlink" title="怎么创建视图？怎么删除视图？"></a>怎么创建视图？怎么删除视图？</h3><p>​    create view myview as select empno,ename from emp;</p>
+<p>​    drop view myview;</p>
+<p><strong>注意：只有DQL语句才能以视图对象的方式创建出来。</strong></p>
+<p>对视图进行增删改查，会影响到原表数据。（通过视图影响原表数据的，不是直接操作的原表）</p>
+<p>​    可以对视图进行CRUD操作。</p>
+<p>视图的作用？</p>
+<p>​    视图可以隐藏表的实现细节。保密级别较高的系统，数据库只对外提供相关的视图，java程序员只对视图对象进行CRUD。</p>
+<h2 id="数据库设计三大范式"><a href="#数据库设计三大范式" class="headerlink" title="数据库设计三大范式"></a>数据库设计三大范式</h2><h3 id="什么是设计范式"><a href="#什么是设计范式" class="headerlink" title="什么是设计范式"></a>什么是设计范式</h3><p>​    设计表的依据。按照这个三范式设计的表不会出现数据冗余。</p>
+<h3 id="三范式："><a href="#三范式：" class="headerlink" title="三范式："></a>三范式：</h3><p>第一范式：任何一张表都应该有主键，并且每一个字段原子性不可再分。</p>
+<p>第二范式：建立在第一范式的基础之上，所有非主键字段完全依赖主键，不能产生部分依赖。对于多对多？用三张表，关系表两个外键来处理</p>
+<p>第三范式：建立在第二范式的基础之上，所有非主键字段直接依赖主键，不能产生传递依赖。一对多？两张表，多的表加外键。</p>
+<p>​    </p>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>redis</title>
+    <url>/2021/06/03/Redis/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><h2 id="（一）Redis是什么"><a href="#（一）Redis是什么" class="headerlink" title="（一）Redis是什么"></a>（一）Redis是什么</h2><h3 id="概述："><a href="#概述：" class="headerlink" title="概述："></a>概述：</h3><p>Redis：REmote DIctionary Server(远程字典服务器)是完全开源免费的，用C语言编写，遵守BSD协议，是一个高性能（key/value）分布式内存数据库，基于内存运行并支持持久化的NoSQL数据库，是当前最热门NoSQL数据库之一，也被人们称为数据结构服务器</p>
+<h3 id="三大特点"><a href="#三大特点" class="headerlink" title="三大特点"></a>三大特点</h3><p>（1）Redis支持数据的持久化，可以将内存中的数据保持在磁盘中，重启的时候可以再次加重进行使用</p>
+<p>（2）Redis不仅仅支持简单的key-value类型的数据，同时还听过list，set，zset，hash,String等数据结构的存储</p>
+<p>（3）Redis支持数据的备份，既master-slave</p>
+<h2 id="（二）Redis能干什么"><a href="#（二）Redis能干什么" class="headerlink" title="（二）Redis能干什么"></a>（二）Redis能干什么</h2><p>（1）内存存储和持久化：redis支持异步将内存中的数据写到硬盘上，同时不影响继续服务</p>
+<p>（2）取最新N个数据的操作，如：可以将最新的10条评论的ID放在Redis的List集合里面</p>
+<p>（3）模拟类似于HttpSession这种需要设定过期时间的功能</p>
+<p>（4）发布、订阅消息系统</p>
+<p>（5）定时器、计数器</p>
+<h2 id="（三-Redis怎么玩"><a href="#（三-Redis怎么玩" class="headerlink" title="（三)Redis怎么玩"></a>（三)Redis怎么玩</h2><h3 id="Redis的安装："><a href="#Redis的安装：" class="headerlink" title="Redis的安装："></a>Redis的安装：</h3><p><a href="http://www.redis.cn/">redis中文官方网站</a>：下载redis</p>
+<p>（1）首先安装c++运行环境：</p>
+<pre><code>yum install gcc-c++
+</code></pre>
+<p>报错的话：</p>
+<pre><code>如果大家在centos7下编译redis6.0版本，如果出现以下错误
+
+In file included from server.c:30:0:
+server.h:1022:5: error: expected specifier-qualifier-list before ‘_Atomic’
+     _Atomic unsigned int lruclock; /* Clock for LRU eviction */
+
+请先检查gcc的版本是否低于5，如果是请先升级，可以使用以下命令：
+sudo yum install centos-release-scl
+sudo yum install devtoolset-7-gcc*
+scl enable devtoolset-7 bash
+</code></pre>
+<p>（2）将redis安装包放在opt下，然后使用以下命令</p>
+<pre><code>$ tar xzf redis-6.0.6.tar.gz
+$ cd redis-6.0.6
+$ make
+</code></pre>
+<p>如果make完成后继续执行 make install</p>
+<p>(3)在根目录下创建myredis</p>
+<pre><code>cp redis.conf /myredis/
+</code></pre>
+<p>(4)进入到解压后的 <code>src</code> 目录，通过如下命令启动Redis:</p>
+<pre><code>$ src/redis-server /myredis/redis.conf
+</code></pre>
+<p>(5)您可以使用内置的客户端与Redis进行交互:</p>
+<pre><code>$ src/redis-cli
+</code></pre>
+<p>(6)退出</p>
+<pre><code>127.0.0.1:6379&gt; shutdown
+</code></pre>
+<pre><code>not connected&gt; exit
+</code></pre>
+<h3 id="Redis五种基本数据类型"><a href="#Redis五种基本数据类型" class="headerlink" title="Redis五种基本数据类型"></a>Redis五种基本数据类型</h3><h3 id="key"><a href="#key" class="headerlink" title="key"></a>key</h3><p>key常用命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>keys *</td>
+<td>查询所有key</td>
+</tr>
+<tr>
+<td>exists key的名字</td>
+<td>判断某个key是否存在</td>
+</tr>
+<tr>
+<td>move key的名字 db</td>
+<td>将当前数据库的 <code>key</code> 移动到给定的数据库 <code>db</code> 当中。</td>
+</tr>
+<tr>
+<td>expire key的名字 秒</td>
+<td>为给定的key设置过期时间</td>
+</tr>
+<tr>
+<td>ttl key的名字</td>
+<td>查看还有多少秒过期，-1表示永不过期，-2表示已过期</td>
+</tr>
+<tr>
+<td>type key的名字</td>
+<td>查看你的key是什么类型</td>
+</tr>
+</tbody></table>
+<h4 id="String"><a href="#String" class="headerlink" title="String"></a>String</h4><p>（1）String是redis最基本的类型，一个key对应一个value</p>
+<p>（2）String类型是二进制安全的。意思是redis的String可以包含任何数据。比如jpg图片或者序列化的对象</p>
+<p>（3）String类型是Redis最基本的数据类型，一个redis中字符串value最多可以是512M</p>
+<p>String常用命令：</p>
+<p>（1）set(设置值)/get(取值)/del（删除值)/append(后面添加值)/strlen(长度)</p>
+<p>（2）Incr(递增)/decr/Incrby/decrby</p>
+<pre><code>incr k1  //只能递增1
+Incrby k1 2   //可以定制每次递增的数
+</code></pre>
+<p>（3）getrange(范围类取值)/setrange(范围类设值)</p>
+<p>（4）setex 秒值（设置为过期时间）/setnx(如果不存在才设置)</p>
+<p>（5）mset/mget/msetnx （多个设置值，多个区值 ，多个设值(如果全部不存在才设置)）</p>
+<pre><code>msetnx k1 v1 k2 v2
+</code></pre>
+<p>（6）getset（先get再set）</p>
+<h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><p>List：单值多value</p>
+<p>（1）lpush(从右向左放值：相当于栈)/rpush(从左向右放值：相当于队列)/Irange</p>
+<pre><code>lpush k2 1 2 3 4 5 6 
+</code></pre>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210601142740.png" alt="image-20210601142733744" style="zoom:67%;">
+
+<p>（2）lpop/rpop（一个从左边(第一个)开始输出，一个从右边开始输出）</p>
+<p>（3）llen key  k的长度</p>
+<p>（4）lrem k1  v1   （参数k1中的多个v1)</p>
+<p>（5）ltrim k1 Index end (截取指定范围的值后再赋值给k1)</p>
+<p>（6）rpoplpush 源列表 目的列表 （源列表从底层加到目的列表头部）</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210601143811.png" alt="image-20210601143811584" style="zoom:50%;">
+
+<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p>set：单值多value</p>
+<p>常用方法：</p>
+<p>（1）sadd/smenbers/sismember   (添加多值/查看k的值)</p>
+<p>（2）scrad ，获取集合里面的元素个数</p>
+<p>（3）srem key value 删除集合中元素</p>
+<p>（4）srandmember key 某个整数 （随机出几个数）</p>
+<p>（5）spop key 随机出栈</p>
+<p>（6）smove key1 key2 值（在key1里面某个值）， 作用：是将key1里面的某个值赋值给key2</p>
+<p>（7）差集：sdiff   交集：sinter 并集：sunion </p>
+<h3 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h3><p>Hash类似java中的Map</p>
+<p>常用方法：</p>
+<p>（1）hset/hget/hmset/hgetall/hdel</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210601150551.png" alt="image-20210601150551647" style="zoom:67%;">
+
+<p>（2）hlen k1 (有多少个属性)</p>
+<p>（3）hexists k1 值（判断k1中是否存在某个值）</p>
+<p>（4）hkeys /hvals (所有的key 或value)</p>
+<p>（5）hincrby/hincrbyfloat</p>
+<p>（6）hsetnx （设置不重复的key）</p>
+<h3 id="Zet"><a href="#Zet" class="headerlink" title="Zet"></a>Zet</h3><p>有序的set</p>
+<p>常用方法：</p>
+<p>（1）zadd/zrange</p>
+<p>（2）zrangbyscore k1 开始score 结束score</p>
+<p>（3）zrem key 某score下对应的value值，作用是删除元素</p>
+<p>（4）zcard/zcount k1 score区间/zrank k1 values ,作用是获取下标值/zscore key 对应值，获取分数</p>
+<p>（5）zrevrank k1 v1值 ，作用是逆序获得下标值</p>
+<p>（6）zrevrange</p>
+<p>（7）zrevrangebyscore key 结束score 开始score（max，min）</p>
+<h1 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h1><p>Redis持久化：在指定的时间间隔内将内存中的数据集快照写入磁盘， 也就是行话讲的Snapshot快照，它恢复时是将快照文件直接读到内存里</p>
+<p>Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到 一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。 整个过程中，主进程是不进行任何IO操作的，这就确保了极高的性能 如果需要进行大规模数据的恢复，且对于数据恢复的完整性不是非常敏感，那RDB方 式要比AOF方式更加的高效。RDB的缺点是最后一次持久化后的数据可能丢失。</p>
+<h2 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h2><p>rdb 保存的是dump.rdb文件，你在哪个目录下启动就在哪个目录下生成dump.rdb文件</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture /20210601210913.png" style="zoom:50%;">
+
+<h3 id="配置位置及SNAPSHOTTING解析"><a href="#配置位置及SNAPSHOTTING解析" class="headerlink" title="配置位置及SNAPSHOTTING解析"></a>配置位置及SNAPSHOTTING解析</h3><p>默认开启的：在多少秒了有几次操作就进行保存</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture /20210601203425.png" alt="image-20210601203418840" style="zoom: 50%;">
+
+<p>可以修改为：</p>
+<pre><code>save 120 10 # 120秒内修改10次则触发RDB
+</code></pre>
+<p><strong>如何触发快照</strong></p>
+<ul>
+<li>1、配置文件中默认的快照配置，建议多用一台机子作为备份，复制一份 dump.rdb</li>
+<li>2、命令save或者是bgsave<ul>
+<li>save 时只管保存，其他不管，全部阻塞</li>
+<li>bgsave，Redis 会在后台异步进行快照操作，快照同时还可以响应客户端请求。可以通过lastsave命令获取最后一次成功执行快照的时间。</li>
+</ul>
+</li>
+<li>3、执行flflushall命令，也会产生 dump.rdb 文件，但里面是空的，无意义 !</li>
+<li>4、退出的时候也会产生 dump.rdb 文件！</li>
+</ul>
+<p><strong>恢复</strong></p>
+<p>1、将备份文件（dump.rdb）移动到redis安装目录并启动服务即可</p>
+<p>2、CONFIG GET dir 获取目录</p>
+<pre><code>127.0.0.1:6379&gt; config get dir dir /usr/local/bin
+</code></pre>
+<h2 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h2><p>AOF：以日志的形式来记录每个写操作，将Redis执行过的所有写指令记录下来(读操作不记录)， 只许追加文件但不可以改写文件，redis启动之初会读取该文件重新构建数据，换言之，redis 重启的话就根据日志文件的内容将写指令从前到后执行一次以完成数据的恢复工作</p>
+<p>默认是关闭的，要在配置文件里进行配置，将appendonly no 改为appendonly  yes</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210603151114.png" alt="image-20210601212724043" style="zoom:67%;">
+
+<p>注：当appendonly.aof和dump.rdb同时存在是redis先读取appendonly.aof</p>
+<p>当appeendonly.aof有问题时：使用命令：将不符合语法规范错误删除</p>
+<pre><code>redis-check-aof --fix appendonly.aof
+</code></pre>
+<h3 id="rewrite"><a href="#rewrite" class="headerlink" title="rewrite"></a>rewrite</h3><p><strong>rewrite：</strong></p>
+<p>AOF采用文件追加方式，文件会越来越大为避免出现此种情况，新增了重写机制, 当AOF文件的大小超过所设定的阈值时，Redis就会启动AOF文件的内容压缩， 只保留可以恢复数据的最小指令集.可以使用命令bgrewriteaof</p>
+<p><strong>rewrite原理：</strong></p>
+<p>AOF文件持续增长而过大时，会fork出一条新进程来将文件重写(也是先写临时文件最后再rename)， 遍历新进程的内存中数据，每条记录有一条的Set语句。重写aof文件的操作，并没有读取旧的aof文件， 而是将整个内存中的数据库内容用命令的方式重写了一个新的aof文件，这点和快照有点类似</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210603151058.png" alt="image-20210601220538350" style="zoom:50%;">
+
+
+
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210603151059.png" alt="image-20210601221024910" style="zoom:50%;">
+# Redis事务
+
+<p>redis事务：可以一次执行多个命令，本质是一组命令的集合。一个事务中的 所有命令都会序列化，按顺序地串行化执行而不会被其它命令插入，不许加塞</p>
+<p>能干什么：一个队列中，一次性、顺序性、排他性的执行一系列命令</p>
+<p>怎么玩：</p>
+<h2 id="事务常用命令："><a href="#事务常用命令：" class="headerlink" title="事务常用命令："></a>事务常用命令：</h2><p>（1）正常执行</p>
+<p>（2）放弃事务</p>
+<p>（3）全体连坐：当编译时就发现错误了，就全体都不执行</p>
+<p>（4）冤有头债有主：当编译时没有发现错误，但在EXEC后才发现错误的，只有错误语句不执行，其余的都执行</p>
+<p>（5）watch监控</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="http://www.redis.cn/commands/discard.html">DISCARD</a></td>
+<td>取消事务，放弃执行事务块内的所有命令</td>
+</tr>
+<tr>
+<td><a href="http://www.redis.cn/commands/exec.html">EXEC</a></td>
+<td>执行所有事务块内的命令</td>
+</tr>
+<tr>
+<td><a href="http://www.redis.cn/commands/multi.html">MULTI</a></td>
+<td>标记一个事务块的开始</td>
+</tr>
+<tr>
+<td><a href="http://www.redis.cn/commands/unwatch.html">UNWATCH</a></td>
+<td>取消WATCH命令对所有key的监视</td>
+</tr>
+<tr>
+<td><a href="http://www.redis.cn/commands/watch.html">WATCH</a></td>
+<td>监视一个（或多个）key，如果在事务执行之前这个（或这些）key被其他命令所改动，那么事务将被打断</td>
+</tr>
+</tbody></table>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602093449.png" alt="image-20210602093449219" style="zoom:50%;">
+
+<h3 id="悲观锁-乐观锁-CAS-Check-And-Set"><a href="#悲观锁-乐观锁-CAS-Check-And-Set" class="headerlink" title="悲观锁/乐观锁/CAS(Check And Set)"></a>悲观锁/乐观锁/CAS(Check And Set)</h3><ul>
+<li><p>悲观锁(Pessimistic Lock)：顾名思义，就是很悲观，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会block直到它拿到锁。传统的关系型数据库里边就用到了很多这种锁机制，比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁</p>
+</li>
+<li><p>乐观锁(Optimistic Lock)：顾名思义，就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，可以使用版本号等机制。乐观锁适用于多读的应用类型，这样可以提高吞吐量，乐观锁策略:提交版本必须大于记录当前版本才能执行更新</p>
+<h3 id="Watch"><a href="#Watch" class="headerlink" title="Watch"></a>Watch</h3><p>watch：监听一个或多个key，当其他的key的值在监听后发生了改变，就无法执行事务，要UNWATCH后重新WATCH,要么事务提交后会自动UNWATCH</p>
+<p>Watch指令，类似乐观锁，事务提交时，如果Key的值已被别的客户端改变， 比如某个list已被别的客户端push/pop过了，整个事务队列都不会被执行</p>
+</li>
+</ul>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602100943.png" alt="image-20210602100943219" style="zoom:67%;">
+
+<h3 id="Redis发布订阅"><a href="#Redis发布订阅" class="headerlink" title="Redis发布订阅"></a>Redis发布订阅</h3><p>Redis 发布订阅 (pub/sub) 是一种消息通信模式：发送者 (pub) 发送消息，订阅者 (sub) 接收消息。</p>
+<p>Redis 客户端可以订阅任意数量的频道。</p>
+<p>下表列出了 redis 发布订阅常用命令：</p>
+<table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">命令及描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a href="http://www.redis.cn/commands/psubscribe.html">PSUBSCRIBE</a></td>
+<td align="left">订阅一个或多个符合给定模式的频道。</td>
+</tr>
+<tr>
+<td align="left"><a href="http://www.redis.cn/commands/pubsub.html">PUBSUB</a></td>
+<td align="left">查看订阅与发布系统状态。</td>
+</tr>
+<tr>
+<td align="left"><a href="http://www.redis.cn/commands/publish.html">PUBLISH</a></td>
+<td align="left">将信息发送到指定的频道。</td>
+</tr>
+<tr>
+<td align="left"><a href="http://www.redis.cn/commands/punsubscribe.html">PUNSUBSCRIBE</a></td>
+<td align="left">退订所有给定模式的频道。</td>
+</tr>
+<tr>
+<td align="left"><a href="http://www.redis.cn/commands/subscribe.html">SUBSCRIBE</a></td>
+<td align="left">订阅给定的一个或多个频道的信息。</td>
+</tr>
+<tr>
+<td align="left"><a href="http://www.redis.cn/commands/unsubscribe.html">UNSUBSCRIBE</a></td>
+<td align="left">指退订给定的频道。</td>
+</tr>
+</tbody></table>
+<p>客户端：订阅mychannel，接收指定频道发送的信息</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602111809.png" alt="image-20210602111802133"></p>
+<p>服务端：将信息发送到指定的频道。</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602111854.png" alt="image-20210602111854672"></p>
+<p>最后客户端接收到服务端发送来的数据</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602111957.png" alt="image-20210602111957496"></p>
+<h1 id="Redis主从复制"><a href="#Redis主从复制" class="headerlink" title="Redis主从复制"></a>Redis主从复制</h1><p>Redis主从复制：也就是我们所说的主从复制，主机数据更新后根据配置和策略， 自动同步到备机的master/slaver机制，Master以写为主，Slave以读为主</p>
+<p>测试：</p>
+<p>将开启三个redis服务，用3个端口，分别为6379、6380、6381</p>
+<p>将下面的三个配置文件进行修改</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602151601.png" alt="image-20210602151601260" style="zoom:50%;">
+
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602151501.png" alt="image-20210602151501167" style="zoom:50%;">
+
+<p>然后启动三台redis服务：端口为6379、6380、6381</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602152334.png" alt="image-20210602152334402"></p>
+<p>三者开始都是master，从机接收主机后，会将全部数据拷贝到从机</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602152848.png" alt="image-20210602152848557" style="zoom:50%;">
+
+<h2 id="一主二仆"><a href="#一主二仆" class="headerlink" title="一主二仆"></a>一主二仆</h2><p>从机连接主机：使用slaveof 主机地址 主机端口 （从机只能读，不能写）</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602154005.png" alt="image-20210602154005492" style="zoom:50%;">
+
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602154318.png" alt="image-20210602154317891" style="zoom:50%;">
+
+<ul>
+<li><p>当主机宕机之后：从机还是从机，当主机重启时，主机还是主机</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602155221.png" alt="image-20210602155221317" style="zoom:67%;"></li>
+<li><p>当从机宕机之后：每次与master断开之后，都需要重新连接，除非你配置进redis.conf文件</p>
+</li>
+</ul>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602155619.png" alt="image-20210602155619460" style="zoom:67%;">
+
+<h2 id="薪火相传"><a href="#薪火相传" class="headerlink" title="薪火相传"></a>薪火相传</h2><ul>
+<li>上一个Slave可以是下一个slave的Master，Slave同样可以接收其他 slaves的连接和同步请求，那么该slave作为了链条中下一个的master, 可以有效减轻master的写压力（奴隶的奴隶还是奴隶）</li>
+<li>中途变更转向：会清除之前的数据，重新建立拷贝最新的</li>
+<li>slaveof 新主库IP 新主库端口<br><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602160931.png" alt="image-20210602160931229"></li>
+</ul>
+<h2 id="反客为主"><a href="#反客为主" class="headerlink" title="反客为主"></a>反客为主</h2><ul>
+<li>SLAVEOF no one<ul>
+<li>使当前数据库停止与其他数据库的同步，转成主数据库</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602161832.png" alt="image-20210602161831928"></p>
+<h2 id="复制原理"><a href="#复制原理" class="headerlink" title="复制原理"></a>复制原理</h2><p>slave启动成功连接到master后会发送一个sync命令</p>
+<p>master接到命令启动后台的存盘进程，同时收集所有接收到的用于修改数据集命令， 在后台进程执行完毕之后，master将传送整个数据文件到slave,以完成一次完全同步</p>
+<p>全量复制：而slave服务在接收到数据库文件数据后，将其存盘并加载到内存中。</p>
+<p>增量复制：Master继续将新的所有收集到的修改命令依次传给slave,完成同步</p>
+<p>但是只要是重新连接master，一次完全同步（全量复制)将被自动执行</p>
+<h2 id="哨兵模式-sentinel"><a href="#哨兵模式-sentinel" class="headerlink" title="哨兵模式(sentinel)"></a>哨兵模式(sentinel)</h2><p>哨兵模式(sentinel)：反客为主自动版，能够后台监控主机是否故障，如果故障了根据投票数自动将从库转换为主库</p>
+<h3 id="怎么玩-使用步骤"><a href="#怎么玩-使用步骤" class="headerlink" title="怎么玩(使用步骤)"></a>怎么玩(使用步骤)</h3><ul>
+<li><p>调整结构，6379带着6380、6381</p>
+</li>
+<li><p>新建/myredis/sentinel.conf文件，名字绝不能错</p>
+</li>
+<li><p>配置哨兵,填写内容</p>
+<ol>
+<li><p>sentinel monitor 被监控主机名字(自己起名字) 127.0.0.1 6379 1 </p>
+</li>
+<li><p>上面最后一个数字1，表示主机挂掉后salve投票看让谁接替成为主机，得票数多少后成为主机（PS. 跟官网的描述有出入，下面有官方文档说明）</p>
+</li>
+</ol>
+</li>
+<li><p>启动哨兵</p>
+<ol>
+<li>redis-sentinel /myredis/sentinel.conf（上述目录依照各自的实际情况配置，可能目录不同）</li>
+</ol>
+</li>
+<li><p>正常主从演示</p>
+</li>
+<li><p>原有的master挂了</p>
+</li>
+<li><p>投票新选</p>
+</li>
+<li><p>重新主从继续开工，info replication查查看</p>
+<p><strong>选出了新的主机</strong>：当原先的主机恢复时，回来了也是从机，新老大还是之前选出来的主机</p>
+</li>
+</ul>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602163948.png" alt="image-20210602163948338"></p>
+<p>问题：如果之前挂了的master重启回来，会不会双master冲突？</p>
+<p>答： 不会，原master，变成slave</p>
+<h1 id="Jedis"><a href="#Jedis" class="headerlink" title="Jedis"></a>Jedis</h1><h2 id="Jedis基本类型"><a href="#Jedis基本类型" class="headerlink" title="Jedis基本类型"></a>Jedis基本类型</h2><p>导包：</p>
+<pre><code class="xml">&lt;!-- https://mvnrepository.com/artifact/redis.clients/jedis --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;redis.clients&lt;/groupId&gt;
+    &lt;artifactId&gt;jedis&lt;/artifactId&gt;
+    &lt;version&gt;3.6.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<pre><code class="java">@Test
+public void test_1()&#123;
+    Jedis jedis=new Jedis(&quot;127.0.0.1&quot;, 6379);
+    jedis.set(&quot;k1&quot;,&quot;v1&quot;);
+    System.out.println(jedis.get(&quot;k1&quot;));
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602171649.png" alt="image-20210602171649327"></p>
+<h2 id="Jedis事务"><a href="#Jedis事务" class="headerlink" title="Jedis事务"></a>Jedis事务</h2><p>事务jedis.multi();获取Transaction对象</p>
+<pre><code class="java">@Test
+public void test_2() throws InterruptedException &#123;
+    Jedis jedis=new Jedis(&quot;127.0.0.1&quot;, 6379);
+    jedis.set(&quot;money&quot;,&quot;100&quot;);
+    jedis.watch(&quot;money&quot;);//加上乐观锁
+    Transaction transaction = jedis.multi();//开启事务，获取事务对象
+    transaction.set(&quot;money&quot;,&quot;80&quot;);
+    System.out.println(transaction.get(&quot;money&quot;));
+    transaction.exec();
+
+&#125;
+</code></pre>
+<h2 id="Jedis主从复制"><a href="#Jedis主从复制" class="headerlink" title="Jedis主从复制"></a>Jedis主从复制</h2><pre><code class="java">@Test
+public void test_3()&#123;
+    Jedis jedis_M=new Jedis(&quot;127.0.0.1&quot;, 6379);//主机
+    Jedis jedis_S=new Jedis(&quot;127.0.0.1&quot;, 6380);//从机
+    jedis_S.slaveof(&quot;127.0.0.1&quot;, 6379);//连接主机
+
+    jedis_M.set(&quot;k1&quot;,&quot;v1&quot;);
+    System.out.println(jedis_S.get(&quot;k1&quot;));
+&#125;
+</code></pre>
+<h2 id="JedisPool"><a href="#JedisPool" class="headerlink" title="JedisPool"></a>JedisPool</h2><p>JedisPoolUtil连接池</p>
+<pre><code class="java">public class JedisPoolUtil &#123;
+    public static volatile JedisPool jedisPool = null;
+
+    public JedisPoolUtil() &#123;
+
+    &#125;
+
+    public static JedisPool getJedisPoolInstance() &#123;
+        if (jedisPool == null) &#123;
+            synchronized (JedisPoolUtil.class) &#123;
+                GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+                poolConfig.setMaxTotal(10);
+                jedisPool = new JedisPool(poolConfig, &quot;127.0.0.1&quot;, 6379);
+            &#125;
+        &#125;
+        return jedisPool;
+    &#125;
+
+    public static void release(JedisPool jedisPool, Jedis jedis) &#123;
+        if (jedis != null) &#123;
+            jedisPool.returnResource(jedis);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>JedisPool的配置参数大部分是由JedisPoolConfig的对应项来赋值的。</p>
+<ul>
+<li>maxActive：控制一个pool可分配多少个jedis实例，通过pool.getResource()来获取；如果赋值为-1，则表示不限制；如果pool已经<br>分配了maxActive个jedis实例，则此时pool的状态为exhausted。</li>
+<li>maxIdle：控制一个pool最多有多少个状态为idle(空闲)的jedis实例；</li>
+<li>whenExhaustedAction：表示当pool中的jedis实例都被allocated完时，pool要采取的操作；默认有三种。</li>
+<li>WHEN<em>EXHAUSTED</em>FAIL –&gt; 表示无jedis实例时，直接抛出NoSuchElementException；</li>
+<li>WHEN<em>EXHAUSTED</em>BLOCK –&gt; 则表示阻塞住，或者达到maxWait时抛出JedisConnectionException；</li>
+<li>WHEN<em>EXHAUSTED</em>GROW –&gt; 则表示新建一个jedis实例，也就说设置的maxActive无用；</li>
+<li>maxWait：表示当borrow一个jedis实例时，最大的等待时间，如果超过等待时间，则直接抛JedisConnectionException；</li>
+</ul>
+<p>测试：</p>
+<pre><code class="java">@Test
+public void test_4()&#123;
+    JedisPool jedisPool = JedisPoolUtil.getJedisPoolInstance();
+    Jedis jedis =null;
+    try &#123;
+        jedis=jedisPool.getResource();
+        jedis.set(&quot;k3&quot;,&quot;v3&quot;);
+        System.out.println(jedis.get(&quot;k3&quot;));
+    &#125; catch (Exception e) &#123;
+        e.printStackTrace();
+    &#125; finally &#123;
+        JedisPoolUtil.release(jedisPool,jedis);
+    &#125;
+&#125;
+</code></pre>
+<p>结果：</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210602193900.png" alt="image-20210602193853554"></p>
+]]></content>
+      <categories>
+        <category>redis</category>
+      </categories>
+      <tags>
+        <tag>redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringIOC和SpringAOP</title>
+    <url>/2021/05/16/SpringIOC%E5%92%8CSpringAOP%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h1><h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>1、IOC思想基于IOC容器完成，IOC容器底层就是对象工厂</p>
+<h3 id="Spring提供IOC容器实现的两种方式：（两个接口）"><a href="#Spring提供IOC容器实现的两种方式：（两个接口）" class="headerlink" title="Spring提供IOC容器实现的两种方式：（两个接口）"></a>Spring提供IOC容器实现的两种方式：（两个接口）</h3><p>​    （1）BeanFactory：IOC容器基本实现，是spring内部的使用接口，不提供开发人员进行使用</p>
+<p>​            加载配置文件时候不会创建对象，在获取对象（使用）才去创建对象</p>
+<p>​    （2）ApplicationContext：BeanFactory接口的子接口，提供更多更强大的功能，一般有开发人员使用</p>
+<p>​            加载配置文件的时候就把配置文件对象进行创建</p>
+<h3 id="Bean管理"><a href="#Bean管理" class="headerlink" title="Bean管理"></a>Bean管理</h3><p>​    spring创建对象 和 spring注入属性</p>
+<h3 id="bean的属性注入"><a href="#bean的属性注入" class="headerlink" title="bean的属性注入"></a>bean的属性注入</h3><h4 id="set注入"><a href="#set注入" class="headerlink" title="set注入"></a>set注入</h4><p>对象中有属性有set方法的时候可以使用set注入</p>
+<pre><code class="xml">&lt;bean id=&quot;people&quot; class=&quot;com.lyj.pojo.People&quot;&gt;
+     &lt;property name=&quot;name&quot; value=&quot;张三&quot;/&gt;
+     &lt;property name=&quot;sex&quot; value=&quot;男&quot;/&gt;
+     &lt;property name=&quot;age&quot; value=&quot;18&quot;/&gt;
+&lt;/bean&gt;
+</code></pre>
+<h4 id="有参构造器注入"><a href="#有参构造器注入" class="headerlink" title="有参构造器注入"></a>有参构造器注入</h4><p>当有有参构造器是</p>
+<pre><code class="xml">&lt;bean id=&quot;people&quot; class=&quot;com.lyj.pojo.People&quot;&gt;
+    &lt;constructor-arg name=&quot;name&quot; value=&quot;张三&quot;/&gt;
+    &lt;constructor-arg name=&quot;sex&quot; value=&quot;男&quot;/&gt;
+    &lt;constructor-arg name=&quot;age&quot; value=&quot;18&quot;/&gt;
+&lt;/bean&gt;
+</code></pre>
+<h4 id="设置空值"><a href="#设置空值" class="headerlink" title="设置空值"></a>设置空值</h4><p>其中age就被设置为了空值</p>
+<pre><code class="xml">&lt;bean id=&quot;people&quot; class=&quot;com.lyj.pojo.People&quot;&gt;
+    &lt;property name=&quot;name&quot; value=&quot;张三&quot;/&gt;
+    &lt;property name=&quot;sex&quot; value=&quot;男&quot;/&gt;
+    &lt;property name=&quot;age&quot;&gt;&lt;null/&gt;&lt;/property&gt;
+&lt;/bean&gt;
+</code></pre>
+<h4 id="特殊符号"><a href="#特殊符号" class="headerlink" title="特殊符号"></a>特殊符号</h4><p>第一种：使用转义字符 &lt; &lg;</p>
+<p>第二种：使用<!--[CDATA[你的内容]]--></p>
+<pre><code class="xml">&lt;bean id=&quot;people&quot; class=&quot;com.lyj.pojo.People&quot;&gt;
+    &lt;property name=&quot;name&quot; value=&quot;张三&quot;/&gt;
+    &lt;property name=&quot;sex&quot;&gt;
+        &lt;value&gt;
+            &lt;![CDATA[&lt;&lt;男&gt;&gt;]]&gt;
+        &lt;/value&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+</code></pre>
+<h4 id="数组、-list、map、set注入"><a href="#数组、-list、map、set注入" class="headerlink" title="数组、 list、map、set注入"></a>数组、 list、map、set注入</h4><pre><code class="xml">&lt;bean id=&quot;student&quot; class=&quot;com.lyj.pojo.Student&quot;&gt;
+    &lt;property name=&quot;courses&quot;&gt;
+        &lt;!--数组--&gt;
+        &lt;array&gt;
+            &lt;value&gt;java课程&lt;/value&gt;
+            &lt;value&gt;Spring课程&lt;/value&gt;
+        &lt;/array&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;list&quot;&gt;
+        &lt;!--List--&gt;
+        &lt;list&gt;
+            &lt;value&gt;张三&lt;/value&gt;
+            &lt;value&gt;小三&lt;/value&gt;
+            &lt;!--如果list里面是对象--&gt;
+            &lt;!--&lt;ref bean=&quot;people&quot;&gt;&lt;/ref&gt;--&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;maps&quot;&gt;
+        &lt;!--Map--&gt;
+        &lt;map&gt;
+            &lt;entry key=&quot;JAVA&quot; value=&quot;java&quot;&gt;&lt;/entry&gt;
+            &lt;entry key=&quot;PHP&quot; value=&quot;php&quot;&gt;&lt;/entry&gt;
+        &lt;/map&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;sets&quot;&gt;
+        &lt;!--set--&gt;
+        &lt;set&gt;
+            &lt;value&gt;MySQL&lt;/value&gt;
+            &lt;value&gt;Redis&lt;/value&gt;
+        &lt;/set&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+</code></pre>
+<h4 id="属性的抽取"><a href="#属性的抽取" class="headerlink" title="属性的抽取"></a>属性的抽取</h4><p>在spring配置文件中导入util约束</p>
+<pre><code class="xml">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:util=&quot;http://www.springframework.org/schema/util&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/util 
+                           http://www.springframework.org/schema/util/spring-util.xsd&quot;&gt;
+</code></pre>
+<p>可以抽取下面的各个属性问公共部分，提高代码复用</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516103321.png" alt="image-20210516103314576"></p>
+<pre><code class="xml">&lt;!--list 属性抽取出来--&gt;
+    &lt;util:list id=&quot;bookList&quot;&gt;
+        &lt;value&gt;java入门到精通&lt;/value&gt;
+        &lt;value&gt;JavaWeb&lt;/value&gt;
+        &lt;value&gt;spring实战&lt;/value&gt;
+    &lt;/util:list&gt;
+
+    &lt;bean id=&quot;book&quot; class=&quot;com.lyj.pojo.Book&quot;&gt;
+        &lt;property name=&quot;books&quot; ref=&quot;bookList&quot;/&gt;
+    &lt;/bean&gt;
+</code></pre>
+<h3 id="IOC操作Bean管理"><a href="#IOC操作Bean管理" class="headerlink" title="IOC操作Bean管理"></a>IOC操作Bean管理</h3><p>Spring中有两种bean，一种普通bean，另一种工厂bean</p>
+<p>工厂bean:在配置文件定义bean类型就是返回类型</p>
+<p>第一步：创建类：让这个类作为工厂bean，实现接口FactoryBean</p>
+<p>第二步：实现接口里面的方法，在实现的方法中定义返回的bean类</p>
+<pre><code class="java">public class MyFactory implements FactoryBean&lt;People&gt; &#123;
+    @Override
+    public People getObject() throws Exception &#123;
+        People people = new People();
+        people.setName(&quot;陈皮&quot;);
+        people.setSex(&quot;男&quot;);
+        people.setAge(18);
+        return people;
+    &#125;
+    @Override
+    public Class&lt;?&gt; getObjectType() &#123;
+        return null;
+    &#125;
+    @Override
+    public boolean isSingleton() &#123;
+        return false;
+    &#125;
+&#125;
+</code></pre>
+<p>spring容器中</p>
+<pre><code class="xml">&lt;bean id=&quot;myFactory&quot; class=&quot;com.lyj.factory.MyFactory&quot;/&gt;
+</code></pre>
+<h3 id="bean的作用域"><a href="#bean的作用域" class="headerlink" title="bean的作用域"></a>bean的作用域</h3><p>spring在默认情况下是单例</p>
+<p>在<bean>标签里面有一个scope属性值可以设置bean是单例还是多例</bean></p>
+<p>第一个值 默认值：singleton，表示是单实例，在加载配置文件是就进行了创建对象</p>
+<p>第二个值 propertype，表示是多实例，在getBean获取对象的时候才创建对象</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516110544.png" alt="image-20210516110544750"></p>
+<h3 id="bean生命周期"><a href="#bean生命周期" class="headerlink" title="bean生命周期"></a>bean生命周期</h3><ol>
+<li><p>通过构造器创建bean实例（无惨构造）</p>
+</li>
+<li><p>为bean的属性设置值和对其他bean引用（调用set方法）</p>
+</li>
+<li><p>把bean实例传递bean后置处理器的方法</p>
+</li>
+<li><p>调用bean的初始化的方法（需要进行配置初始化的方法）</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516142523.png" alt="image-20210516142441130"></p>
+</li>
+<li><p>把bean实例传递bean后置处理器的方法</p>
+</li>
+<li><p>bean可以使用了（对象获取到了）</p>
+</li>
+<li><p>当容器关闭时候，调用bean的销毁的方法（需要进行配置销毁的方法）</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516142602.png" alt="image-20210516142602135"></p>
+</li>
+</ol>
+<p>第三步和第五部需要自己写一个类继承BeanPostProcessor</p>
+<pre><code class="java">public class MyBeanPost implements BeanPostProcessor &#123;
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException &#123;
+        System.out.println(&quot;在初始化之前执行&quot;);
+        return null;
+    &#125;
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException &#123;
+        System.out.println(&quot;在初始化之后执行&quot;);
+        return null;
+    &#125;
+&#125;
+</code></pre>
+<p>spring.xml</p>
+<pre><code class="xml">  &lt;!--配置后置处理器--&gt;
+    &lt;bean id=&quot;myBeanPost&quot; class=&quot;com.lyj.bean.MyBeanPost&quot;/&gt;
+</code></pre>
+<h3 id="自动装配"><a href="#自动装配" class="headerlink" title="自动装配"></a>自动装配</h3><h4 id="xml方式"><a href="#xml方式" class="headerlink" title="xml方式"></a>xml方式</h4><p>实现自动装配 bean的标签属性autowire，配置自动装配，autowire属性常用两个值byName根据属性名称注入，注入值bean的id值和类属性名称一样 </p>
+<p>byType根据属性类型注入</p>
+<h4 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h4><p>spring开启注解扫描</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+    &lt;context:component-scan base-package=&quot;com.lyj&quot;/&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>还可以使用自己的filter</p>
+<p>use-default-filters=”false” 表示不使用默认的filter，自己配置filter</p>
+<p>context:include-filter：设置扫描那些内容</p>
+<p>context:exclude-filter：设置不扫描的内容</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd 
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;context:component-scan base-package=&quot;com.lyj&quot; use-default-filters=&quot;false&quot;&gt;
+        &lt;!--只扫描@Controller注解--&gt;
+        &lt;context:include-filter type=&quot;annotation&quot; expression=&quot;org.springframework.stereotype.Controller&quot;/&gt;
+    &lt;/context:component-scan&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>@Autowire：根据属性类型进行自动装配 （byType）</p>
+<p>@Qualifier：根据属性名称进行自动装配  （byName)</p>
+<p>@Resource：根据属性名称或者类型进行自动装配  （先byName如果没有再byType)</p>
+<p>@Value：普通值的注入</p>
+<h2 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h2><p>AOP：面向切面编程，利用AOP可以对业务逻辑的各个部分进行隔离，从而使得业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时提高了开发的效率。</p>
+<p>通俗的说：不通过修改源代码方式，在主干功能里面添加新功能</p>
+<h3 id="Aop底层"><a href="#Aop底层" class="headerlink" title="Aop底层"></a>Aop底层</h3><p>AOP的底层使用的是动态代理实现的</p>
+<p>1、JDK动态代理：有接口的情况下，使用JDK动态代理，创建<strong>接口实现类代理对象</strong>，增强类的方法</p>
+<p>2、cglib动态代理：没有接口的情况下，使用cglib动态代理，创建<strong>当前类子类的代理对象</strong></p>
+<h5 id="jdk动态案例"><a href="#jdk动态案例" class="headerlink" title="jdk动态案例"></a>jdk动态案例</h5><p>UserDaoImpl是UserDao接口的实现类</p>
+<pre><code class="java">public class MyJDKProxy &#123;
+    public static void main(String[] args) &#123;
+        //创建接口实现代理
+        Class[] interfaces=&#123;UserDao.class&#125;;
+        UserDao userDaoImpl=new UserDaoImpl();
+        //要使用接口类
+        UserDao userDaoProxy =(UserDao) Proxy.newProxyInstance(MyJDKProxy.class.getClassLoader(), interfaces, new MyProxyUserDaoImpl(userDaoImpl));
+        System.out.println(userDaoProxy.add(1, 2));
+    &#125;
+
+&#125;
+class MyProxyUserDaoImpl implements InvocationHandler &#123;
+    private Object object;
+
+    public MyProxyUserDaoImpl(Object object) &#123;
+        this.object = object;
+    &#125;
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;
+        //方法执行前
+        System.out.println(&quot;方法之前执行。。。&quot;+method.getName()+&quot; :传递的参数。。。&quot;+ Arrays.toString(args));
+        //被增强的方法执行
+        Object res = method.invoke(object, args);
+        //方法执行之后
+        System.out.println(&quot;方法执行之后。。。&quot;+object);
+        return res;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516185307.png" alt="image-20210516185300853"></p>
+<h3 id="Aop术语"><a href="#Aop术语" class="headerlink" title="Aop术语"></a>Aop术语</h3><p>1、连接点：类里面的那些方法<strong>可以被增强</strong>，这些方法称为连接点</p>
+<p>2、切入点：<strong>实际被增强</strong>的方法，称为切入点 </p>
+<p>3、通知（增强）：实际增强的逻辑部分称为通知，通知类型：前置通知、后置通知、环绕通知、异常通知、最终通知（finally）</p>
+<p>4、切面：把通知应用到切入点的过程</p>
+<h4 id="切入点表达式"><a href="#切入点表达式" class="headerlink" title="切入点表达式"></a>切入点表达式</h4><p>切入点表达式作用：知道对哪个类里面的哪个方法进行增强</p>
+<p>语法结构：execution([权限修饰符] [返回类型] [类全路径] [类全路径] [方法名称] ([参数列表]))。</p>
+<pre><code>例如：executon(* *com.lyj.dao.BookDao.add(..)) 或者executon(* *com.lyj.dao.BookDao.*(..))或者executon(* *com.lyj.dao.*.*(..))
+</code></pre>
+<h4 id="AOP操作（AspectJ注解）"><a href="#AOP操作（AspectJ注解）" class="headerlink" title="AOP操作（AspectJ注解）"></a>AOP操作（AspectJ注解）</h4><p>1、创建类，在类里定义方法</p>
+<p>2、创建增强类（编写增强逻辑）</p>
+<p>3、进行通知的配置</p>
+<p>​    1、在spring配置文件中，开启注解扫描</p>
+<p>​    2、使用注解创建User和UserProxy对象</p>
+<p>​    3、在增强类上面添加注解@Aspect</p>
+<p>​    4、在spring配置文件中开启代理对象</p>
+<h5 id="Aop的实现代码"><a href="#Aop的实现代码" class="headerlink" title="Aop的实现代码"></a>Aop的实现代码</h5><p>1、导入依赖</p>
+<pre><code class="xml">&lt;!-- https://mvnrepository.com/artifact/org.springframework/spring-aop --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+    &lt;version&gt;5.3.3&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-aspects&lt;/artifactId&gt;
+    &lt;version&gt;5.3.3&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>2、创建类</p>
+<pre><code class="java">@Component
+public class User &#123;
+    public void addUser()&#123;
+        System.out.println(&quot;===执行User对象的addUser()方法===&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>3、创建增强类</p>
+<pre><code class="java">@Aspect
+@Component
+public class UserProxy &#123;
+    @Before(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+    public void before()&#123;
+        System.out.println(&quot;前置通知。。。&quot;);
+    &#125;
+    @AfterReturning(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+    public void afterReturning()&#123;
+        System.out.println(&quot;后置通知。。。&quot;);
+    &#125;
+    @After(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+    public void after()&#123;
+        System.out.println(&quot;最终通知。。。&quot;);
+    &#125;
+    @AfterThrowing(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+    public void afterThrowing()&#123;
+        System.out.println(&quot;异常通知。。。&quot;);
+    &#125;
+    @Around(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+    public void around(ProceedingJoinPoint point) throws Throwable &#123;
+        System.out.println(&quot;环绕通知前。。。&quot;);
+        point.proceed();
+        System.out.println(&quot;环绕通知后。。。&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>​    注：将相同的切入点进行抽取</p>
+<pre><code class="java">@Pointcut(value = &quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;)
+public void point()&#123;
+&#125;
+@Before(value = &quot;point()&quot;)
+public void before()&#123;
+    System.out.println(&quot;前置通知。。。&quot;);
+&#125;
+</code></pre>
+<p>4、spring配置文件进行配置</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;
+
+    &lt;!--开启注解--&gt;
+    &lt;context:component-scan base-package=&quot;com.lyj.aspectj&quot;/&gt;
+    &lt;!--开启Aspect生成代理对象--&gt;
+    &lt;aop:aspectj-autoproxy/&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>5、测试类</p>
+<pre><code class="java"> @Test
+    public void testAopAnno()&#123;
+        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;application.xml&quot;);
+        User user = context.getBean(&quot;user&quot;, User.class);
+        user.addUser();
+    &#125;
+</code></pre>
+<p>6、结果：可以看出通知的先后顺序</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516201046.png" alt="image-20210516201046467"></p>
+<p>​    当出现异常时的异常通知：后置通知和环绕通知后不执行了，而执行了异常通知</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516201221.png" alt="image-20210516201221015"></p>
+<p>如果有多个增强类对同一方法进行增强时，在增强类上面添加@Order(数字类型值)，数字越小优先级越高</p>
+<h5 id="完全使用注解开发（将java配置类用来代替spring的xml文件）"><a href="#完全使用注解开发（将java配置类用来代替spring的xml文件）" class="headerlink" title="完全使用注解开发（将java配置类用来代替spring的xml文件）"></a>完全使用注解开发（将java配置类用来代替spring的xml文件）</h5><pre><code class="java">@Configuration//相当于配置类
+@ComponentScan(basePackages = &#123;&quot;com.lyj.aspectj&quot;&#125;)//开启注解扫描
+@EnableAspectJAutoProxy(proxyTargetClass = true)//代替注解中的&lt;aop:aspectj-autoproxy/&gt;
+public class AspectConfig &#123;
+&#125;
+</code></pre>
+<h4 id="AOP操作（AspectJ配置文件）"><a href="#AOP操作（AspectJ配置文件）" class="headerlink" title="AOP操作（AspectJ配置文件）"></a>AOP操作（AspectJ配置文件）</h4><p>1、创建两个类，增强类和被增强类，创建方法</p>
+<p>2、在spring配置文件中创建两个类对象</p>
+<pre><code class="xml"> &lt;!--创建对象--&gt;
+&lt;bean id=&quot;user&quot; class=&quot;com.lyj.aspectj.User&quot;/&gt;
+&lt;bean id=&quot;userProxy&quot; class=&quot;com.lyj.aspectj.UserProxy&quot;/&gt;
+</code></pre>
+<p>3、在spring配置文件中配置切入点</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd 
+                           http://www.springframework.org/schema/aop 
+                           http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;
+    &lt;!--创建对象--&gt;
+    &lt;bean id=&quot;user&quot; class=&quot;com.lyj.aspectj.User&quot;/&gt;
+    &lt;bean id=&quot;userProxy&quot; class=&quot;com.lyj.aspectj.UserProxy&quot;/&gt;
+    &lt;!--配置aop增强--&gt;
+    &lt;aop:config&gt;
+        &lt;!--切入点--&gt;
+        &lt;aop:pointcut id=&quot;point&quot; expression=&quot;execution(* *com.lyj..aspectj.User.addUser(..))&quot;/&gt;
+        &lt;!--配置切面--&gt;
+        &lt;aop:aspect ref=&quot;userProxy&quot;&gt;
+            &lt;!--增强在具体的方法上--&gt;
+            &lt;aop:before method=&quot;before&quot; pointcut-ref=&quot;point&quot;/&gt;
+        &lt;/aop:aspect&gt;
+    &lt;/aop:config&gt;
+&lt;/beans&gt;
+</code></pre>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210516203302.png" alt="image-20210516203302663"></p>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>java集合复习</title>
+    <url>/2021/05/28/java%E9%9B%86%E5%90%88/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="java集合复习"><a href="#java集合复习" class="headerlink" title="java集合复习"></a>java集合复习</h1><p>1、集合与数组存储数据结构概述</p>
+<p>​    集合、数组都是对多个数据进行存储操作的结构，简称java容器</p>
+<p>​    说明：此时的存储，主要指的是内存层面的存储，不涉及持久化的存储</p>
+<p>2、数组存储的特点</p>
+<p>​    一旦初始化以后，其长度就确定了</p>
+<p>​    数组一段定义好，其元素类型也就确定了。我们也就只能操作指定类型的数据了</p>
+<p>3、数组存储的弊端</p>
+<p>​    一旦初始化以后，其长度就不可修改</p>
+<p>​    数组中提供的方法非常有限，对应添加、删除、插入数据等操作，非常不便，同时效率不高。</p>
+<p>​    获取数组中实际元素的个数的需求，数组没有现成的属性或方法可用</p>
+<p>​    数组存储数据的特点：序、可重复、对于无序、不可重复的需求，不能满足</p>
+<p>4、集合优点</p>
+<p>​    解决数组存储数据方面的弊端</p>
+<h2 id="集合的框架结构"><a href="#集合的框架结构" class="headerlink" title="集合的框架结构"></a>集合的框架结构</h2><p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210526090520.png" alt="image-20210526090512899"></p>
+<h3 id="Collection常用方法"><a href="#Collection常用方法" class="headerlink" title="Collection常用方法"></a>Collection常用方法</h3><ul>
+<li><ul>
+<li><table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>boolean</code></td>
+<td><code>add(E e)</code>  确保此集合包含指定的元素（可选操作）。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>addAll(Collection&lt;? extends E&gt; c)</code>  将指定集合中的所有元素添加到此集合（可选操作）。</td>
+</tr>
+<tr>
+<td><code>void</code></td>
+<td><code>clear()</code>  从此集合中删除所有元素（可选操作）。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>contains(Object o)</code>  如果此集合包含指定的元素，则返回 <code>true</code> 。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>containsAll(Collection&lt;?&gt; c)</code>  如果此集合包含指定 <code>集合</code>中的所有元素，则返回true。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>equals(Object o)</code>  将指定的对象与此集合进行比较以获得相等性。</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>hashCode()</code>  返回此集合的哈希码值。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>isEmpty()</code>  如果此集合不包含元素，则返回 <code>true</code> 。</td>
+</tr>
+<tr>
+<td><code>Iterator&lt;E&gt;</code></td>
+<td><code>iterator()</code>  返回此集合中的元素的迭代器。</td>
+</tr>
+<tr>
+<td><code>default Stream&lt;E&gt;</code></td>
+<td><code>parallelStream()</code>  返回可能并行的 <code>Stream</code>与此集合作为其来源。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>remove(Object o)</code>  从该集合中删除指定元素的单个实例（如果存在）（可选操作）。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>removeAll(Collection&lt;?&gt; c)</code>  删除指定集合中包含的所有此集合的元素（可选操作）。</td>
+</tr>
+<tr>
+<td><code>default boolean</code></td>
+<td><code>removeIf(Predicate&lt;? super E&gt; filter)</code>  删除满足给定谓词的此集合的所有元素。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>retainAll(Collection&lt;?&gt; c)</code>  仅保留此集合中包含在指定集合中的元素（可选操作）。</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>size()</code>  返回此集合中的元素数。</td>
+</tr>
+<tr>
+<td><code>default Spliterator&lt;E&gt;</code></td>
+<td><code>spliterator()</code>  创建一个<a href="../../java/util/Spliterator.html"><code>Spliterator</code></a>在这个集合中的元素。</td>
+</tr>
+<tr>
+<td><code>default Stream&lt;E&gt;</code></td>
+<td><code>stream()</code>  返回以此集合作为源的顺序 <code>Stream</code> 。</td>
+</tr>
+<tr>
+<td><code>Object[]</code></td>
+<td><code>toArray()</code>  返回一个包含此集合中所有元素的数组。</td>
+</tr>
+<tr>
+<td><code>&lt;T&gt; T[]</code></td>
+<td><code>toArray(T[] a)</code>  返回包含此集合中所有元素的数组;  返回的数组的运行时类型是指定数组的运行时类型。</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+<p>contains判断对象是否包含在集合中，我们要复写equals方法，如果不复写就会去比较原生的equals，就是比较地址，复写后比较内容</p>
+<h3 id="Iterator迭代器"><a href="#Iterator迭代器" class="headerlink" title="Iterator迭代器"></a>Iterator迭代器</h3><ol>
+<li><p>Iterator对象称为迭代器（设计模式的一种），主要用于遍历Collection集合中的元素</p>
+</li>
+<li><p>GOF给迭代器模式的定义为：提供一个方法访问一个容器（container）对象中各个元素，而不是需要暴露该对象的内部细节</p>
+</li>
+<li><p>Collection接口继承了java.lang.Iterable接口，该接口有一个iterator()方法，那么所有实现Collection接口的集合都有一个iterator()方法，用以返回一个实现了Iterator接口的对象</p>
+</li>
+<li><p>Iterator仅用于遍历集合，Iterator本身并不提供承装对象的能力，如果需要创建Iterator对象，则必须有一个被迭代的集合</p>
+</li>
+<li><p>集合对象每次调用iterator()方法都得到一个全新的迭代器，默认游标都在集合的第一个元素之前</p>
+</li>
+</ol>
+<pre><code class="java">public static void main(String []args)&#123;
+    Collection collection=new ArrayList();
+    collection.add(&quot;123&quot;);
+    collection.add(&quot;456&quot;);
+    collection.add(new Person(1,&quot;张三&quot;,18));
+    Iterator iterator = collection.iterator();
+    while (iterator.hasNext())&#123;
+        System.out.println(iterator.next());
+    &#125;
+&#125;
+</code></pre>
+<ul>
+<li><ul>
+<li><table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>default void</code></td>
+<td><code>forEachRemaining(Consumer&lt;? super E&gt; action)</code>  对每个剩余元素执行给定的操作，直到所有元素都被处理或动作引发异常。</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>hasNext()</code>  如果迭代具有更多元素，则返回 <code>true</code> 。</td>
+</tr>
+<tr>
+<td><code>E</code></td>
+<td><code>next()</code>  返回迭代中的下一个元素。</td>
+</tr>
+<tr>
+<td><code>default void</code></td>
+<td><code>remove()</code>  从底层集合中删除此迭代器返回的最后一个元素（可选操作）。</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+<p>部分实现类：</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210527155807.png" alt="image-20210527155807467" style="zoom:50%;">
+
+<h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><ul>
+<li>动态数组</li>
+<li>List集合类中元素有序、且可重复，集合中的每个元素都有其对应的顺序索引。</li>
+<li>List容器中的元素都对应一个整数型的序号记载其容器中的位置，可以根据序号存取容器的元素</li>
+</ul>
+<h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>ArrayList：作为List接口的主要实现类；线程不安全，效率高；底层使用Object[] elementData存储</p>
+<p>扩容机制：默认大小为10，超过容量扩容原来的1.5倍，同时将原来数据复制到新的数组中</p>
+<pre><code class="java">//扩容机制源码
+private void grow(int minCapacity) &#123;
+    // overflow-conscious code
+    int oldCapacity = elementData.length;
+    int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);
+    if (newCapacity - minCapacity &lt; 0)
+        newCapacity = minCapacity;
+    if (newCapacity - MAX_ARRAY_SIZE &gt; 0)
+        newCapacity = hugeCapacity(minCapacity);
+    // minCapacity is usually close to size, so this is a win:
+    elementData = Arrays.copyOf(elementData, newCapacity);
+&#125;
+</code></pre>
+<p>常用方法</p>
+<h3 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h3><p>LinkedList：对于频繁的插入、删除操作，使用此类效率比ArrayList高；底层使用双向链表存储</p>
+<p>LinkedList数据结构 Node内部类</p>
+<pre><code class="java">private static class Node&lt;E&gt; &#123;
+    E item;
+    Node&lt;E&gt; next;
+    Node&lt;E&gt; prev;
+
+    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;
+        this.item = element;
+        this.next = next;
+        this.prev = prev;
+    &#125;
+&#125;
+</code></pre>
+<h3 id="Vector"><a href="#Vector" class="headerlink" title="Vector"></a>Vector</h3><p>Vector：作为List接口的古老实现类；线程安全的，效率低；底层使用Object[] elementData存储</p>
+<p>扩容机制：默认扩容到原来的2倍</p>
+<h2 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h2><p>Set接口是Collection的子接口，set接口没有提供额外的方法</p>
+<p>Set集合不允许包括相同的元素，如果试吧两个相同的元素加入同一个Set集合中，则添加操作失败（<strong>存储无序，不可重复的数据</strong>）</p>
+<p>Set判断两个对象是否相同不是==运算符，而是根据equals()方法</p>
+<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>作为Set接口的主要实现类；线程不安全的；可以存储null值</p>
+<p>一：Set：存储无序，不可重复的数据</p>
+<p>以HashSet为例</p>
+<p>​    无序性：不等于随机性，存储的数据在底层数组中并非按照数组索引的顺序添加，而是根据数据的HashCode</p>
+<p>​    不可重复性：保证添加的元素按照equals()判断时，不能返回true，既：相同的元素只能添加一个。</p>
+<p>二：添加元素的过程：以HashSet为例：</p>
+<p>​    我们向HashSet中添加元素a，首先调用a所在类的hashCode()方法，计算元素a的哈希值，次哈希值接着通过某种算法计算出在HashSet底层数组中的存放位置（既：索引位置），判断数组此位置上是否已经有元素</p>
+<p>​        1、如果位置上没有其他元素，则元素a添加成功。—&gt;情况1</p>
+<p>​        2、如果此位置上有其他元素b（或以链表形式存在的多个元素），则比较元素a与元素b的hash值：</p>
+<p>​            （1）如果hash值不相同，则元素a添加成功   —&gt;情况2</p>
+<p>​            （2）如果hash值相同，进而需要调整元素啊所在类的equlas()方法：</p>
+<p>​                （1）equals()返回true，元素a添加失败</p>
+<p>​                （2）equals()返回false，元素a添加成功     —&gt;情况3</p>
+<p>对于上面的情况2和情况3而言：元素a与已经存在指定索引位置上数据以链表的方式存储</p>
+<p>jdk7：元素a放到数组中，指向原来的元素（新元素为链表的头）</p>
+<p>jdk8：原来的元素在数组中，指向元素a（新元素为链表的尾）</p>
+<p>总结：七上八下</p>
+<p>HashSet底层：数组+链表（jdk7以前）</p>
+<h3 id="LinkedHashSet"><a href="#LinkedHashSet" class="headerlink" title="LinkedHashSet"></a>LinkedHashSet</h3><p>作为HashSet的子类，遍历其内部数据时，可以按照添加的顺序遍历。</p>
+<p>LinkedHashSet作为HashSet的子类，在添加数据的同时，每个数据还维持了两个引用，记录此数据的前一个和后一个数据。</p>
+<p>优点：对于频繁的遍历操作，LinkedHashSet效率高于HashSet。</p>
+<h3 id="TreeSet"><a href="#TreeSet" class="headerlink" title="TreeSet"></a>TreeSet</h3><p>可以按照添加元素对象的<strong>指定属性</strong>进行排序</p>
+<p>两种排序：自然排序（继承Comparable接口）和定制排序（Comparator）</p>
+<p>​    自然排序：比较两个对象是否相同的标准：compareTo()返回0，不再是equals().</p>
+<p>​    定制排序：比较两个对象是否相同的标准：compare()返回0，不再是equals().</p>
+<p>自然排序：对象继承Comparable接口</p>
+<pre><code class="java">//TreeSet按照姓名排序
+@Override
+public int compareTo(Object o) &#123;
+    if (o instanceof Person)&#123;
+        Person person=(Person)o;
+        int i = this.name.compareTo(person.name);
+        //当姓名相同是，按照年龄排序
+        if (i!=0)&#123;
+            return i;
+        &#125;else &#123;
+            return Integer.compare(this.age,person.age);
+        &#125;
+    &#125;else &#123;
+        throw new RuntimeException(&quot;输入的类型不匹配&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>定制排序：注入Comparator参数</p>
+<pre><code class="java">Comparator comparator=new Comparator() &#123;
+    @Override
+    public int compare(Object o1, Object o2) &#123;
+        if (o1 instanceof Person &amp;&amp; o2 instanceof Person)&#123;
+            Person person1 = (Person) o1;
+            Person person2 = (Person) o2;
+            return Integer.compare(person1.getAge(),person2.getAge());
+        &#125;else &#123;
+            throw new RuntimeException(&quot;参数类型不匹配&quot;);
+        &#125;
+    &#125;
+&#125;;
+TreeSet set=new TreeSet(comparator);
+</code></pre>
+<p>要求：想TreeSet中添加数据，要求是相同类的对象 </p>
+<p>TreeSet是通过compareTo()来判断数据是否重复，而不是使用equals()</p>
+<h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210527160336.png" alt="image-20210527160336312" style="zoom:50%;">
+
+<ul>
+<li>Map：双列数据，存储key-value对的数据。</li>
+<li>Map中的key：无序的，不可重复的，使用Set存储所有的key   –&gt;如果key为对象，则key所在的类要重写equals()和hashCode() （以HashMap来说的）。</li>
+<li>Map中的value：无序的，可重复的，使用Collection存储所有的value    –&gt;如果value为对象，则value所在的类要重写equals()。</li>
+<li>一个键值对：key-value构成了一个Entry对象。</li>
+<li>Map中的entry：无序、不可重复，使用set存储所有的entry。</li>
+</ul>
+<h3 id="HashMap（Map主要实现类）"><a href="#HashMap（Map主要实现类）" class="headerlink" title="HashMap（Map主要实现类）"></a>HashMap（Map主要实现类）</h3><p>HashMap：作为Map的主要实现类；线程不安全的；效率高，存储null的key和value。</p>
+<p>HashMap底层：数组+链表（jdk7及之前）</p>
+<p>​                         数组+链表+红黑树（jdk8）</p>
+<h4 id="HashMap的底层实现原理"><a href="#HashMap的底层实现原理" class="headerlink" title="HashMap的底层实现原理"></a>HashMap的底层实现原理</h4><p>在实例化后，底层创建了长度为16的一维 数组Entry[] table</p>
+<p>map.put(key1,value1):（jdk7)</p>
+<p>​    一、调用key1所在类的hashCode()及计算key1哈希值，此哈希值经过某种计算以后，得到Entry数组中的存放位置</p>
+<p>​    二、如果此位置上的数据为空，此时的key1-value为空添加成功       —&gt;情况1</p>
+<p>​         （1）如果此位置上的数据不为空（意味着此位置上存在一个或多个数据（以链表形式存在），比较key1和已经存在的一个或者多个数据的哈希值：</p>
+<ul>
+<li>​                    1、如果key1的哈希值与已经存在的数据的好像值不相同，此时key1-value添加成功     —&gt;情况2</li>
+<li>​                    2、如果key1的哈希值与已经存在的某一个数据的好像值相同时，继续比较：调用key1所在类的equals()方法，比较：<ul>
+<li>​                            (1)如果equals返回false，此时key1-value添加成功      —&gt;情况3</li>
+<li>​                            (2)如果equals返回true，将value1替换相同key的value值</li>
+</ul>
+</li>
+</ul>
+<p>补充：关于情况2和情况3：此时key1-value1和原来的数据以链表的方式存储</p>
+<p>​    三：扩容方式：默认为扩容为原来容量的2倍，并将原有数据复制过来</p>
+<p>​    四：jdk8相较于jdk7在底层实现的不同</p>
+<ul>
+<li>​        1、new HashMap()：底层没有创建一个长度为16的数组</li>
+<li>​        2、jdk8底层的数组是：Node[]，而非Entry[]</li>
+<li>​        3、首次调用put()方法是，底层常见长度为16的数组</li>
+<li>​        4、jdk7底层结构：数组+链表</li>
+</ul>
+<p>​             jdk8底层结构：数组+链表+红黑树</p>
+<p>​            当数组的摸一个索引位置上的元素以链表形式存在的数据个数&gt;8且当前数组的长度&gt;64时，此时此索引位置上所有数据改为使用红黑树 </p>
+<h5 id="HashMap的源码"><a href="#HashMap的源码" class="headerlink" title="HashMap的源码"></a>HashMap的源码</h5><p><strong>HashMap重要常量</strong></p>
+<p>​    DEFAULT_INITIAL_CAPACITY：HashMap的默认容量，16</p>
+<p>​    MAXIMUM_CAPACITY：HashMap的最大支持容量，2^30</p>
+<p>​    DEFAULT_LOAD_FACTOR：HashMap的默认加载因子</p>
+<p>​    TREEIFY_THRESHOLD：Bucket中链表长度大于该默认值，转化为红黑树</p>
+<p>​    UNTREEIFY_THRESHOLD：Bucket中红黑树存储的Node小于该默认值，转化为链</p>
+<p>​    MIN_TREEIFY_CAPACITY：桶中的Node被树化时最小的hash表容量。</p>
+<p>​            (当桶中Node的数量大到需要变红黑树时，若hash表容量小于MIN_TREEIFY_CAPACITY时，此时应执行resize扩容操作这个MIN_TREEIFY_CAPACITY的值至少是TREEIFY_THRESHOLD的4倍。)</p>
+<p>​    table：存储元素的数组，总是2的n次幂</p>
+<p>​    entrySet：存储具体元素的集</p>
+<p>​    size：HashMap中存储的键值对的数量</p>
+<p>​    modCount：HashMap扩容和结构改变的次数。</p>
+<p>​    threshold：扩容的临界值，=容量*填充因</p>
+<p>​    loadFactor：填充因子</p>
+<p>源码：map.put()调用下面的方法（jdk8)</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210527215724.png" alt="image-20210527215724769" style="zoom: 50%;">
+
+<pre><code class="java">final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+               boolean evict) &#123;
+    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
+    if ((tab = table) == null || (n = tab.length) == 0)
+        n = (tab = resize()).length;//创建一个16大小的数组
+    if ((p = tab[i = (n - 1) &amp; hash]) == null)
+        tab[i] = newNode(hash, key, value, null);//如果没有相同的hashCode的，直接添加，对应上述情况1
+    else &#123;
+        Node&lt;K,V&gt; e; K k;
+        if (p.hash == hash &amp;&amp;
+            ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))//如果hashCode相同，key也相同的情况,用新值将原来的值覆盖
+            e = p;
+        else if (p instanceof TreeNode)//判断p是不是一个树
+            e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
+        else &#123;//hashCode相同，key不同，在数组的这个位置生成链表
+            for (int binCount = 0; ; ++binCount) &#123;
+                if ((e = p.next) == null) &#123;//找到这个位置的尾节点
+                    p.next = newNode(hash, key, value, null);//在最后插入新的值
+                    if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                        treeifyBin(tab, hash);//当该链表大小大于8时，转换为红黑树
+                    break;
+                &#125;
+                if (e.hash == hash &amp;&amp;
+                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))//如果hashCode相同，key也相同的情况,用新值将原来的值覆盖
+                    break;
+                p = e;
+            &#125;
+        &#125;
+        if (e != null) &#123; // existing mapping for key（翻译：存在key的映射）
+            V oldValue = e.value;//存在时将新值覆盖为原来的值
+            if (!onlyIfAbsent || oldValue == null)
+                e.value = value;
+            afterNodeAccess(e);
+            return oldValue;
+        &#125;
+    &#125;
+    ++modCount;
+    if (++size &gt; threshold)//当数组大小大于临界值时，扩容
+        resize();//扩容方法，源码中 newThr = oldThr &lt;&lt; 1; 扩大为原来的2倍
+    afterNodeInsertion(evict);
+    return null;
+&#125;
+</code></pre>
+<p>resize扩容的部分源码：</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210527222736.png" style="zoom:50%;">
+
+<h3 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h3><p>LinkedHashMap：保证在遍历map元素时，可以按照添加的顺序实现遍历。原因：在原有的HashMap底层结构基础上，添加了一对指针，指向前一个和后一个元素。</p>
+<p>对于频繁的遍历操作，此类执行效率高于HashMap。</p>
+<h3 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h3><p>TreeMap：保证按照添加的key-value对进行排序，实现排序遍历，吃啥考虑key的自然排序或定制排序。底层使用红黑树。</p>
+<p>向TreeMap中添加key-value，要求key必须是由同一个类创建的对象，因为要按照key进行排序：自然排序、定制排序</p>
+<pre><code class="java">//定制排序，按照年龄排序
+Comparator comparator = new Comparator() &#123;
+    @Override
+    public int compare(Object o1, Object o2) &#123;
+        if (o1 instanceof Person &amp;&amp; o2 instanceof Person)&#123;
+            Person person1 = (Person) o1;
+            Person person2 = (Person) o2;
+            return Integer.compare(person1.getAge(),person2.getAge());
+        &#125;
+        throw new RuntimeException(&quot;输入的类型不匹配&quot;);
+    &#125;
+&#125;;
+TreeMap map=new TreeMap(comparator);
+</code></pre>
+<h3 id="Hashtable。"><a href="#Hashtable。" class="headerlink" title="Hashtable。"></a>Hashtable。</h3><p>Hashtable：作为古老的实现类；线程安全，效率低；不能存储null的key和value。</p>
+<h3 id="Properties"><a href="#Properties" class="headerlink" title="Properties"></a>Properties</h3><p>Properties：常用来处理配置文件。key和value都是String类型 。</p>
+<pre><code class="java">public static void main(String[] args) throws IOException &#123;
+    Properties properties = new Properties();
+    FileInputStream fis = new FileInputStream(&quot;jdbc.properties&quot;);
+    properties.load(fis);//加载流对应文件
+    String name = properties.getProperty(&quot;name&quot;);
+    System.out.println(name);
+&#125;
+</code></pre>
+<h2 id="Collections"><a href="#Collections" class="headerlink" title="Collections"></a>Collections</h2><p>Collections：集合工具集（具体看jdk文档）</p>
+<p>Collections类中提供了多个synchronizedXxx()方法，该方法可变将制定集合包装成线程同步的集合，从而可以解决多线程并发访问集合时的线程安全问题</p>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>集合</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>多线程</title>
+    <url>/2021/05/28/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="线程的复习"><a href="#线程的复习" class="headerlink" title="线程的复习"></a>线程的复习</h1><p>java中线程分为两类：一种是守护线程（如：垃圾回收线程，jvm中都是守护线程），通过在start()方法前调用thread.serDaemon(true)可以把一个用户线程变为一个守护线程，一种是用户线程（main线程）</p>
+<h2 id="线程的创建"><a href="#线程的创建" class="headerlink" title="线程的创建"></a>线程的创建</h2><h3 id="（一）使用Thread"><a href="#（一）使用Thread" class="headerlink" title="（一）使用Thread"></a>（一）使用Thread</h3><p>多线程的创建，方式一:继承于Thread类</p>
+<p>1、创建一个继承于Thread类的子类</p>
+<p>2、重写Thread类的run() –&gt;将此线程执行的操作声明在run()中</p>
+<p>3、创建Thread类的子类的对象</p>
+<p>4、通过此对象调用start()</p>
+<pre><code class="java">class MyThread extends Thread&#123;
+    @Override
+    public void run() &#123;
+        for (int i = 0; i &lt; 1000; i++) &#123;
+            if(i%2==0)&#123;
+                System.out.println(Thread.currentThread().getName()+&quot;:&quot;+i);
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="java">public static void main(String[] args) &#123;
+    MyThread myThead = new MyThread();
+    MyThread myThead2 = new MyThread();
+    myThead.start();
+    myThead2.start();
+&#125;
+</code></pre>
+<p>使用匿名子类的方式</p>
+<pre><code class="java">//使用匿名子类的方法
+public static void main(String[] args) &#123;
+    /*
+         * 匿名子类
+         * */
+    new Thread()&#123;
+        @Override
+        public void run() &#123;
+            for (int i = 0; i &lt; 100000; i++) &#123;
+                if(i%2==0)&#123;
+                    System.out.println(Thread.currentThread().getName()+&quot;:&quot;+i);
+                &#125;
+            &#125;
+        &#125;
+    &#125;.start();
+    new Thread()&#123;
+        @Override
+        public void run() &#123;
+            for (int i = 0; i &lt; 100000; i++) &#123;
+                if(i%2==0)&#123;
+                    System.out.println(Thread.currentThread().getName()+&quot;:&quot;+i);
+                &#125;
+            &#125;
+        &#125;
+    &#125;.start();
+&#125;
+</code></pre>
+<h4 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h4><p>1、start()：启动当前线程，调用当前线程的run()</p>
+<p>2、run()：通常需要重写Tread类中的此方法，将创建的线程要执行的操作声明在此方法中</p>
+<p>3、currentTread()：静态方法，返回执行当前代码的线程</p>
+<p>4、getName：获取当前线程的名字</p>
+<p>5、serName：设置当前线程的名字</p>
+<p>6、yield：释放当前cpu的执行权。再去和其他线程竞争cpu</p>
+<pre><code class="java">class MyThread extends Thread&#123;
+    @Override
+    public void run() &#123;
+        for (int i = 0; i &lt; 1000; i++) &#123;
+            if(i%2==0)&#123;
+                System.out.println(Thread.currentThread().getName()+&quot;:&quot;+i);
+            &#125;
+            if (i%20==0)&#123;
+                yield();
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>7、join()：在线程a中调用线程b的join()，此时线程a就进入阻塞状态，直到线程b完全执行完以后，线程a才结束阻塞状态</p>
+<pre><code class="java">//在main函数中，线程myThead调用了join(),则当main函数i=20时,myThead会强行强到cpu资源，等到myThead执行完后才执行mian
+if (i==20)&#123;
+    try &#123;
+        myThead.join();
+    &#125; catch (InterruptedException e) &#123;
+        e.printStackTrace();
+    &#125;
+&#125;
+</code></pre>
+<p>8、sleep(long millis)：线程睡眠多少时间，单位毫秒</p>
+<p>9、stop()：已过时，强制结束当前线程，不推荐</p>
+<p>10、isAlive()：线程是否存活</p>
+<h4 id="线程优先级"><a href="#线程优先级" class="headerlink" title="线程优先级"></a>线程优先级</h4><p>MAX_PRIORITY(max_priority)：10</p>
+<p>MIN_PRIORITY(min_priority)：1</p>
+<p>NORM_PRIORITY(norm_priority)：5</p>
+<p>涉及方法：</p>
+<p>getPriority()：获取线程优先级</p>
+<p>setPriority(int newPriority)：设置线程优先级</p>
+<p>说明：高优先级的线程要抢占低优先级线程cpu的执行权，但是只是从概率上讲，高优先级的线程搞概率的情况下被执行。并不意味着只有当高优先级的线程执行完以后，低优先级线程执行</p>
+<h3 id="（二）Runnable"><a href="#（二）Runnable" class="headerlink" title="（二）Runnable"></a>（二）Runnable</h3><p>创建多线程的方式二:实现Runnable接口</p>
+<p>1、创建一个实现了Runnable接口的类</p>
+<p>2、实现类去实现Runnable中的抽象方法: run()</p>
+<p>3、创建实现类的对象</p>
+<p>4、将此对象作为参数传递到Thread类的构造器中，创建Thread类的对象</p>
+<p>5、通过Thread类的对象调用start()</p>
+<pre><code class="java">public class TestRunnable implements Runnable&#123; 
+    private int ticketNum = 100;
+    @Override
+    public void run() &#123;
+        while (ticketNum &gt;0) &#123;
+            try &#123;
+                Thread.sleep(50);
+            &#125; catch (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+            System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                    + &quot;剩余的票数=&quot; + (--ticketNum));
+        &#125;
+    &#125;
+&#125;
+class Test&#123;
+    public static void main(String[] args) &#123;
+        //会共享对象ticketNum，但是在最后也存在线程安全
+        TestRunnable myThread = new TestRunnable();
+        Thread t1=new Thread(myThread);
+        Thread t2=new Thread(myThread);
+        t1.start();
+        t2.start();
+    &#125;
+&#125;
+</code></pre>
+<p>为什么调用t1.start会跑到myThread的run()方法中？</p>
+<p>因为Thread源码中target不为空时使用的是target的run方法</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210521190433.png" alt="image-20210521190433267"></p>
+<p>而我们使用的是有参构造器</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210521190539.png" alt="image-20210521190539425"></p>
+<h5 id="比较创建线程的两种方式。"><a href="#比较创建线程的两种方式。" class="headerlink" title="比较创建线程的两种方式。"></a>比较创建线程的两种方式。</h5><p>开发中：优先选择:实现Runnable接口的方式原因:</p>
+<p>1、实现的方式没有类的单继承性的局限性</p>
+<p>2、实现的方式更适合来处理多个线程有共享数据的情况。</p>
+<p>联系: public class Thread impLements Runnable</p>
+<p>相同点：两种方式都需要重写run(),将线程要执行的逻辑声明在run()中。目前两个方法，想要启动线程，都是调用Tread类中的start()。</p>
+<h3 id="（三）Callable接口实现多线程"><a href="#（三）Callable接口实现多线程" class="headerlink" title="（三）Callable接口实现多线程"></a>（三）Callable接口实现多线程</h3><p>创建多线程的方式三:实现Callable接口</p>
+<p>Callable实现多线程有返回值，但是一般常用的还是Runnable</p>
+<p>与使用Runnable相比，Callable功能更强大些</p>
+<p>1、相比run()方法，可以有返回值，</p>
+<p>2、方法可以抛出异常，</p>
+<p>3、支持泛型的返回值</p>
+<p>4、需要借助FutureTask类，比如获取返回结果</p>
+<pre><code class="java">public class CallableTest implements Callable&lt;String&gt; &#123;
+    private int ticket=100;
+    @Override
+    public String call() throws Exception &#123;
+        while (true) &#123;
+            if(this.ticket&gt;0)&#123;
+                System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                        + &quot;剩余的票数=&quot; + (--ticket));
+            &#125;else &#123;
+                break;
+            &#125;
+        &#125;
+        return &quot;票出售完了&quot;;
+    &#125;
+&#125;
+class Test1&#123;
+    public static void main(String[] args) throws ExecutionException, InterruptedException &#123;
+        //创建Callable接口实现类的对象
+        CallableTest callableThread = new CallableTest();
+        //将此Callable接口实现类的对象作为传递到FutureTask构造器中，创建FutureTask对象
+        FutureTask&lt;String&gt; task1 = new FutureTask&lt;&gt;(callableThread1);
+        //将FutureTask的对象作为参数传递到Thread类的构造器中，创建Thread，并.start()
+        new Thread(task1).start();
+
+        //多线程执行完可以取得内容，依靠FutureTask的父接口中的get()方法实现
+        System.out.println(&quot;A线程的返回结果：&quot;+task1.get());
+
+    &#125;
+&#125;
+</code></pre>
+<h3 id="（四）使用线程池"><a href="#（四）使用线程池" class="headerlink" title="（四）使用线程池"></a>（四）使用线程池</h3><p>创建线程的方式四:使用线程池<br>好处：<br>    1、提高响应速度(减少了创建新线程的时间)</p>
+<p>​    2、降低资源消耗（重复利用线程池中线程，不需要每次都创建)</p>
+<p>​    3、便于线程管理<br>​        corePooLsize：核心池的大小</p>
+<p>​        maximumPooLsize：最大线程数</p>
+<p>​        keepALiveTime：线程没有任务时最多保持多长时间后会终止</p>
+<pre><code class="java">public class ThreadPool &#123;
+    public static void main(String[] args) &#123;
+        //1、提供指定线程数量的线程池
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        //2、执行指定的线程的操作。需要提供实现Runnable接口或者Callable接口实现类的对象
+        executorService.execute(new NumberThread());//适合使用与Runnable
+        //executorService.submit();//适合使用与Callable
+        //关闭连接池
+        executorService.shutdown();
+    &#125;
+&#125;
+class NumberThread implements Runnable&#123;
+
+    @Override
+    public void run() &#123;
+        for (int i = 0; i &lt; 100; i++) &#123;
+            if (i%2==0)&#123;
+                System.out.println(Thread.currentThread().getName()+&quot;：&quot;+i);
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>如何要对线程池进行设置，则需要将executorService强转为ThreadPoolExecutor，因为ExecutorService是一个接口，而ThreadPoolExecutor是ExecutorService子类，将装换为ThreadPoolExecutor类后有更多的设置</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210522145632.png" alt="image-20210522145625043" style="zoom:50%;">
+
+<h2 id="多线程的生命周期"><a href="#多线程的生命周期" class="headerlink" title="多线程的生命周期"></a>多线程的生命周期</h2><p>要想实现多线程，必须在主线程中创建新的线程对象。</p>
+<p>Java语言使用Thread类及其子类的对象来表示线程，在它的一个完整的生命周期中通常要经历如下的五种状态:</p>
+<p>新建：当一个Thread类或其子类的对象被声明并创建时，新生的线程对象处于新建状态</p>
+<p>就绪：处于新建状态的线程被start()后，将进入线程队列等待CPU时间片，此时它已具备了运行的条件，只是没分配到CPU资源</p>
+<p>运行：当就绪的线程被调度并获得CPU资源时,便进入运行状态，run()方法定义了线程的操作和功能</p>
+<p>阻塞：在某种特殊情况下，被人为挂起或执行输入输出操作时，让出 CPU并临时中止自己的执行，进入阻塞状态</p>
+<p>死亡：线程完成了它的全部工作或线程被提前强制性地中止或出现异常导致结束</p>
+<img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210521202104.png" alt="image-20210521202104374" style="zoom:50%;">
+
+<h2 id="线程安全问题"><a href="#线程安全问题" class="headerlink" title="线程安全问题"></a>线程安全问题</h2><h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><p>操作共享数据的代码，既为需要被同步的代码。不可包含代码过多（比如将while都包括了，哪就是一个线程拿到cpu就一直运行了），或包含代码过少</p>
+<p><strong>共享数据</strong>：多个线程共同操作的变量，比如：买票中的票数的值</p>
+<p><strong>同步监视器</strong>：俗称：锁。任何一个类的对象都可以当成锁。要求：多个线程必须要共用一把锁。</p>
+<p>补充：在实现Runnable接口创建多线程的方式中，我们可以考虑使用this当做同步监视器。（具体问题具体分析，慎用this，要确保this是否可以保证唯一）</p>
+<p>方式一：同步代码块</p>
+<p>synchronized(同步监视器){</p>
+<p>//需要被同步的代码</p>
+<p>}</p>
+<pre><code class="java"> @Override
+    public void run() &#123;
+        while (true) &#123;
+            //此时this，是指创建的Runnable对象，也就是上面使用Runnable创建线程中的myThread对象
+            //在Thread中不能使用this，而使用当前类名.class ，如  synchronized (MyThread.class)
+            synchronized (this) &#123;
+                //同步代码块  synchronized (对象),可以在（）里写一个this，也可以在run（）方法外随便new 一个对象当做一个同步监视器，但不能在run方法里面new一个对象当做同步监视器，不然每个线程都有一个独立的锁，就没有效果了
+                if (ticketNum &lt;= 0) &#123;
+                    System.out.println(&quot;售票结束...&quot;);
+                    return;
+                &#125;
+                try &#123;
+                    Thread.sleep(50);
+                &#125; catch (InterruptedException e) &#123;
+                    e.printStackTrace();
+                &#125;
+                System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                        + &quot;剩余的票数=&quot; + (--ticketNum));
+            &#125;
+        &#125;
+    &#125;
+</code></pre>
+<p><strong>一个细节点</strong>，在Runnable创建线程时由于最后start是 new Thread(myRunnable).start();几个线程都是用的同一个myRunnable，因此当做同步监视器可以用Object obj=new Object用obj当做同步监视器，而在Thread创建线程时，多线程需要多个new Thread()，因此需要再Object obj=new Object()前加一个static关键字保证多个线程使用同一个同步监视器</p>
+<p>同步的好处：解决了线程的安全问题</p>
+<p>同步的局限性：只有一个线程参与，其他线程等待，相当于一个单线程的过程，效率低一些</p>
+<p>方式二：同步方法：</p>
+<p>如果操作共享数据的代码完整的声明在一个方法中，我们不妨将此方法声明同步</p>
+<pre><code class="java">//对应Runnable创建的线程，Thread创建的线程还要加static
+public synchronized void show() &#123;//同步监视器：this
+        if (ticketNum &lt;= 0) &#123;
+            System.out.println(&quot;售票结束...&quot;);
+            flag = false;
+            return;
+        &#125;
+        try &#123;
+            Thread.sleep(50);
+        &#125; catch (InterruptedException e) &#123;
+            e.printStackTrace();
+        &#125;
+        System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                + &quot;剩余的票数=&quot; + (--ticketNum));
+    &#125;
+</code></pre>
+<p>1、同步方法任然涉及到同步监视器，只是不需要我们显式声明。</p>
+<p>2、非静态的同步方法，同步监视器是：this，</p>
+<p>​    静态的同步方法，同步监视器是：当前类本身</p>
+<h3 id="lock"><a href="#lock" class="headerlink" title="lock"></a>lock</h3><pre><code class="java">public class LockTest implements Runnable &#123;
+    private int ticketNum = 100;
+    ReentrantLock lock = new ReentrantLock();
+    @Override
+    public void run() &#123;
+        while (true) &#123;
+            lock.lock();
+            try &#123;
+                if (ticketNum&gt;0) &#123;
+                    System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                            + &quot;剩余的票数=&quot; + (--ticketNum));
+                &#125;else&#123;
+                    break;
+                &#125;
+            &#125; finally &#123;
+                lock.unlock();
+            &#125;
+        &#125;
+
+    &#125;
+&#125;
+</code></pre>
+<h3 id="1、面试题：synchronized与lock的异同？"><a href="#1、面试题：synchronized与lock的异同？" class="headerlink" title="1、面试题：synchronized与lock的异同？"></a>1、面试题：synchronized与lock的异同？</h3><p>​    相同：二者可以解决线程安全问题</p>
+<p>​    不同：synchronized机制在执行完相应的同步代码以后，自动的释放同步监视器，lock需要手动的启动同步（lock()），同时结束同步也需要手动的实现（unlock()）</p>
+<p>2、如何解决线程安全问题？有几种方式</p>
+<p>​    用synchronized或者lock。有三种，同步代码块、同步方法和lock</p>
+<h2 id="线程通信"><a href="#线程通信" class="headerlink" title="线程通信"></a>线程通信</h2><p>wait()：一旦执行此方法，当前线程就进行阻塞状态，并释放同步监视器</p>
+<p>notify()：一旦执行此方法，就会唤醒被wait的一个线程 ，如果多个线程被wait，就唤醒优先级高的线程</p>
+<p>notifyAll()：一旦执行此方法，就会唤醒所有被wait的线程。</p>
+<p>说明：</p>
+<p>1、wait()、notify()、notifyAll()三个方法必须使用在同步代码块或者同步方法中。</p>
+<p>2、wait()、notify()、notifyAll()三个方法三个方法的调用者必须是同步代码块或者同步方法中的同步监视器，否则会出现IllegalMonitorStateException</p>
+<p>3、wait()、notify()、notifyAll()三个方法是在java.lang.Object类中</p>
+<pre><code class="java">public class Synchronized implements Runnable &#123;
+    private int ticketNum = 100;
+    Object object=new Object();
+    @Override
+    public void run() &#123;
+        while (true) &#123;
+            synchronized (object) &#123; //同步代码块  synchronized (对象)
+                object.notify();//使用同步监视器.方法（原因：上述说明3）
+                if (ticketNum &lt;= 0) &#123;
+                    System.out.println(&quot;售票结束...&quot;);
+                    return;
+                &#125;
+                try &#123;
+                    object.wait();
+                &#125; catch (InterruptedException e) &#123;
+                    e.printStackTrace();
+                &#125;
+                System.out.println(&quot;窗口 &quot; + Thread.currentThread().getName() + &quot;售出一张票, &quot;
+                        + &quot;剩余的票数=&quot; + (--ticketNum));
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h3 id="面试题-sleep-和wait-的异同"><a href="#面试题-sleep-和wait-的异同" class="headerlink" title="面试题:sleep()和wait()的异同"></a>面试题:sleep()和wait()的异同</h3><p>1、相同点：一旦执行方法，都可以使得当前的线程进入阻塞状态</p>
+<p>2、不同点：</p>
+<p>​        （1）两个方法声明的位置不同：Thread类中声明sleep(),Object类中声明wait()</p>
+<p>​        （2）调用的范围不同：sleep()可以在任何需要的场景下调用，wait()方法必须用在同步代码块或者同步方法使用同步监视器来调用</p>
+<p>​        （3）关于是否释放同步监视器：都在同步代码块或者同步方法中sleep()会自动释放锁，而wait()需要手动释放</p>
+<p>​            </p>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>多线程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>自定义注解</title>
+    <url>/2022/05/11/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h1><p>推荐文章：<a href="https://www.jianshu.com/p/a7bedc771204">Java 自定义注解及使用场景 - 简书 (jianshu.com)</a></p>
+<h2 id="一、定义一个自定义的注解"><a href="#一、定义一个自定义的注解" class="headerlink" title="一、定义一个自定义的注解"></a>一、定义一个自定义的注解</h2><pre><code class="java">@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface Notification &#123;
+
+    /** 消息类型 */
+    TaskMsgType type();
+
+&#125;
+</code></pre>
+<h2 id="二、实现注解的功能"><a href="#二、实现注解的功能" class="headerlink" title="二、实现注解的功能"></a>二、实现注解的功能</h2><p>案例：使用AOP，@Pointcut(“@annotation(com.seeyon.apps.bhtTask.annotation.Notification)”)定义有@Notification这个注解的类为切点</p>
+<pre><code class="java">@Aspect
+public class CipMessageAspect &#123;
+
+    private static final Log log = LogFactory.getLog(CipMessageAspect.class);
+
+    private SendMsgTask sendMsgTask;
+
+    private static Map&lt;TaskMsgType, ISendMsgByType&gt; msgMap = new HashMap&lt;&gt;();
+
+    @Pointcut(&quot;@annotation(com.seeyon.apps.bhtTask.annotation.Notification)&quot;)
+    public void notification() &#123;
+    &#125;
+
+    @AfterReturning(value = &quot;notification()&quot;, returning=&quot;res&quot;)
+    public void sendMsg(JoinPoint joinPoint, Object res) &#123;
+        try &#123;
+            String methodName = joinPoint.getSignature().getName();
+            String className = joinPoint.getTarget().getClass().getName();
+            TaskMsgType type = getMethodDescription(className, methodName);
+            ISendMsgByType sendMsgManager = msgMap.get(type);
+            if(null == sendMsgManager) &#123;
+                log.warn(&quot;没有实现对应的消息类型:&quot; + type.name());
+                return;
+            &#125;
+            sendMsgManager.sendMsg(res);
+        &#125; catch (Exception e) &#123;
+            log.error(&quot;发送消息失败：&quot;, e);
+        &#125;
+    &#125;
+
+  
+    public TaskMsgType getMethodDescription(String targetName, String methodName)  throws Exception &#123;
+        Class&lt;?&gt; targetClass = Class.forName(targetName);
+        Method[] methods = targetClass.getMethods();
+        for(Method method : methods) &#123;
+            //  找到对应的方法变并且不是覆写的
+            if(method.getName().equals(methodName)) &#123;
+                return method.getAnnotation(Notification.class).type();
+            &#125;
+        &#125;
+        return null;
+    &#125;
+&#125;
+</code></pre>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>自定义注解</tag>
+      </tags>
+  </entry>
+</search>

@@ -1,0 +1,256 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Mybatis逆向工程使用 | 长安故里</title><meta name="keywords" content="mybatis"><meta name="author" content="长安故里"><meta name="copyright" content="长安故里"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Mybatis逆向工程使用官方地址：mybatis&#x2F;generator: A code generator for MyBatis. (github.com) 导入需要的jar包 &lt;dependency&gt;     &lt;groupId&gt;org.mybatis.generator&lt;&#x2F;groupId&gt;     &lt;artifactId&gt;mybatis-gene">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mybatis逆向工程使用">
+<meta property="og:url" content="https://github.com/Longyongji/myblog/2021/05/14/Mybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="长安故里">
+<meta property="og:description" content="Mybatis逆向工程使用官方地址：mybatis&#x2F;generator: A code generator for MyBatis. (github.com) 导入需要的jar包 &lt;dependency&gt;     &lt;groupId&gt;org.mybatis.generator&lt;&#x2F;groupId&gt;     &lt;artifactId&gt;mybatis-gene">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg">
+<meta property="article:published_time" content="2021-05-14T05:53:29.000Z">
+<meta property="article:modified_time" content="2021-05-14T06:24:55.822Z">
+<meta property="article:author" content="长安故里">
+<meta property="article:tag" content="mybatis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://github.com/Longyongji/myblog/2021/05/14/Mybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E4%BD%BF%E7%94%A8/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 长安故里","link":"链接: ","source":"来源: 长安故里","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Mybatis逆向工程使用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-14 14:24:55'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="长安故里" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">长安故里</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Mybatis逆向工程使用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-14T05:53:29.000Z" title="发表于 2021-05-14 13:53:29">2021-05-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-14T06:24:55.822Z" title="更新于 2021-05-14 14:24:55">2021-05-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/mybatis/">mybatis</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Mybatis逆向工程使用"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Mybatis逆向工程使用"><a href="#Mybatis逆向工程使用" class="headerlink" title="Mybatis逆向工程使用"></a>Mybatis逆向工程使用</h1><p>官方地址：<a href="https://github.com/mybatis/generator">mybatis/generator: A code generator for MyBatis. (github.com)</a></p>
+<p>导入需要的jar包</p>
+<pre><code class="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-generator&lt;/artifactId&gt;
+    &lt;version&gt;1.4.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-generator-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;1.4.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>在项目名称下创建generatorConfig.xml（与src同一级别），各个组件的官方介绍<a target="_blank" rel="noopener" href="http://mybatis.org/generator/configreference/xmlconfig.html">MyBatis Generator Core – MyBatis Generator XML Configuration File Reference</a></p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE generatorConfiguration
+        PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot;&gt;
+
+&lt;generatorConfiguration&gt;
+    &lt;context id=&quot;DB2Tables&quot; targetRuntime=&quot;MyBatis3&quot;&gt;
+        &lt;jdbcConnection driverClass=&quot;com.mysql.cj.jdbc.Driver&quot;
+                        connectionURL=&quot;jdbc:mysql://localhost:3306/bjpowernode?serverTimezone=UTC&quot;
+                        userId=&quot;root&quot;
+                        password=&quot;123456&quot;&gt;
+        &lt;/jdbcConnection&gt;
+
+        &lt;javaTypeResolver &gt;
+            &lt;property name=&quot;forceBigDecimals&quot; value=&quot;false&quot; /&gt;
+        &lt;/javaTypeResolver&gt;
+        &lt;!--javaModelGenerator,指定javaBean的生成策略--&gt;
+        &lt;javaModelGenerator targetPackage=&quot;com.lyj.pojo&quot; targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+            &lt;property name=&quot;trimStrings&quot; value=&quot;true&quot; /&gt;
+        &lt;/javaModelGenerator&gt;
+        &lt;!--sqlMapGenerator指定sql映射（Mapper）的生成策略--&gt;
+        &lt;sqlMapGenerator targetPackage=&quot;com.lyj.dao.xml&quot;  targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+        &lt;/sqlMapGenerator&gt;
+        &lt;!--javaClientGenerator指定mapper接口所在位置--&gt;
+        &lt;javaClientGenerator type=&quot;XMLMAPPER&quot; targetPackage=&quot;com.lyj.dao&quot;  targetProject=&quot;.\src\main\java&quot;&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;
+        &lt;/javaClientGenerator&gt;
+        &lt;!--指定逆向分析哪些表：根据这些表创建javabean--&gt;
+        &lt;table tableName=&quot;dept&quot; domainObjectName=&quot;Department&quot;/&gt;
+        &lt;table tableName=&quot;emp&quot; domainObjectName=&quot;Employee&quot;/&gt;
+    &lt;/context&gt;
+&lt;/generatorConfiguration&gt;
+</code></pre>
+<p>在测试类里面进行运行代码</p>
+<pre><code class="java">@Test
+    public void generator() throws IOException, XMLParserException, InvalidConfigurationException, SQLException, InterruptedException &#123;
+        List&lt;String&gt; warnings = new ArrayList&lt;String&gt;();
+        boolean overwrite = true;
+        File configFile = new File(&quot;generatorConfig.xml&quot;); //xml地址
+        ConfigurationParser cp = new ConfigurationParser(warnings);
+        Configuration config = cp.parseConfiguration(configFile);
+        DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+        MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
+        myBatisGenerator.generate(null);
+    &#125;
+</code></pre>
+<p>最后就可以生成代码和文件</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514094825.png" alt="image-20210514094825578"></p>
+<p>如何使用targetRuntime=”MyBatis3”会产生一些条件查询的方法，因此要多一写xxxExample的类，具体看<a target="_blank" rel="noopener" href="http://mybatis.org/generator/configreference/context.html">MyBatis Generator Core – The  Element</a></p>
+<table>
+<thead>
+<tr>
+<th>targetRuntime的值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>MyBatis3</strong></td>
+<td>使用该值，MBG将生成与MyBatis 3.0或更高版本以及JSE 5.0或更高版本兼容的对象（例如Java模型和mapper接口将使用通用类型）。 这些生成的对象中的“示例”方法实际上支持无限的动态where子句。 此外，使用这些生成器生成的Java对象支持许多JSE 5.0功能，包括参数化类型和注释。</td>
+</tr>
+<tr>
+<td><strong>MyBatis3Simple</strong></td>
+<td>使用该值，MBG将生成与MyBatis 3.0或更高版本以及JSE 5.0或更高版本兼容的对象（例如Java模型和mapper接口将使用通用类型）。 用此目标运行时生成的映射器是非常基本的CRUD操作，仅没有“示例”方法且动态SQL很少。 用这些生成器生成的Java对象支持许多JSE 5.0功能，包括参数化类型和注释。</td>
+</tr>
+</tbody></table>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514094620.png" alt="image-20210514094613433"></p>
+<p>测试</p>
+<pre><code class="java">@Test
+public void mytest01() throws IOException &#123;
+    String resource = &quot;mybatis-config.xml&quot;;
+    InputStream inputStream = Resources.getResourceAsStream(resource);
+    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    
+    EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+    //使用EmployeeExample来封装条件
+    EmployeeExample example = new EmployeeExample();
+    //创建一个Criteria,这个criteria就是拼装条件
+    EmployeeExample.Criteria criteria = example.createCriteria();
+    criteria.andEnameLike(&quot;%S%&quot;);
+    //第二个criteria，使用or来拼接上,或满足criteria或者满足criteria2
+    EmployeeExample.Criteria criteria2 = example.createCriteria();
+    criteria2.andEnameLike(&quot;%T%&quot;);
+    //拼接第二个criteria
+    example.or(criteria2);
+    
+    List&lt;Employee&gt; employees = mapper.selectByExample(example);
+    for (Employee employee : employees) &#123;
+        System.out.println(employee.getEname());
+    &#125;
+&#125;
+</code></pre>
+<p>运行结果：</p>
+<p><img src="https://gitee.com/longyongji/image/raw/master/picture%20/20210514133215.png" alt="image-20210514133215219"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://github.com/Longyongji/myblog">长安故里</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://github.com/Longyongji/myblog/2021/05/14/Mybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E4%BD%BF%E7%94%A8/">https://github.com/Longyongji/myblog/2021/05/14/Mybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E4%BD%BF%E7%94%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://github.com/Longyongji/myblog" target="_blank">长安故里</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/mybatis/">mybatis</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/05/14/log4j%E6%97%A5%E5%BF%97%E8%BE%93%E5%87%BA/"><img class="prev-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">log4j日志输出</div></div></a></div><div class="next-post pull-right"><a href="/2021/05/14/Mybatis%E5%8A%A8%E6%80%81Sql/"><img class="next-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Mybatis动态Sql</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/05/14/Mybatis%E5%8A%A8%E6%80%81Sql/" title="Mybatis动态Sql"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-14</div><div class="title">Mybatis动态Sql</div></div></a></div><div><a href="/2021/05/14/log4j%E6%97%A5%E5%BF%97%E8%BE%93%E5%87%BA/" title="log4j日志输出"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-14</div><div class="title">log4j日志输出</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">长安故里</div><div class="author-info__description">想要走得更远，更高</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" href="https://github.com/Longyongji"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Longyongji" target="_blank" title="Github"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Mybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">Mybatis逆向工程使用</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/05/11/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3/" title="自定义注解">自定义注解</a><time datetime="2022-05-11T02:52:26.346Z" title="发表于 2022-05-11 10:52:26">2022-05-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/09/07/Springboot%E4%B8%89%E5%A4%A7%E6%A0%B8%E5%BF%83%E6%B3%A8%E8%A7%A3/" title="Springboot三大核心注解">Springboot三大核心注解</a><time datetime="2021-09-07T03:45:24.000Z" title="发表于 2021-09-07 11:45:24">2021-09-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/06/03/%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B1%BB/" title="java常用类">java常用类</a><time datetime="2021-06-03T05:51:16.000Z" title="发表于 2021-06-03 13:51:16">2021-06-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/06/03/Redis/" title="redis">redis</a><time datetime="2021-06-03T05:51:16.000Z" title="发表于 2021-06-03 13:51:16">2021-06-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/05/28/java%E9%9B%86%E5%90%88/" title="java集合复习">java集合复习</a><time datetime="2021-05-28T12:59:45.000Z" title="发表于 2021-05-28 20:59:45">2021-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 长安故里</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":320},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
